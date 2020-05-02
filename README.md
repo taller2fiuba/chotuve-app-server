@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.com/taller2fiuba/chotuve-app-server.svg?branch=master)](https://travis-ci.com/taller2fiuba/chotuve-app-server)
-[![Coverage Status](https://coveralls.io/repos/github/taller2fiuba/chotuve-app-server/badge.svg?branch=poner_linter_y_coveralls)](https://coveralls.io/github/taller2fiuba/chotuve-app-server?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/taller2fiuba/chotuve-app-server/badge.svg?branch=master)](https://coveralls.io/github/taller2fiuba/chotuve-app-server?branch=master)
 
 # Chotuve App Server
 
