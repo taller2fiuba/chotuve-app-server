@@ -15,4 +15,5 @@ def blow(envvar):
 class Config:
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or blow('DATABASE_URL')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    CHOTUVE_MEDIA_SERVER_URL = os.environ.get('CHOTUVE_MEDIA_SERVER_URL') or "http://localhost:27080"
+    CHOTUVE_MEDIA_URL = os.environ.get('CHOTUVE_MEDIA_URL') or "http://localhost:27080"
+    CHOTUVE_AUTH_URL = os.environ.get('CHOTUVE_AUTH_URL') or "http://localhost:26080"

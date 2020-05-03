@@ -3,7 +3,7 @@ from flask import request
 import requests
 from config import Config
 
-CHOTUVE_MEDIA_SERVER_URL = Config.CHOTUVE_MEDIA_SERVER_URL
+CHOTUVE_MEDIA_URL = Config.CHOTUVE_MEDIA_URL
 
 class Video(Resource):
     def post(self):
@@ -12,6 +12,6 @@ class Video(Resource):
         titulo = body['titulo']
 
         response = requests.post(
-            CHOTUVE_MEDIA_SERVER_URL + "/video", json={"url": url, "titulo": titulo})
+            CHOTUVE_MEDIA_URL + "/video", json={"url": url, "titulo": titulo})
 
         return response.json(), response.status_code
