@@ -12,9 +12,11 @@ services:
             FLASK_APP: "app"
             FLASK_ENV: "development"
             FLASK_RUN_PORT: 28080
+            CHOTUVE_MEDIA_URL: ${CHOTUVE_MEDIA_URL:-}
+            CHOTUVE_AUTH_URL: ${CHOTUVE_AUTH_URL:-}
 
             DATABASE_URL: "postgres://chotuve_app:chotuve_app@localhost:28032/chotuve_app"
-           
+
             # Avoid Python cache in src directory
             # [Python <3.8] PYTHONDONTWRITEBYTECODE: 1
             PYTHONPYCACHEPREFIX: "/tmp/app"
@@ -32,7 +34,7 @@ services:
             TRAVIS_PULL_REQUEST_SHA: ${TRAVIS_PULL_REQUEST_SHA:-}
             TRAVIS_REPO_SLUG: ${TRAVIS_REPO_SLUG:-}
             TRAVIS_TAG: ${TRAVIS_TAG:-}
-            
+
         working_dir: /var/www/app
         command: bash /var/www/app/bin/chotuve_dev/start.sh
         network_mode: host
@@ -45,7 +47,7 @@ services:
         volumes:
             - chotuve_app_db_data:/var/lib/postgresql/data
         ports:
-            - 28032:5432 
+            - 28032:5432
 volumes:
     chotuve_app_db_data:
     chotuve_app_cache:

@@ -7,7 +7,7 @@ services:
             STATIC_URL: "/static"
             STATIC_PATH: "/var/www/app/app/static"
             DATABASE_URL: "postgres://chotuve_app:chotuve_app@chotuve_app_db/chotuve_app"
-            PORT: 28080 
+            PORT: 28080
             CHOTUVE_AUTH_URL: ${CHOTUVE_AUTH_URL:-http://chotuve_auth:26080}
             CHOTUVE_MEDIA_URL: ${CHOTUVE_MEDIA_URL:-http://chotuve_media:27080}
         ports:
