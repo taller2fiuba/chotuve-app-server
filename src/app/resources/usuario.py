@@ -1,9 +1,6 @@
 from flask_restful import Resource
 from flask import request
-import requests
-from config import Config
-
-CHOTUVE_AUTH_URL = Config.CHOTUVE_AUTH_URL
+import auth_server_api
 
 class Usuario(Resource):
     def post(self):
@@ -11,7 +8,6 @@ class Usuario(Resource):
         mail = body['mail']
         contra = body['contraseña']
 
-        response = requests.post(
-            CHOTUVE_AUTH_URL + "/usuario", json={"mail": mail, "contraseña": contra})
+        response = auth_server_api.registro_nuevo_usuario(mail, contra)
 
         return response.json(), response.status_code
