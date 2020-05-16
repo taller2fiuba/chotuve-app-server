@@ -1,8 +1,7 @@
 import requests
-from config import Config
+from app import app
 
-CHOTUVE_AUTH_URL = Config.CHOTUVE_AUTH_URL
-
+CHOTUVE_AUTH_URL = app.config.get('CHOTUVE_AUTH_URL')
 
 def post_to_auth_server(ruta, datos):
     response = requests.post(
