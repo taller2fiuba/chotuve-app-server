@@ -1,7 +1,7 @@
 import unittest
 import mock
 
-from app import app, db
+from app import app
 from config import Config
 
 
@@ -16,9 +16,7 @@ class BaseDeDatosTestCase(unittest.TestCase):
         mock_post.return_value.status_code = 200
         response = self.app.delete('/base_de_datos')
         self.assertEqual(response.status_code, 200)
-        meta = db.metadata
-        for tabla in reversed(meta.sorted_tables):
-            self.assertEqual(tabla.count(), 0)
+        # TODO cuando haya alguna tabla verificar que esta vacia
 
     @mock.patch('auth_server_api.requests.delete')
     def test_delete_base_de_datos_de_auth_server_fallido(self, mock_post):
