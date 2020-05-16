@@ -17,3 +17,4 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     CHOTUVE_MEDIA_URL = os.environ.get('CHOTUVE_MEDIA_URL') or "http://localhost:27080"
     CHOTUVE_AUTH_URL = os.environ.get('CHOTUVE_AUTH_URL') or "http://localhost:26080"
+    FLASK_ENV = os.environ.get('FLASK_ENV') or 'development'
