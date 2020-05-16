@@ -9,18 +9,14 @@ def post_to_auth_server(ruta, datos):
         CHOTUVE_AUTH_URL + ruta, json=datos)
     return response
 
-def iniciar_sesion(mail, contra):
-    datos = {"mail": mail, "contraseña": contra}
+def iniciar_sesion(email, password):
+    datos = {"email": email, "password": password}
     ruta = "/usuario/sesion"
 
-    response = post_to_auth_server(ruta, datos)
+    return post_to_auth_server(ruta, datos)
 
-    return response
-
-def registro_nuevo_usuario(mail, contra):
-    datos = {"mail": mail, "contraseña": contra}
+def registro_nuevo_usuario(email, password):
+    datos = {"email": email, "password": password}
     ruta = "/usuario"
 
-    response = post_to_auth_server(ruta, datos)
-
-    return response
+    return post_to_auth_server(ruta, datos)

@@ -4,10 +4,10 @@ import auth_server_api
 
 class Usuario(Resource):
     def post(self):
-        body = request.get_json(force=True)
-        mail = body['mail']
-        contra = body['contraseña']
+        post_data = request.get_json()
+        email = post_data['email']
+        password = post_data['password']
 
-        response = auth_server_api.registro_nuevo_usuario(mail, contra)
+        response = auth_server_api.registro_nuevo_usuario(email, password)
 
         return response.json(), response.status_code

@@ -4,10 +4,10 @@ import auth_server_api
 
 class Sesion(Resource):
     def post(self):
-        body = request.get_json(force=True)
-        mail = body['mail']
-        contra = body['contraseña']
+        post_data = request.get_json()
+        email = post_data['email']
+        password = post_data['password']
 
-        response = auth_server_api.iniciar_sesion(mail, contra)
+        response = auth_server_api.iniciar_sesion(email, password)
 
         return response.json(), response.status_code
