@@ -20,3 +20,6 @@ def registro_nuevo_usuario(email, password):
     ruta = "/usuario"
 
     return post_to_auth_server(ruta, datos)
+
+def limpiar_base_de_datos():
+    return requests.delete(f'{CHOTUVE_AUTH_URL}/base_de_datos')
