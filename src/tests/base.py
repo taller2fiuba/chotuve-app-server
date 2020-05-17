@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import MagicMock
-from flask import g
 
 from app import app, db, login_requerido_decorator
+from app.repositorios import usuario_actual_repositorio
 from config import Config
 
 class BaseTestCase(unittest.TestCase):
@@ -28,5 +28,5 @@ class MockResponse:
 class LoginMockTestCase(BaseTestCase):
     def setUp(self):
         super().setUp()
-        g.usuario_actual = 1
+        usuario_actual_repositorio.get_usuario_actual = MagicMock(return_value=1)
         login_requerido_decorator.auth_server_api.autentificar = MagicMock(return_value=MockResponse(200, {'usuario_id': 1}))

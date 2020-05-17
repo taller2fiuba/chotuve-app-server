@@ -32,11 +32,12 @@ class UsuarioLoginMockTestCase(LoginMockTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual({'email': 'test@test'}, response.json)
 
-    @mock.patch('auth_server_api.requests.get')
-    def test_get_usuario_sin_id_es_el_actual(self, mock_get):
-        mock_get.return_value.json = lambda: {'email': 'test@test'}
-        mock_get.return_value.status_code = 200
+    @mock.patch('auth_server_api.get_usuario')
+    def test_get_usuario_sin_id_es_el_actual(self, mock_get_usuario):
+        mock_get_usuario.return_value.json = lambda: {'email': 'test@test'}
+        mock_get_usuario.return_value.status_code = 200
         response = self.app.get('/usuario')
+        mock_get_usuario.assert_called_with(1)
         self.assertEqual(response.status_code, 200)
         self.assertEqual({'email': 'test@test'}, response.json)
 
