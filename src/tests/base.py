@@ -1,5 +1,6 @@
 import unittest
 from unittest.mock import MagicMock
+from flask import g
 
 from app import app, db, login_requerido_decorator
 from config import Config
@@ -27,4 +28,5 @@ class MockResponse:
 class LoginMockTestCase(BaseTestCase):
     def setUp(self):
         super().setUp()
+        g.usuario_actual = 1
         login_requerido_decorator.auth_server_api.autentificar = MagicMock(return_value=MockResponse(200, {'usuario_id': 1}))
