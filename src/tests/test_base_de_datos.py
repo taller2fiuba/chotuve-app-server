@@ -1,16 +1,9 @@
 import unittest
 import mock
 
-from app import app
-from config import Config
+from tests.base import BaseTestCase
 
-
-class BaseDeDatosTestCase(unittest.TestCase):
-    def setUp(self):
-        self.app = app.test_client()
-        self.app.testing = True
-        app.config.from_object(Config)
-
+class BaseDeDatosTestCase(BaseTestCase):
     @mock.patch('auth_server_api.requests.delete')
     def test_delete_base_de_datos_exitoso(self, mock_post):
         mock_post.return_value.status_code = 200

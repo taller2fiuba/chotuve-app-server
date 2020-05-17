@@ -22,3 +22,9 @@ def registro_nuevo_usuario(email, password):
 
 def limpiar_base_de_datos():
     return requests.delete(f'{CHOTUVE_AUTH_URL}/base_de_datos')
+
+def autentificar(headers):
+    return requests.get(f'{CHOTUVE_AUTH_URL}/usuario/sesion', headers=headers)
+
+def get_usuario(usuario_id):
+    return requests.get(f'{CHOTUVE_AUTH_URL}/usuario/{usuario_id}')
