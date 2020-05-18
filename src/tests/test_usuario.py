@@ -15,12 +15,13 @@ class UsuarioTestCase(BaseTestCase):
 
     @mock.patch('auth_server_api.requests.post')
     def test_post_signup_fallido(self, mock_post):
-        mock_post.return_value.json = lambda: {'Mensaje de error': 'Mail en uso'}
+        error = {'errores': {'email': 'El mail ya se encuentra registrado'}}
+        mock_post.return_value.json = lambda: error
         mock_post.return_value.status_code = 400
         response = self.app.post('/usuario', json={
             'email': 'value', 'password': 'data'})
         self.assertEqual(response.status_code, 400)
-        self.assertEqual({'Mensaje de error': 'Mail en uso'}, response.json)
+        self.assertEqual(response.json, error)
 
 class UsuarioLoginMockTestCase(LoginMockTestCase):
 

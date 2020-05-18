@@ -15,12 +15,12 @@ class SesionTestCase(BaseTestCase):
 
     @mock.patch('auth_server_api.requests.post')
     def test_post_login_fallido(self, mock_post):
-        mock_post.return_value.json = lambda: {'Mensaje de error': 'Mail o contraseña invalidos'}
+        mock_post.return_value.json = lambda: {'mensaje': 'Email o constraseña invalidos'}
         mock_post.return_value.status_code = 400
         response = self.app.post('/usuario', json={
             'email': 'value', 'password': 'data'})
         self.assertEqual(response.status_code, 400)
-        self.assertEqual({'Mensaje de error': 'Mail o contraseña invalidos'}, response.json)
+        self.assertEqual({'mensaje': 'Email o constraseña invalidos'}, response.json)
 
 if __name__ == '__main__':
     unittest.main()
