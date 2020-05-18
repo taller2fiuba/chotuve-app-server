@@ -14,14 +14,10 @@ class UsuarioResource(Resource):
         return response.json(), response.status_code
 
     @login_requerido
-    def get(self):
-        response = auth_server_api.get_usuario(g.usuario_actual)
+    def get(self, usuario_id=None):
+        if not usuario_id:
+            usuario_id = g.usuario_actual
 
-        return response.json(), response.status_code
-
-class UsuarioConIdResource(Resource):
-    @login_requerido
-    def get(self, usuario_id):
         response = auth_server_api.get_usuario(usuario_id)
 
         return response.json(), response.status_code

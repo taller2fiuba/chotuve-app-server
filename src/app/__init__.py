@@ -11,11 +11,11 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 API = Api(app)
 
-from .resources import Ping, Video, Sesion, UsuarioResource, UsuarioConIdResource, BaseDeDatosResource
+from .resources import Ping, Video, Sesion, UsuarioResource, BaseDeDatosResource
 API.add_resource(Ping, '/ping')
 API.add_resource(Video, '/video')
-API.add_resource(UsuarioResource, '/usuario')
-API.add_resource(UsuarioConIdResource, '/usuario/<int:usuario_id>')
+API.add_resource(UsuarioResource, '/usuario', '/usuario/')
+API.add_resource(UsuarioResource, '/usuario/<int:usuario_id>', methods=["GET"], endpoint='UsuarioConIdResource')
 API.add_resource(Sesion, '/usuario/sesion')
 API.add_resource(BaseDeDatosResource, '/base_de_datos')
 
