@@ -1,12 +1,12 @@
 # Documento de API temporal, a migrar a OPEN API SPEC
 
-## ping
+## ping: ver el estado del server
 Ruta: GET /ping
 
 Respuesta: 200
 
 ## usuario
-### Get
+### Get: obtener email de usuario_id o el actual si no se ingresa id
 Ruta: GET /usuario/<usuario_id>(opcional)
 
 Repuestas:
@@ -14,7 +14,7 @@ Repuestas:
 - En caso de exito: CODE 200 BODY {email: email}
 - Si no existe usuario con ese id: CODE 404
 
-### Post
+### Post: registrar un nuevo usuario
 Ruta: POST /usuario BODY email, password
 
 Repuestas:
@@ -24,7 +24,7 @@ Repuestas:
 
 ## sesion
 
-### Post
+### Post: iniciar sesion
 Ruta: POST /usuario/sesion BODY email, password
 
 Repuestas:
@@ -34,7 +34,7 @@ Repuestas:
 
 ## video
 
-### Post
+### Post: subir un video
 Ruta: POST /video BODY url, titulo
 
 Repuestas:
