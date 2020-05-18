@@ -27,4 +27,4 @@ def autentificar(headers):
     return requests.get(f'{CHOTUVE_AUTH_URL}/usuario/sesion', headers=headers)
 
 def get_usuario(usuario_id):
-    return requests.get(f'{CHOTUVE_AUTH_URL}/usuario/{usuario_id}')
+    return requests.get(f'{CHOTUVE_AUTH_URL}/usuario/{int(usuario_id)}')
