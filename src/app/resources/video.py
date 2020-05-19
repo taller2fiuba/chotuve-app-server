@@ -1,9 +1,9 @@
 from flask_restful import Resource
 from flask import request
 import requests
-from config import Config
+from app import app
 
-CHOTUVE_MEDIA_URL = Config.CHOTUVE_MEDIA_URL
+CHOTUVE_MEDIA_URL = app.config.get('CHOTUVE_MEDIA_URL')
 
 class Video(Resource):
     def post(self):
