@@ -1,9 +1,9 @@
 import unittest
 import mock
 
-from tests.base import BaseTestCase
+from tests.base import LoginMockTestCase
 
-class VideoTestCase(BaseTestCase):
+class VideoTestCase(LoginMockTestCase):
     @mock.patch('app.resources.video.requests.post')
     def test_post_agregar_video(self, mock_post):
         mock_post.return_value.json = lambda: {}
