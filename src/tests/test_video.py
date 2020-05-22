@@ -4,7 +4,7 @@ import mock
 from tests.base import LoginMockTestCase
 
 class VideoTestCase(LoginMockTestCase):
-    @mock.patch('app.resources.video.requests.post')
+    @mock.patch('media_server_api.requests.post')
     def test_post_agregar_video(self, mock_post):
         mock_post.return_value.json = lambda: {}
         mock_post.return_value.status_code = 200
