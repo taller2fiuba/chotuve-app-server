@@ -14,7 +14,7 @@ class Video(Resource):
         titulo = post_data.get('titulo', '')
         descripcion = post_data.get('descripcion', '')
         ubicacion = post_data.get('ubicacion', '')
-        visibilidad = post_data.get('visibilidad', '')
+        visibilidad = post_data.get('visibilidad', 'publico')
         usuario_id = g.usuario_actual
 
         datos = {
