@@ -8,8 +8,7 @@ def post_to_media_server(ruta, datos):
         CHOTUVE_MEDIA_URL + ruta, json=datos)
     return response
 
-def subir_video(url, titulo, usuario_id):
-    datos = {"url": url, "titulo": titulo, "usuario_id": usuario_id}
+def subir_video(datos):
     ruta = "/video"
 
     return post_to_media_server(ruta, datos)

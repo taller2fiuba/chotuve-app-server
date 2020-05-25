@@ -11,7 +11,13 @@ class VideoTestCase(LoginMockTestCase):
     def test_post_agregar_video(self, mock_post):
         mock_post.return_value.json = lambda: {}
         mock_post.return_value.status_code = 200
-        body = {'url': 'value', 'titulo': 'data'}
+        body = {
+            'url': 'value',
+            'titulo': 'data',
+            'descripcion': 'descripcion',
+            'ubicacion': 'mi casa',
+            'visibilidad': 'publico'
+        }
 
         response = self.app.post('/video', json=body)
 
