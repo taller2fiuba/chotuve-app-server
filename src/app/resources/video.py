@@ -16,6 +16,17 @@ class Video(Resource):
 
         return response.json(), response.status_code
 
+    @login_requerido
+    def get(self):
+        offset = int(request.args.get('offset', 0))
+        cantidad = int(request.args.get('cantidad', 10))
+
+        params = {'offset': offset, 'cantidad': cantidad}
+
+        response = media_server_api.get_videos(params)
+
+        return response.json(), response.status_code
+
     def _obtener_datos(self, post_data):
         return {
             'url': post_data.get('url', None),
@@ -25,4 +36,4 @@ class Video(Resource):
             'duracion': post_data.get('duracion', 0),
             'usuario_id': g.usuario_actual,
             'visibilidad': post_data.get('visibilidad', 'publico'),
-        }
+        }    

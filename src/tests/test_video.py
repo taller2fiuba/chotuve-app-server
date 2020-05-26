@@ -47,5 +47,29 @@ class VideoTestCase(LoginMockTestCase):
         self.assertEqual(response.status_code, 201)
         self.assertEqual({}, response.json)
 
+    @mock.patch('media_server_api.get_videos')
+    def test_get_videos_sin_parametros_se_envia_con_parametros_por_defecto(self, mock_get_videos):
+        mock_get_videos.return_value.json = lambda: {'data':[]}
+        mock_get_videos.return_value.status_code = 200
+
+        response = self.app.get('/video')
+        
+        params = {'offset': 0, 'cantidad': 10}
+        mock_get_videos.assert_called_with(params)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual({'data':[]}, response.json)
+
+    @mock.patch('media_server_api.requests.get')
+    def test_get_videos_con_parametros(self, mock_get):
+        mock_get.return_value.json = lambda: {'data':[]}
+        mock_get.return_value.status_code = 200
+
+        response = self.app.get('/video?offset=10&cantidad=5')
+
+        params = {'offset': 10, 'cantidad': 5}
+        mock_get.assert_called_with(f'{CHOTUVE_MEDIA_URL}/video', params=params)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual({'data':[]}, response.json)
+
 if __name__ == '__main__':
     unittest.main()
