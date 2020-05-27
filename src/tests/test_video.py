@@ -16,7 +16,8 @@ class VideoTestCase(LoginMockTestCase):
             'titulo': 'data',
             'descripcion': 'descripcion',
             'ubicacion': 'mi casa',
-            'visibilidad': 'publico'
+            'duracion': 0,
+            'visibilidad': 'publico',
         }
 
         response = self.app.post('/video', json=body)
@@ -35,6 +36,7 @@ class VideoTestCase(LoginMockTestCase):
             'titulo': 'data',
             'descripcion': 'descripcion',
             'ubicacion': 'mi casa',
+            'duracion': 0,
         }
 
         response = self.app.post('/video', json=body)
