@@ -10,24 +10,19 @@ class Video(Resource):
     @login_requerido
     def post(self):
         post_data = request.get_json(force=True)
-        url = post_data.get('url', '')
-        titulo = post_data.get('titulo', '')
-        descripcion = post_data.get('descripcion', '')
-        ubicacion = post_data.get('ubicacion', '')
-        visibilidad = post_data.get('visibilidad', 'publico')
-        duracion = post_data.get('duracion', 0)
-        usuario_id = g.usuario_actual
-
-        datos = {
-            'url': url,
-            'titulo': titulo,
-            'descripcion': descripcion,
-            'ubicacion': ubicacion,
-            'duracion': duracion,
-            'visibilidad': visibilidad,
-            'usuario_id': usuario_id,
-        }
+        datos = self._obtener_datos(post_data)
 
         response = media_server_api.subir_video(datos)
 
         return response.json(), response.status_code
+
+    def _obtener_datos(self, post_data):
+        return {
+            'url': post_data.get('url', None),
+            'titulo': post_data.get('titulo', None),
+            'descripcion': post_data.get('descripcion', None),
+            'ubicacion': post_data.get('ubicacion', None),
+            'duracion': post_data.get('duracion', 0),
+            'usuario_id': g.usuario_actual,
+            'visibilidad': post_data.get('visibilidad', 'publico'),
+        }

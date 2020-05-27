@@ -36,13 +36,13 @@ class VideoTestCase(LoginMockTestCase):
             'titulo': 'data',
             'descripcion': 'descripcion',
             'ubicacion': 'mi casa',
-            'duracion': 0,
+            'duracion': 60,
         }
 
         response = self.app.post('/video', json=body)
 
         body['usuario_id'] = 1 # agregar usuario por defecto
-        body['visibilidad'] = 'publico'
+        body['visibilidad'] = 'publico' # agrega visibilidad por defecto
         mock_post.assert_called_with(f'{CHOTUVE_MEDIA_URL}/video', json=body)
         self.assertEqual(response.status_code, 201)
         self.assertEqual({}, response.json)
