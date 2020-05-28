@@ -36,4 +36,4 @@ class Video(Resource):
             'duracion': post_data.get('duracion', 0),
             'usuario_id': g.usuario_actual,
             'visibilidad': post_data.get('visibilidad', 'publico'),
-        }    
+        }

@@ -53,7 +53,7 @@ class VideoTestCase(LoginMockTestCase):
         mock_get_videos.return_value.status_code = 200
 
         response = self.app.get('/video')
-        
+
         params = {'offset': 0, 'cantidad': 10}
         mock_get_videos.assert_called_with(params)
         self.assertEqual(response.status_code, 200)
