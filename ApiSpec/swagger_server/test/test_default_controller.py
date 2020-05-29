@@ -44,9 +44,11 @@ class TestDefaultController(BaseTestCase):
 
         Devuelve el email del usuario correspondiente
         """
+        headers = [('Authorization', 'Authorization_example')]
         response = self.client.open(
             '/matiaseiglesias/AppServer/1.0.0/usuario'.format(usuario_id='usuario_id_example'),
-            method='GET')
+            method='GET',
+            headers=headers)
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
@@ -84,11 +86,13 @@ class TestDefaultController(BaseTestCase):
         Sube un video
         """
         video = Video()
+        headers = [('Authorization', 'Authorization_example')]
         response = self.client.open(
             '/matiaseiglesias/AppServer/1.0.0/video',
             method='POST',
             data=json.dumps(video),
-            content_type='application/json')
+            content_type='application/json',
+            headers=headers)
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 

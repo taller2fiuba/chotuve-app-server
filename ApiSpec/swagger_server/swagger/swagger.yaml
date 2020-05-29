@@ -39,6 +39,11 @@ paths:
       produces:
       - "application/json"
       parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Token pasado como header"
+        required: true
+        type: "string"
       - name: "usuario_id"
         in: "path"
         description: "Id del usuario"
@@ -80,6 +85,11 @@ paths:
       produces:
       - "application/json"
       parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Token pasado como header"
+        required: true
+        type: "string"
       - in: "body"
         name: "video"
         required: false
@@ -107,11 +117,11 @@ paths:
           $ref: "#/definitions/Usuario"
       responses:
         "200":
-          description: "sdads"
+          description: "Inicio de sesion exitosa"
           schema:
             $ref: "#/definitions/Token"
         "400":
-          description: "dasda"
+          description: "Mail o contraseña incorrectos"
           schema:
             $ref: "#/definitions/MensajeCampoInvalido"
       x-swagger-router-controller: "swagger_server.controllers.default_controller"
@@ -165,12 +175,27 @@ definitions:
   Video:
     type: "object"
     required:
+    - "descripcion"
+    - "duracion"
     - "titulo"
+    - "ubicacion"
     - "url"
+    - "usuario_id"
+    - "visibilidad"
     properties:
       url:
         type: "string"
       titulo:
+        type: "string"
+      descripcion:
+        type: "string"
+      ubicacion:
+        type: "string"
+      duracion:
+        type: "string"
+      usuario_id:
+        type: "string"
+      visibilidad:
         type: "string"
   MensajeCampoInvalido:
     type: "object"

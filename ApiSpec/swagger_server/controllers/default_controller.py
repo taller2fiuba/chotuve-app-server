@@ -32,11 +32,13 @@ def pin_get():  # noqa: E501
     return 'do some magic!'
 
 
-def usuario_get(usuario_id):  # noqa: E501
+def usuario_get(Authorization, usuario_id):  # noqa: E501
     """Devuelve el email del usuario correspondiente
 
     Dado el id de un usuario, se devuelve el email asociado al mismo # noqa: E501
 
+    :param Authorization: Token pasado como header
+    :type Authorization: str
     :param usuario_id: Id del usuario
     :type usuario_id: str
 
@@ -75,11 +77,13 @@ def usuario_sesion_post(usuario=None):  # noqa: E501
     return 'do some magic!'
 
 
-def video_post(video=None):  # noqa: E501
+def video_post(Authorization, video=None):  # noqa: E501
     """Sube un video
 
     Dada la ubicacion de un video, el mismo es subido al Media Server # noqa: E501
 
+    :param Authorization: Token pasado como header
+    :type Authorization: str
     :param video: 
     :type video: dict | bytes
 
