@@ -21,3 +21,15 @@ class UsuarioResource(Resource):
         response = auth_server_api.get_usuario(usuario_id)
 
         return response.json(), response.status_code
+
+    @login_requerido
+    def put(self):
+        post_data = request.get_json()
+        nombre = post_data['nombre']
+        apellido = post_data['apellido']
+        telefono = post_data['telefono']
+        direccion = post_data['direccion']
+
+        response = auth_server_api.actualizar_perfil_usuario(nombre, apellido, telefono, direccion)
+
+        return response.json(), response.status_code

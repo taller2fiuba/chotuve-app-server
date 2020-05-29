@@ -16,6 +16,7 @@ API.add_resource(Ping, '/ping')
 API.add_resource(Video, '/video')
 API.add_resource(UsuarioResource, '/usuario', '/usuario/')
 API.add_resource(UsuarioResource, '/usuario/<int:usuario_id>', methods=["GET"], endpoint='UsuarioConIdResource')
+API.add_resource(UsuarioResource, '/usuario/perfil', methods=["PUT"], endpoint='PerfilUsuario')
 API.add_resource(Sesion, '/usuario/sesion')
 API.add_resource(BaseDeDatosResource, '/base_de_datos')
 
