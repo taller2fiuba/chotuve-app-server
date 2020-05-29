@@ -22,3 +22,6 @@ def get_videos(params):
     ruta = "/video"
 
     return get_to_media_server(ruta, params)
+
+def limpiar_base_de_datos():
+    return requests.delete(f'{CHOTUVE_MEDIA_URL}/base_de_datos')
