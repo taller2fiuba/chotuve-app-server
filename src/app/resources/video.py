@@ -20,12 +20,15 @@ class Video(Resource):
     def get(self):
         offset = int(request.args.get('offset', 0))
         cantidad = int(request.args.get('cantidad', 10))
-
         params = {'offset': offset, 'cantidad': cantidad}
 
         response = media_server_api.get_videos(params)
+        videos = response.json()
 
-        return response.json(), response.status_code
+        for i, video in enumerate(videos):
+            videos[i] = self._armar_video(video)
+
+        return videos, response.status_code
 
     def _obtener_datos(self, post_data):
         return {
@@ -36,4 +39,15 @@ class Video(Resource):
             'duracion': post_data.get('duracion', 0),
             'usuario_id': g.usuario_actual,
             'visibilidad': post_data.get('visibilidad', 'publico'),
+        }
+
+    def _armar_video(self, video):
+        return {
+            'id': video['_id'],
+            'url': video['url'],
+            'titulo': video['titulo'],
+            'duracion': video['duracion'],
+            'creacion': video['time_stamp'],
+            'visibilidad': video['visibilidad'],
+            'author': {'usuario_id': video['usuario_id']} # llamar al auth_server
         }
