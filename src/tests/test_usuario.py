@@ -42,5 +42,51 @@ class UsuarioLoginMockTestCase(LoginMockTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual({'email': 'test@test'}, response.json)
 
+class UsuarioActualizarPerfilMockTestCase(LoginMockTestCase):
+
+    @mock.patch('auth_server_api.requests.put')
+    def test_actualizar_perfil_exitosamente(self, mock_put):
+        mock_put.return_value.json = lambda: {}
+        mock_put.return_value.status_code = 200
+
+        nuevo_nombre = "Lucas"
+        nuevo_apellido = "Perez"
+        nueva_direccion = "La Pampa 1111"
+        nuevo_telefono = "1530449926"
+        response = self.app.put('/usuario/perfil', json={
+            'nombre': nuevo_nombre,
+            'apellido': nuevo_apellido,
+            'telefono': nuevo_telefono,
+            'direccion': nueva_direccion})
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual({}, response.json)
+
+    @mock.patch('auth_server_api.requests.put')
+    def test_actualizar_perfil_sin_campos_falla(self, mock_put):
+        mock_put.return_value.json = lambda: {}
+        mock_put.return_value.status_code = 400
+
+        response = self.app.put('/usuario/perfil')
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual({}, response.json)
+
+    @mock.patch('auth_server_api.requests.put')
+    def test_actualizar_perfil_sin_un_campos_falla(self, mock_put):
+        mock_put.return_value.json = lambda: {}
+        mock_put.return_value.status_code = 400
+
+        nuevo_nombre = "Lucas"
+        nuevo_apellido = "Perez"
+        nueva_direccion = "La Pampa 1111"
+
+        response = self.app.put('/usuario/perfil', json={
+            'nombre': nuevo_nombre,
+            'apellido': nuevo_apellido,
+            'direccion': nueva_direccion})
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual({}, response.json)
 if __name__ == '__main__':
     unittest.main()
