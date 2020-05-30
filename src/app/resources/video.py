@@ -60,6 +60,7 @@ class Video(Resource):
             'autor': {
                 'usuario_id': usuario['id'],
                 'nombre': usuario['nombre'],
-                'apellido': usuario['apellido']
+                'apellido': usuario['apellido'],
+                'email': usuario['email']
                 }
         }
