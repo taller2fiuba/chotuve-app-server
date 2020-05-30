@@ -47,27 +47,37 @@ class VideoTestCase(LoginMockTestCase):
         self.assertEqual(response.status_code, 201)
         self.assertEqual({}, response.json)
 
+    @mock.patch('auth_server_api.get_usuarios')
     @mock.patch('media_server_api.get_videos')
-    def test_get_videos_sin_parametros_se_envia_con_parametros_por_defecto(self, mock_get_videos):
+    def test_get_videos_sin_parametros_se_envia_con_parametros_por_defecto(self,
+                                                                           mock_get_videos,
+                                                                           mock_get_usuarios):
         mock_get_videos.return_value.json = lambda: []
         mock_get_videos.return_value.status_code = 200
+        mock_get_usuarios.return_value.json = lambda: []
+        mock_get_usuarios.return_value.status_code = 200
 
         response = self.app.get('/video')
 
-        params = {'offset': 0, 'cantidad': 10}
-        mock_get_videos.assert_called_with(params)
+        mock_get_videos.assert_called_with({'offset': 0, 'cantidad': 10})
+        mock_get_usuarios.assert_called_with({'ids':'', 'offset': 0, 'cantidad': 10})
         self.assertEqual(response.status_code, 200)
         self.assertEqual([], response.json)
 
+    @mock.patch('auth_server_api.get_usuarios')
     @mock.patch('media_server_api.get_videos')
-    def test_get_videos_con_parametros(self, mock_get_videos):
+    def test_get_videos_con_parametros(self, mock_get_videos, mock_get_usuarios):
         mock_get_videos.return_value.json = lambda: []
         mock_get_videos.return_value.status_code = 200
+        mock_get_usuarios.return_value.json = lambda: []
+        mock_get_usuarios.return_value.status_code = 200
+        offset = 10
+        cantidad = 5
 
-        response = self.app.get('/video?offset=10&cantidad=5')
+        response = self.app.get(f'/video?offset={offset}&cantidad={cantidad}')
 
-        params = {'offset': 10, 'cantidad': 5}
-        mock_get_videos.assert_called_with(params)
+        mock_get_videos.assert_called_with({'offset': offset, 'cantidad': cantidad})
+        mock_get_usuarios.assert_called_with({'ids':'', 'offset': offset, 'cantidad': cantidad})
         self.assertEqual(response.status_code, 200)
         self.assertEqual([], response.json)
 
