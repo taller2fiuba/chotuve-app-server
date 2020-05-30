@@ -3,6 +3,7 @@ from flask import request, g
 from app import app
 from app.login_requerido_decorator import login_requerido
 import media_server_api
+import auth_server_api
 
 CHOTUVE_MEDIA_URL = app.config.get('CHOTUVE_MEDIA_URL')
 
@@ -25,8 +26,15 @@ class Video(Resource):
         response = media_server_api.get_videos(params)
         videos = response.json()
 
+        ids = ','.join([str(video['usuario_id']) for video in videos])
+        params = {'ids': ids, 'offset': offset, 'cantidad': cantidad}
+        response = auth_server_api.get_usuarios(params)
+        usuarios = response.json()
+
         for i, video in enumerate(videos):
-            videos[i] = self._armar_video(video)
+            # TODO ver si se puede mejorar
+            usuario = [usuario for usuario in usuarios if usuario['id'] == video['usuario_id']][0]
+            videos[i] = self._armar_video(video, usuario)
 
         return videos, response.status_code
 
@@ -41,7 +49,7 @@ class Video(Resource):
             'visibilidad': post_data.get('visibilidad', 'publico'),
         }
 
-    def _armar_video(self, video):
+    def _armar_video(self, video, usuario):
         return {
             'id': video['_id'],
             'url': video['url'],
@@ -49,5 +57,9 @@ class Video(Resource):
             'duracion': video['duracion'],
             'creacion': video['time_stamp'],
             'visibilidad': video['visibilidad'],
-            'author': {'usuario_id': video['usuario_id']} # llamar al auth_server
+            'autor': {
+                'usuario_id': usuario['id'],
+                'nombre': usuario['nombre'],
+                'apellido': usuario['apellido']
+                }
         }

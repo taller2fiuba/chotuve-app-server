@@ -59,15 +59,15 @@ class VideoTestCase(LoginMockTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual([], response.json)
 
-    @mock.patch('media_server_api.requests.get')
-    def test_get_videos_con_parametros(self, mock_get):
-        mock_get.return_value.json = lambda: []
-        mock_get.return_value.status_code = 200
+    @mock.patch('media_server_api.get_videos')
+    def test_get_videos_con_parametros(self, mock_get_videos):
+        mock_get_videos.return_value.json = lambda: []
+        mock_get_videos.return_value.status_code = 200
 
         response = self.app.get('/video?offset=10&cantidad=5')
 
         params = {'offset': 10, 'cantidad': 5}
-        mock_get.assert_called_with(f'{CHOTUVE_MEDIA_URL}/video', params=params)
+        mock_get_videos.assert_called_with(params)
         self.assertEqual(response.status_code, 200)
         self.assertEqual([], response.json)
 
