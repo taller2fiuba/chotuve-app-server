@@ -22,21 +22,23 @@ class Video(Resource):
         offset = int(request.args.get('offset', 0))
         cantidad = int(request.args.get('cantidad', 10))
         params = {'offset': offset, 'cantidad': cantidad}
-
         response = media_server_api.get_videos(params)
-        videos = response.json()
+        if response.status_code == 400:
+            return response.json(), response.status_code
+
         # remover los videos del usuario actual
+        videos = response.json()
         videos = list(filter(lambda video: (video['usuario_id'] != g.usuario_actual), videos))
 
-        ids = ','.join([str(video['usuario_id']) for video in videos])
-        params = {'ids': ids, 'offset': offset, 'cantidad': cantidad}
-        response = auth_server_api.get_usuarios(params)
-        usuarios = response.json()
+        response = self._obtener_autores(videos, offset, cantidad)
+        if response.status_code == 400:
+            return response.json(), response.status_code
 
+        autores = response.json()
         for i, video in enumerate(videos):
-            # TODO ver si se puede mejorar obtener el autor del video de la lista de usuarios
-            usuario = [usuario for usuario in usuarios if usuario['id'] == video['usuario_id']][0]
-            videos[i] = self._armar_video(video, usuario)
+            # TODO ver si se puede mejorar: obtener el autor del video de la lista de autores
+            autor = [autor for autor in autores if autor['id'] == video['usuario_id']][0]
+            videos[i] = self._armar_video(video, autor)
 
         return videos, response.status_code
 
@@ -51,7 +53,7 @@ class Video(Resource):
             'visibilidad': post_data.get('visibilidad', 'publico'),
         }
 
-    def _armar_video(self, video, usuario):
+    def _armar_video(self, video, autor):
         return {
             'id': video['_id'],
             'url': video['url'],
@@ -60,9 +62,15 @@ class Video(Resource):
             'creacion': video['time_stamp'],
             'visibilidad': video['visibilidad'],
             'autor': {
-                'usuario_id': usuario['id'],
-                'nombre': usuario['nombre'],
-                'apellido': usuario['apellido'],
-                'email': usuario['email']
+                'usuario_id': autor['id'],
+                'nombre': autor['nombre'],
+                'apellido': autor['apellido'],
+                'email': autor['email']
                 }
         }
+
+    def _obtener_autores(self, videos, offset, cantidad):
+        ids = ','.join([str(video['usuario_id']) for video in videos])
+        params = {'ids': ids, 'offset': offset, 'cantidad': cantidad}
+
+        return auth_server_api.get_usuarios(params)
