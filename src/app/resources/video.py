@@ -23,7 +23,7 @@ class Video(Resource):
         cantidad = int(request.args.get('cantidad', 10))
         params = {'offset': offset, 'cantidad': cantidad}
         response = media_server_api.get_videos(params)
-        if response.status_code == 400:
+        if response.status_code != 200:
             return response.json(), response.status_code
 
         # remover los videos del usuario actual
@@ -31,7 +31,7 @@ class Video(Resource):
         videos = list(filter(lambda video: (video['usuario_id'] != g.usuario_actual), videos))
 
         response = self._obtener_autores(videos, offset, cantidad)
-        if response.status_code == 400:
+        if response.status_code != 200:
             return response.json(), response.status_code
 
         autores = response.json()
