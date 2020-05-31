@@ -25,6 +25,8 @@ class Video(Resource):
 
         response = media_server_api.get_videos(params)
         videos = response.json()
+        # remover los videos del usuario actual
+        videos = list(filter(lambda video: (video['usuario_id'] != g.usuario_actual), videos))
 
         ids = ','.join([str(video['usuario_id']) for video in videos])
         params = {'ids': ids, 'offset': offset, 'cantidad': cantidad}
@@ -32,7 +34,7 @@ class Video(Resource):
         usuarios = response.json()
 
         for i, video in enumerate(videos):
-            # TODO ver si se puede mejorar
+            # TODO ver si se puede mejorar obtener el autor del video de la lista de usuarios
             usuario = [usuario for usuario in usuarios if usuario['id'] == video['usuario_id']][0]
             videos[i] = self._armar_video(video, usuario)
 
