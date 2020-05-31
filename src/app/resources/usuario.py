@@ -22,6 +22,14 @@ class UsuarioResource(Resource):
 
         return response.json(), response.status_code
 
+class PerfilUsuarioResource(Resource):
+
+    @login_requerido
+    def get(self):
+        response = auth_server_api.get_perfil(g.usuario_actual)
+
+        return response.json(), response.status_code
+
     @login_requerido
     def put(self):
         campos_requeridos = ('nombre', 'apellido', 'telefono', 'direccion')
@@ -36,5 +44,13 @@ class UsuarioResource(Resource):
         direccion = post_data['direccion']
 
         response = auth_server_api.actualizar_perfil_usuario(nombre, apellido, telefono, direccion)
+
+        return response.json(), response.status_code
+
+class PerfilOtroUsuarioResource(Resource):
+
+    @login_requerido
+    def get(self, usuario_id):
+        response = auth_server_api.get_perfil(usuario_id)
 
         return response.json(), response.status_code

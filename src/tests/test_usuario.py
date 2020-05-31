@@ -88,5 +88,52 @@ class UsuarioActualizarPerfilMockTestCase(LoginMockTestCase):
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual({}, response.json)
+
+class UsuarioConsultarPerfilMockTestCase(LoginMockTestCase):
+
+    @mock.patch('auth_server_api.requests.get')
+    def test_get_mi_perfil(self, mock_get):
+        mock_get.return_value.json = lambda: {
+            'email': "test@test",
+            'nombre': "Lucas",
+            'apellido': "Perez",
+            'telefono': "123456789",
+            'direccion': "Calle falsa 123"}
+        mock_get.return_value.status_code = 200
+        response = self.app.get('/usuario/perfil')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual({
+            'email': "test@test",
+            'nombre': "Lucas",
+            'apellido': "Perez",
+            'telefono': "123456789",
+            'direccion': "Calle falsa 123"}, response.json)
+
+    @mock.patch('auth_server_api.requests.get')
+    def test_get_otro_perfil(self, mock_get):
+        mock_get.return_value.json = lambda: {
+            'email': "test@test",
+            'nombre': "Lucas",
+            'apellido': "Perez",
+            'telefono': "123456789",
+            'direccion': "Calle falsa 123"}
+        mock_get.return_value.status_code = 200
+        response = self.app.get('/usuario/perfil/1')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual({
+            'email': "test@test",
+            'nombre': "Lucas",
+            'apellido': "Perez",
+            'telefono': "123456789",
+            'direccion': "Calle falsa 123"}, response.json)
+
+    @mock.patch('auth_server_api.requests.get')
+    def test_get_otro_perfil_identificador_inexistente(self, mock_get):
+        mock_get.return_value.json = lambda: {}
+        mock_get.return_value.status_code = 404
+        response = self.app.get('/usuario/perfil/10215')
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual({}, response.json)
+
 if __name__ == '__main__':
     unittest.main()

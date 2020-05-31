@@ -16,6 +16,11 @@ def put_to_auth_server(ruta, datos):
         CHOTUVE_AUTH_URL + ruta, json=datos)
     return response
 
+def get_to_auth_server(ruta, datos):
+    response = requests.get(
+        CHOTUVE_AUTH_URL + ruta, json=datos)
+    return response
+
 def iniciar_sesion(email, password):
     datos = {"email": email, "password": password}
     ruta = "/usuario/sesion"
@@ -42,3 +47,8 @@ def actualizar_perfil_usuario(nombre, apellido, telefono, direccion):
     ruta = "/usuario/"+str(g.usuario_actual)
 
     return put_to_auth_server(ruta, datos)
+
+def get_perfil(id_usuario):
+    ruta = "/usuario/perfil/"+str(id_usuario)
+
+    return get_to_auth_server(ruta, {})
