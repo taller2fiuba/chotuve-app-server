@@ -8,7 +8,7 @@ import auth_server_api
 CHOTUVE_MEDIA_URL = app.config.get('CHOTUVE_MEDIA_URL')
 OFFSET_POR_DEFECTO = 0
 CANTIDAD_POR_DEFECTO = 10
-DURACION_POR_DEFETO = 0
+DURACION_POR_DEFECTO = 0
 
 class Video(Resource):
     @login_requerido
@@ -25,7 +25,7 @@ class Video(Resource):
         offset = int(request.args.get('offset', OFFSET_POR_DEFECTO))
         cantidad = int(request.args.get('cantidad', CANTIDAD_POR_DEFECTO))
         params = {'offset': offset, 'cantidad': cantidad}
-        response = media_server_api.get_videos(params)
+        response = media_server_api.obtener_videos(params)
         if response.status_code != 200:
             return response.json(), response.status_code
 
@@ -50,7 +50,7 @@ class Video(Resource):
             'titulo': post_data.get('titulo', None),
             'descripcion': post_data.get('descripcion', None),
             'ubicacion': post_data.get('ubicacion', None),
-            'duracion': post_data.get('duracion', DURACION_POR_DEFETO),
+            'duracion': post_data.get('duracion', DURACION_POR_DEFECTO),
             'usuario_id': g.usuario_actual,
             'visibilidad': post_data.get('visibilidad', 'publico'),
         }
@@ -72,7 +72,7 @@ class Video(Resource):
         }
 
     def _obtener_autores(self, videos, offset, cantidad):
-        ids = ','.join([str(video['usuario_id']) for video in videos])
+        ids = ','.join({str(video['usuario_id']) for video in videos})
         params = {'ids': ids, 'offset': offset, 'cantidad': cantidad}
 
-        return auth_server_api.get_usuarios(params)
+        return auth_server_api.obtener_usuarios(params)

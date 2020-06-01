@@ -15,7 +15,7 @@ def get_to_media_server(ruta, params):
 def subir_video(datos):
     return post_to_media_server(RUTA_VIDEO, datos)
 
-def get_videos(params):
+def obtener_videos(params):
     return get_to_media_server(RUTA_VIDEO, params)
 
 def limpiar_base_de_datos():
