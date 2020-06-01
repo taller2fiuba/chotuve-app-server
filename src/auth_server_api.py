@@ -30,4 +30,4 @@ def get_usuario(usuario_id):
     return requests.get(f'{CHOTUVE_AUTH_URL}/usuario/{int(usuario_id)}')
 
 def get_usuarios(params):
-    return requests.get(f'{CHOTUVE_AUTH_URL}/usuarios', params=params)
+    return requests.get(f'{CHOTUVE_AUTH_URL}/usuario', params=params)

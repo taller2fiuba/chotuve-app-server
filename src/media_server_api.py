@@ -3,25 +3,20 @@ from app import app
 
 CHOTUVE_MEDIA_URL = app.config.get('CHOTUVE_MEDIA_URL')
 
-def post_to_media_server(ruta, datos):
-    response = requests.post(CHOTUVE_MEDIA_URL + ruta, json=datos)
+RUTA_VIDEO = '/video'
 
-    return response
+def post_to_media_server(ruta, datos):
+    return requests.post(CHOTUVE_MEDIA_URL + ruta, json=datos)
+
 
 def get_to_media_server(ruta, params):
-    response = requests.get(CHOTUVE_MEDIA_URL + ruta, params=params)
-
-    return response
+    return requests.get(CHOTUVE_MEDIA_URL + ruta, params=params)
 
 def subir_video(datos):
-    ruta = "/video"
-
-    return post_to_media_server(ruta, datos)
+    return post_to_media_server(RUTA_VIDEO, datos)
 
 def get_videos(params):
-    ruta = "/video"
-
-    return get_to_media_server(ruta, params)
+    return get_to_media_server(RUTA_VIDEO, params)
 
 def limpiar_base_de_datos():
     return requests.delete(f'{CHOTUVE_MEDIA_URL}/base_de_datos')

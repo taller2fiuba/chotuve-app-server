@@ -6,6 +6,9 @@ import media_server_api
 import auth_server_api
 
 CHOTUVE_MEDIA_URL = app.config.get('CHOTUVE_MEDIA_URL')
+OFFSET_POR_DEFECTO = 0
+CANTIDAD_POR_DEFECTO = 10
+DURACION_POR_DEFETO = 0
 
 class Video(Resource):
     @login_requerido
@@ -19,8 +22,8 @@ class Video(Resource):
 
     @login_requerido
     def get(self):
-        offset = int(request.args.get('offset', 0))
-        cantidad = int(request.args.get('cantidad', 10))
+        offset = int(request.args.get('offset', OFFSET_POR_DEFECTO))
+        cantidad = int(request.args.get('cantidad', CANTIDAD_POR_DEFECTO))
         params = {'offset': offset, 'cantidad': cantidad}
         response = media_server_api.get_videos(params)
         if response.status_code != 200:
@@ -36,7 +39,6 @@ class Video(Resource):
 
         autores = response.json()
         for i, video in enumerate(videos):
-            # TODO ver si se puede mejorar: obtener el autor del video de la lista de autores
             autor = [autor for autor in autores if autor['id'] == video['usuario_id']][0]
             videos[i] = self._armar_video(video, autor)
 
@@ -48,7 +50,7 @@ class Video(Resource):
             'titulo': post_data.get('titulo', None),
             'descripcion': post_data.get('descripcion', None),
             'ubicacion': post_data.get('ubicacion', None),
-            'duracion': post_data.get('duracion', 0),
+            'duracion': post_data.get('duracion', DURACION_POR_DEFETO),
             'usuario_id': g.usuario_actual,
             'visibilidad': post_data.get('visibilidad', 'publico'),
         }
