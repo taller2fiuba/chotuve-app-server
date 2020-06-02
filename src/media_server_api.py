@@ -20,3 +20,6 @@ def obtener_videos(params):
 
 def limpiar_base_de_datos():
     return requests.delete(f'{CHOTUVE_MEDIA_URL}/base_de_datos')
+
+def obtener_video(video_id):
+    return requests.get(f'{CHOTUVE_MEDIA_URL}/video/{video_id}')
