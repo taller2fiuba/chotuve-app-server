@@ -1,10 +1,7 @@
-from app import app
 from app.login_requerido_decorator import login_requerido
 import auth_server_api
 import media_server_api
 from .video_base import VideoBaseResource
-
-CHOTUVE_MEDIA_URL = app.config.get('CHOTUVE_MEDIA_URL')
 
 class VideoIdResource(VideoBaseResource):
     @login_requerido
