@@ -44,7 +44,7 @@ def get_usuario(usuario_id):
 
 def actualizar_perfil_usuario(nombre, apellido, telefono, direccion):
     datos = {"nombre": nombre, "apellido": apellido, "telefono": telefono, "direccion": direccion}
-    ruta = "/usuario/"+str(g.usuario_actual)
+    ruta = "/usuario/perfil/"+str(g.usuario_actual)
 
     return put_to_auth_server(ruta, datos)
 
