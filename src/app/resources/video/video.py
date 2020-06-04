@@ -1,16 +1,16 @@
-from flask_restful import Resource
 from flask import request, g
 from app import app
 from app.login_requerido_decorator import login_requerido
 import media_server_api
 import auth_server_api
+from .video_base import VideoBaseResource
 
 CHOTUVE_MEDIA_URL = app.config.get('CHOTUVE_MEDIA_URL')
 OFFSET_POR_DEFECTO = 0
 CANTIDAD_POR_DEFECTO = 10
 DURACION_POR_DEFECTO = 0
 
-class Video(Resource):
+class VideoResource(VideoBaseResource):
     @login_requerido
     def post(self):
         post_data = request.get_json(force=True)
@@ -40,7 +40,7 @@ class Video(Resource):
         autores = response.json()
         for i, video in enumerate(videos):
             autor = [autor for autor in autores if autor['id'] == video['usuario_id']][0]
-            videos[i] = self._armar_video(video, autor)
+            videos[i] = self.armar_video(video, autor)
 
         return videos, response.status_code
 
@@ -53,22 +53,6 @@ class Video(Resource):
             'duracion': post_data.get('duracion', DURACION_POR_DEFECTO),
             'usuario_id': g.usuario_actual,
             'visibilidad': post_data.get('visibilidad', 'publico'),
-        }
-
-    def _armar_video(self, video, autor):
-        return {
-            'id': video['_id'],
-            'url': video['url'],
-            'titulo': video['titulo'],
-            'duracion': video['duracion'],
-            'creacion': video['time_stamp'],
-            'visibilidad': video['visibilidad'],
-            'autor': {
-                'usuario_id': autor['id'],
-                'nombre': autor['nombre'],
-                'apellido': autor['apellido'],
-                'email': autor['email']
-                }
         }
 
     def _obtener_autores(self, videos, offset, cantidad):

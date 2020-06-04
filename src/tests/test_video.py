@@ -92,7 +92,8 @@ class VideoTestCase(LoginMockTestCase):
                 'duracion': 600,
                 'time_stamp': '2019-07-02',
                 'visibilidad': 'publico',
-                'usuario_id': 123
+                'usuario_id': 123,
+                'descripcion': 'una descripción'
             }
         ]
 
@@ -117,6 +118,7 @@ class VideoTestCase(LoginMockTestCase):
                     'usuario_id': 123
                 },
                 'creacion': '2019-07-02',
+                'descripcion': 'una descripción',
                 'duracion': 600,
                 'id': 'c78',
                 'titulo': 'mi video',
@@ -140,13 +142,84 @@ class VideoTestCase(LoginMockTestCase):
 
     @mock.patch('auth_server_api.obtener_usuarios')
     @mock.patch('media_server_api.obtener_videos')
-    def test_obtener_usuarios_falla(self, mock_obtener_videos, mock_obtener_usuarios):
+    def test_obtener_videos_falla_porque_no_se_pudo_obtener_usuarios(self,
+                                                                     mock_obtener_videos,
+                                                                     mock_obtener_usuarios):
         mock_obtener_videos.return_value.json = lambda: []
         mock_obtener_videos.return_value.status_code = 200
         mock_obtener_usuarios.return_value.json = lambda: {}
         mock_obtener_usuarios.return_value.status_code = 400
 
         response = self.app.get(f'/video')
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual({}, response.json)
+
+    @mock.patch('auth_server_api.get_usuario')
+    @mock.patch('media_server_api.obtener_video')
+    def test_obtener_video_correcto(self, mock_obtener_video, mock_get_usuario):
+        mock_obtener_video.return_value.status_code = 200
+        mock_obtener_video.return_value.json = lambda: {
+            '_id':'1loR8g7',
+            'url': '/test/video.mp4',
+            'titulo': 'mi video',
+            'duracion': 600,
+            'time_stamp': '2019-07-02',
+            'visibilidad': 'publico',
+            'usuario_id': 456,
+            'descripcion': 'una descripción'
+        }
+
+        mock_get_usuario.return_value.status_code = 200
+        mock_get_usuario.return_value.json = lambda: {
+            'id': 456,
+            'nombre': 'autor_test',
+            'apellido': 'apellido_test',
+            'email': 'apellidos_test'
+        }
+
+        response = self.app.get(f'/video/1loR8g7')
+
+        valor_esperado = {
+            'autor': {
+                'apellido': 'apellido_test',
+                'email': 'apellidos_test',
+                'nombre': 'autor_test',
+                'usuario_id': 456
+            },
+            'creacion': '2019-07-02',
+            'duracion': 600,
+            'id': '1loR8g7',
+            'titulo': 'mi video',
+            'url': '/test/video.mp4',
+            'visibilidad': 'publico',
+            'descripcion': 'una descripción'
+        }
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(valor_esperado, response.json)
+
+    @mock.patch('media_server_api.obtener_video')
+    def test_obtener_video_falla_porque_no_existe_id(self, mock_obtener_video):
+        mock_obtener_video.return_value.json = lambda: {}
+        mock_obtener_video.return_value.status_code = 404
+
+        response = self.app.get(f'/video/13grt5')
+
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual({}, response.json)
+
+    @mock.patch('auth_server_api.get_usuario')
+    @mock.patch('media_server_api.obtener_video')
+    def test_obtener_video_falla_porque_no_existe_usuario(self,
+                                                          mock_obtener_video,
+                                                          mock_get_usuario):
+        mock_obtener_video.return_value.json = lambda: {'usuario_id': 12}
+        mock_obtener_video.return_value.status_code = 200
+        mock_get_usuario.return_value.json = lambda: {}
+        mock_get_usuario.return_value.status_code = 400
+
+        response = self.app.get(f'/video/13grt5')
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual({}, response.json)
