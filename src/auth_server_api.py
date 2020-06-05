@@ -52,3 +52,6 @@ def get_perfil(id_usuario):
     ruta = "/usuario/perfil/"+str(id_usuario)
 
     return get_to_auth_server(ruta, {})
+
+def obtener_usuarios(params):
+    return requests.get(f'{CHOTUVE_AUTH_URL}/usuario', params=params)
