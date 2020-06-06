@@ -1,10 +1,10 @@
-version: '3'
+version: '3.4'
 services:
     chotuve_app:
         image: python:3.8
         volumes:
             - ../..:/var/www/app
-            - chotuve_app_cache:/root
+            - chotuve_pip_cache:/root
         environment:
             # Flask
             STATIC_URL: "/static"
@@ -36,7 +36,7 @@ services:
             TRAVIS_TAG: ${TRAVIS_TAG:-}
 
         working_dir: /var/www/app
-        command: bash /var/www/app/bin/chotuve_dev/start.sh
+        command: bash /var/www/app/bin/chotuve_app_dev/start.sh
         network_mode: host
     chotuve_app_db:
         image: postgres
@@ -50,4 +50,5 @@ services:
             - 28032:5432
 volumes:
     chotuve_app_db_data:
-    chotuve_app_cache:
+    chotuve_pip_cache:
+        name: chotuve_pip_cache
