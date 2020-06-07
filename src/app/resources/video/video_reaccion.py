@@ -22,7 +22,9 @@ class VideoReaccion(VideoBaseResource):
         #  201 -> reacción creada
         # Si ya hay una reacción
         #  200 -> reacción modificada / eliminada
-        reaccion_guardada = Reaccion.query.filter_by(video=video_id, usuario=g.usuario_actual).one_or_none()
+        query = Reaccion.query
+        query = query.filter_by(video=video_id, usuario=g.usuario_actual)
+        reaccion_guardada = query.one_or_none()
 
         if reaccion_guardada:
             reaccion_guardada.tipo = REACCIONES[reaccion]

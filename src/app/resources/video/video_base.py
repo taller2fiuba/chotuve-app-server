@@ -2,7 +2,7 @@ from flask import g
 from flask_restful import Resource
 from app.models.reaccion import Reaccion, TipoReaccion
 
-REACCIONES = {TipoReaccion.ME_GUSTA: 'me-gusta', 
+REACCIONES = {TipoReaccion.ME_GUSTA: 'me-gusta',
               TipoReaccion.NO_ME_GUSTA: 'no-me-gusta'}
 
 class VideoBaseResource(Resource):
@@ -25,6 +25,6 @@ class VideoBaseResource(Resource):
                                                        TipoReaccion.NO_ME_GUSTA),
             "me-gustas": Reaccion.contar_reacciones(video['_id'],
                                                     TipoReaccion.ME_GUSTA),
-            "mi-reaccion": REACCIONES[Reaccion.obtener_reaccion(video['_id'],
-                                                     g.usuario_actual)]
+            "mi-reaccion": REACCIONES.get(Reaccion.obtener_reaccion(video['_id'],
+                                                                    g.usuario_actual))
         }
