@@ -1,4 +1,9 @@
+from flask import g
 from flask_restful import Resource
+from app.models.reaccion import Reaccion, TipoReaccion
+
+REACCIONES = {TipoReaccion.ME_GUSTA: 'me-gusta', 
+              TipoReaccion.NO_ME_GUSTA: 'no-me-gusta'}
 
 class VideoBaseResource(Resource):
     def armar_video(self, video, autor):
@@ -16,7 +21,10 @@ class VideoBaseResource(Resource):
                 'apellido': autor['apellido'],
                 'email': autor['email']
             },
-            "no-me-gustas": 0,
-            "me-gustas": 0,
-            "mi-reaccion": None
+            "no-me-gustas": Reaccion.contar_reacciones(video['_id'],
+                                                       TipoReaccion.NO_ME_GUSTA),
+            "me-gustas": Reaccion.contar_reacciones(video['_id'],
+                                                    TipoReaccion.ME_GUSTA),
+            "mi-reaccion": REACCIONES[Reaccion.obtener_reaccion(video['_id'],
+                                                     g.usuario_actual)]
         }
