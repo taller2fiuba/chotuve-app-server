@@ -2,8 +2,9 @@ from flask import request, abort, g
 from app import db
 from app.login_requerido_decorator import login_requerido
 from app.models.reaccion import Reaccion, TipoReaccion
-from .video_base import VideoBaseResource
 import media_server_api
+from .video_base import VideoBaseResource
+
 
 REACCIONES = {'me-gusta': TipoReaccion.ME_GUSTA,
               'no-me-gusta': TipoReaccion.NO_ME_GUSTA}
