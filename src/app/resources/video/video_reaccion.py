@@ -27,7 +27,10 @@ class VideoReaccion(VideoBaseResource):
         reaccion_guardada = query.one_or_none()
 
         if reaccion_guardada:
-            reaccion_guardada.tipo = REACCIONES[reaccion]
+            if reaccion_guardada.tipo == REACCIONES[reaccion]:
+                db.session.delete(reaccion_guardada)
+            else:
+                reaccion_guardada.tipo = REACCIONES[reaccion]
         else:
             db.session.add(Reaccion(
                 video=video_id,
