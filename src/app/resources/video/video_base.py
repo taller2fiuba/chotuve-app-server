@@ -15,5 +15,8 @@ class VideoBaseResource(Resource):
                 'nombre': autor['nombre'],
                 'apellido': autor['apellido'],
                 'email': autor['email']
-                }
+            },
+            "no-me-gustas": 0,
+            "me-gustas": 0,
+            "mi-reaccion": None
         }

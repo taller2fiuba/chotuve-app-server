@@ -52,7 +52,7 @@ class VideoResource(VideoBaseResource):
             'ubicacion': post_data.get('ubicacion', None),
             'duracion': post_data.get('duracion', DURACION_POR_DEFECTO),
             'usuario_id': g.usuario_actual,
-            'visibilidad': post_data.get('visibilidad', 'publico'),
+            'visibilidad': post_data.get('visibilidad', 'publico')
         }
 
     def _obtener_autores(self, videos, offset, cantidad):
