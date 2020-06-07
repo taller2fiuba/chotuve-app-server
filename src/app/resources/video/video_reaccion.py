@@ -17,11 +17,6 @@ class VideoReaccion(VideoBaseResource):
         if not reaccion or reaccion not in REACCIONES:
             return {"error": f'La reaccion {reaccion} es inválida'}, 400
 
-        # Buscar la reacción en la base
-        # Si no hay una reacción para mi usuario y el video indicado
-        #  201 -> reacción creada
-        # Si ya hay una reacción
-        #  200 -> reacción modificada / eliminada
         query = Reaccion.query
         query = query.filter_by(video=video_id, usuario=g.usuario_actual)
         reaccion_guardada = query.one_or_none()
