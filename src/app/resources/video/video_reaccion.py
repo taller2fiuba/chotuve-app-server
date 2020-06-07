@@ -3,6 +3,7 @@ from app import db
 from app.login_requerido_decorator import login_requerido
 from app.models.reaccion import Reaccion, TipoReaccion
 from .video_base import VideoBaseResource
+import media_server_api
 
 REACCIONES = {'me-gusta': TipoReaccion.ME_GUSTA,
               'no-me-gusta': TipoReaccion.NO_ME_GUSTA}
@@ -16,6 +17,10 @@ class VideoReaccion(VideoBaseResource):
         reaccion = request.get_json().get('reaccion')
         if not reaccion or reaccion not in REACCIONES:
             return {"error": f'La reaccion {reaccion} es inválida'}, 400
+
+        response = media_server_api.obtener_video(video_id)
+        if response.status_code != 200:
+            abort(404)
 
         query = Reaccion.query
         query = query.filter_by(video=video_id, usuario=g.usuario_actual)
