@@ -3,7 +3,7 @@ import unittest
 import mock
 
 from tests.base import LoginMockTestCase
-from app import app
+from app import app, log
 
 CHOTUVE_MEDIA_URL = app.config.get('CHOTUVE_MEDIA_URL')
 
@@ -27,8 +27,8 @@ class VideoReaccionesTestCase(LoginMockTestCase):
         return mock
 
     @mock.patch('media_server_api.obtener_video')
-    def test_agregar_me_gusta_a_video_sin_me_gusta_devuelve_201(self, mock):
-        self.cargar_mock_obtener_video(mock, "5edcd01cd3cf810031d865db")
+    def test_agregar_me_gusta_a_video_sin_me_gusta_devuelve_201(self, mock_obtener_video):
+        self.cargar_mock_obtener_video(mock_obtener_video, "5edcd01cd3cf810031d865db")
         body = {"reaccion": "me-gusta"}
 
         response = self.app.post("/video/5edcd01cd3cf810031d865db/reaccion", 
@@ -105,10 +105,20 @@ class VideoReaccionesTestCase(LoginMockTestCase):
             json=body)
         
         self.assertEquals(response.status_code, 200)
-    
+
+    @mock.patch('auth_server_api.get_usuario')
     @mock.patch('media_server_api.obtener_video')
-    def test_agregar_me_gusta_video_trae_reacciones(self, mock):
-        self.cargar_mock_obtener_video(mock, "5edcd01cd3cf810031d865db")
+    def test_agregar_me_gusta_video_trae_reacciones(self, mock_obtener_video, mock_get_usuario):
+        self.cargar_mock_obtener_video(mock_obtener_video, "5edcd01cd3cf810031d865db")
+        mock_get_usuario.return_value.status_code = 200
+        mock_get_usuario.return_value.json = lambda: {
+            "id": 1,
+            "nombre": "",
+            "apellido": "",
+            "email": "test@test.com",
+            "telefono": "",
+            "foto": ""
+        }
         
         body = {"reaccion": "me-gusta"}
         response = self.app.post("/video/5edcd01cd3cf810031d865db/reaccion", 
@@ -126,10 +136,20 @@ class VideoReaccionesTestCase(LoginMockTestCase):
         assert 'mi-reaccion' in data
         self.assertEquals(data['mi-reaccion'], 'me-gusta')
     
+    @mock.patch('auth_server_api.get_usuario')
     @mock.patch('media_server_api.obtener_video')
-    def test_agregar_no_me_gusta_video_trae_reacciones(self, mock):
-        self.cargar_mock_obtener_video(mock, "5edcd01cd3cf810031d865db")
-        
+    def test_agregar_no_me_gusta_video_trae_reacciones(self, mock_obtener_video, mock_get_usuario):
+        self.cargar_mock_obtener_video(mock_obtener_video, "5edcd01cd3cf810031d865db")
+        mock_get_usuario.return_value.status_code = 200
+        mock_get_usuario.return_value.json = lambda: {
+            "id": 1,
+            "nombre": "",
+            "apellido": "",
+            "email": "test@test.com",
+            "telefono": "",
+            "foto": ""
+        }
+
         body = {"reaccion": "no-me-gusta"}
         response = self.app.post("/video/5edcd01cd3cf810031d865db/reaccion", 
             json=body)
