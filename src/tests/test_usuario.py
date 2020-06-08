@@ -94,58 +94,90 @@ class UsuarioConsultarPerfilMockTestCase(LoginMockTestCase):
     @mock.patch('auth_server_api.requests.get')
     def test_get_mi_perfil_sin_campos_completados(self, mock_get):
         mock_get.return_value.json = lambda: {
-            'email': "test@test"}
+            'id': 1,
+            'nombre': None,
+            'apellido': None,
+            'email': 'test@test',
+            'telefono': None,
+            'direccion': None,
+            'foto': None}
         mock_get.return_value.status_code = 200
         response = self.app.get('/usuario/perfil')
         self.assertEqual(response.status_code, 200)
         self.assertEqual({
-            'email': "test@test"}, response.json)
+            'id': 1,
+            'nombre': None,
+            'apellido': None,
+            'email': 'test@test',
+            'telefono': None,
+            'direccion': None,
+            'foto': None}, response.json)
 
     @mock.patch('auth_server_api.requests.get')
     def test_get_otro_perfil_sin_campos_completados(self, mock_get):
         mock_get.return_value.json = lambda: {
-            'email': "test@test"}
+            'id': 1,
+            'nombre': None,
+            'apellido': None,
+            'email': 'test@test',
+            'telefono': None,
+            'direccion': None,
+            'foto': None}
         mock_get.return_value.status_code = 200
         response = self.app.get('/usuario/perfil/1')
         self.assertEqual(response.status_code, 200)
         self.assertEqual({
-            'email': "test@test"}, response.json)
+            'id': 1,
+            'nombre': None,
+            'apellido': None,
+            'email': 'test@test',
+            'telefono': None,
+            'direccion': None,
+            'foto': None}, response.json)
 
     @mock.patch('auth_server_api.requests.get')
     def test_get_mi_perfil_con_todos_los_campos(self, mock_get):
         mock_get.return_value.json = lambda: {
-            'email': "test@test",
-            'nombre': "Lucas",
-            'apellido': "Perez",
-            'telefono': "123456789",
-            'direccion': "Calle falsa 123"}
+            'id': 1,
+            'nombre': 'Lucas',
+            'apellido': 'Perez',
+            'email': 'test@test',
+            'telefono': '123456789',
+            'direccion': 'Calle falsa 123',
+            'foto': None}
         mock_get.return_value.status_code = 200
         response = self.app.get('/usuario/perfil')
         self.assertEqual(response.status_code, 200)
         self.assertEqual({
-            'email': "test@test",
-            'nombre': "Lucas",
-            'apellido': "Perez",
-            'telefono': "123456789",
-            'direccion': "Calle falsa 123"}, response.json)
+            'id': 1,
+            'nombre': 'Lucas',
+            'apellido': 'Perez',
+            'email': 'test@test',
+            'telefono': '123456789',
+            'direccion': 'Calle falsa 123',
+            'foto': None}, response.json)
 
     @mock.patch('auth_server_api.requests.get')
     def test_get_otro_perfil_con_todos_los_campos(self, mock_get):
         mock_get.return_value.json = lambda: {
-            'email': "test@test",
-            'nombre': "Lucas",
-            'apellido': "Perez",
-            'telefono': "123456789",
-            'direccion': "Calle falsa 123"}
+            'id': 1,
+            'nombre': 'Lucas',
+            'apellido': 'Perez',
+            'email': 'test@test',
+            'telefono': '123456789',
+            'direccion': 'Calle falsa 123',
+            'foto': None}
         mock_get.return_value.status_code = 200
         response = self.app.get('/usuario/perfil/1')
         self.assertEqual(response.status_code, 200)
         self.assertEqual({
-            'email': "test@test",
-            'nombre': "Lucas",
-            'apellido': "Perez",
-            'telefono': "123456789",
-            'direccion': "Calle falsa 123"}, response.json)
+            'id': 1,
+            'nombre': 'Lucas',
+            'apellido': 'Perez',
+            'email': 'test@test',
+            'telefono': '123456789',
+            'direccion': 'Calle falsa 123',
+            'foto': None}, response.json)
 
     @mock.patch('auth_server_api.requests.get')
     def test_get_otro_perfil_identificador_inexistente(self, mock_get):

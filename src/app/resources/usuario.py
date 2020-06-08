@@ -33,16 +33,11 @@ class PerfilUsuarioResource(Resource):
     @login_requerido
     def put(self):
         campos_requeridos = ('nombre', 'apellido')
-        campos = ('nombre', 'apellido', 'telefono', 'direccion')
         post_data = request.get_json()
         if not post_data: #no hay body
             return {}, 400
         if not all(parametros in post_data for parametros in campos_requeridos):
             return {}, 400
-
-        for campo in campos:
-            if campo not in post_data:
-                post_data[campo] = None
 
         nombre = post_data['nombre']
         apellido = post_data['apellido']
