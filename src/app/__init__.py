@@ -25,11 +25,11 @@ api.add_resource(UsuarioResource, '/usuario/<int:usuario_id>', methods=["GET"], 
 api.add_resource(Sesion, '/usuario/sesion')
 api.add_resource(BaseDeDatosResource, '/base_de_datos')
 
-# @app.errorhandler(Exception)
-# def unhandled_exception(e):
-#     tb = traceback.format_exc()
-#     log.warn(f'Excepcion no manejada: {tb}')
-#     return {'mensaje': str(e)}, 500
+@app.errorhandler(Exception)
+def unhandled_exception(e):
+    tb = traceback.format_exc()
+    log.error(f'Excepcion no manejada: {tb}')
+    return {'mensaje': str(e)}, 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
