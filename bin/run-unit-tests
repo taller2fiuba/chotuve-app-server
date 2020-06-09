@@ -7,6 +7,8 @@
 
 exec $(dirname "$0")/dev-compose exec \
     -e DATABASE_URL="sqlite:///:memory:" \
+    -e CHOTUVE_MEDIA_URL="http://localhost:28001" \
+    -e CHOTUVE_AUTH_URL="http://localhost:28001" \
     chotuve_app \
     sh -c "pylint --load-plugins pylint_flask src && coverage run -m nose2 -v && coverage report -m"
 
