@@ -7,6 +7,7 @@ import auth_server_api
 from .video_base import VideoBaseResource
 
 CANTIDAD_POR_DEFECTO = 10
+USUARIO_ELIMINADO = '<eliminado>'
 
 class VideoComentario(VideoBaseResource):
     @login_requerido
@@ -48,7 +49,7 @@ class VideoComentario(VideoBaseResource):
                    for u in auth_server_api.obtener_usuarios(params).json()}
 
         return [{
-            'autor': autores.get(comentario.usuario, '<eliminado>'),
+            'autor': autores.get(comentario.usuario, USUARIO_ELIMINADO),
             'fecha': str(comentario.fecha),
             'comentario': comentario.comentario
         } for comentario in comentarios], 200
