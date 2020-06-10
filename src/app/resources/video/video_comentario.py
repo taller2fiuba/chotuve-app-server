@@ -21,7 +21,7 @@ class VideoComentario(VideoBaseResource):
 
         response = media_server_api.obtener_video(video_id)
         if response.status_code != 200:
-            abort(404)
+            abort(repsonse.status_code)
 
         db.session.add(Comentario(
             video=video_id,
