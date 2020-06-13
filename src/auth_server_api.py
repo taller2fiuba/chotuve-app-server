@@ -1,5 +1,5 @@
 import requests
-from app import app, log
+from app import app
 
 CHOTUVE_AUTH_URL = app.config.get('CHOTUVE_AUTH_URL')
 
