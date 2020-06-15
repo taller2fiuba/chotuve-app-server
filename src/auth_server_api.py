@@ -44,8 +44,9 @@ def autentificar(headers):
 def get_usuario(usuario_id):
     return requests.get(f'{CHOTUVE_AUTH_URL}/usuario/{int(usuario_id)}')
 
-def actualizar_perfil_usuario(nombre, apellido, telefono, direccion):
-    datos = {"nombre": nombre, "apellido": apellido, "telefono": telefono, "direccion": direccion}
+def actualizar_perfil_usuario(nombre, apellido, telefono, direccion, foto):
+    datos = {"nombre": nombre, "apellido": apellido, "telefono": telefono, "direccion": direccion,
+             "foto": foto}
 
     return put_to_auth_server(f'/usuario/{g.usuario_actual}', datos)
 

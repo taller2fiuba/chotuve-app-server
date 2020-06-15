@@ -43,8 +43,10 @@ class PerfilUsuarioResource(Resource):
         apellido = post_data['apellido']
         telefono = post_data['telefono']
         direccion = post_data['direccion']
+        foto = post_data['foto']
 
-        response = auth_server_api.actualizar_perfil_usuario(nombre, apellido, telefono, direccion)
+        response = auth_server_api.actualizar_perfil_usuario(nombre, apellido, telefono, direccion,
+                                                             foto)
 
         return response.json(), response.status_code
 

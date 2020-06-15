@@ -23,9 +23,10 @@ api.add_resource(VideoIdResource, '/video/<video_id>')
 api.add_resource(UsuarioResource, '/usuario', '/usuario/')
 api.add_resource(UsuarioResource, '/usuario/<int:usuario_id>', methods=["GET"], endpoint='UsuarioConIdResource')
 api.add_resource(PerfilUsuarioResource, '/usuario/perfil', methods=["PUT", "GET"], endpoint='PerfilUsuario')
-api.add_resource(PerfilOtroUsuarioResource, '/usuario/perfil/<int:usuario_id>', methods=["GET"], endpoint='PerfilOtroUsuario')
+api.add_resource(PerfilOtroUsuarioResource, '/usuario/<int:usuario_id>/perfil', methods=["GET"], endpoint='PerfilOtroUsuario')
 api.add_resource(Sesion, '/usuario/sesion')
 api.add_resource(BaseDeDatosResource, '/base_de_datos')
+
 @app.errorhandler(Exception)
 def unhandled_exception(e):
     tb = traceback.format_exc()
