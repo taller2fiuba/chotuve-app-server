@@ -1,10 +1,23 @@
 import requests
+
+from flask import g
+
 from app import app
 
 CHOTUVE_AUTH_URL = app.config.get('CHOTUVE_AUTH_URL')
 
 def post_to_auth_server(ruta, datos):
     response = requests.post(
+        CHOTUVE_AUTH_URL + ruta, json=datos)
+    return response
+
+def put_to_auth_server(ruta, datos):
+    response = requests.put(
+        CHOTUVE_AUTH_URL + ruta, json=datos)
+    return response
+
+def get_to_auth_server(ruta, datos):
+    response = requests.get(
         CHOTUVE_AUTH_URL + ruta, json=datos)
     return response
 
@@ -30,6 +43,17 @@ def autentificar(headers):
 
 def get_usuario(usuario_id):
     return requests.get(f'{CHOTUVE_AUTH_URL}/usuario/{int(usuario_id)}')
+
+def actualizar_perfil_usuario(nombre, apellido, telefono, direccion, foto):
+    datos = {"nombre": nombre, "apellido": apellido, "telefono": telefono, "direccion": direccion,
+             "foto": foto}
+
+    return put_to_auth_server(f'/usuario/{g.usuario_actual}', datos)
+
+def get_perfil(id_usuario):
+    ruta = "/usuario/"+str(id_usuario)
+
+    return get_to_auth_server(ruta, {})
 
 def obtener_usuarios(params):
     return requests.get(f'{CHOTUVE_AUTH_URL}/usuario', params=params)
