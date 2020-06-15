@@ -37,7 +37,9 @@ def limpiar_base_de_datos():
     return requests.delete(f'{CHOTUVE_AUTH_URL}/base_de_datos')
 
 def autentificar(headers):
-    return requests.get(f'{CHOTUVE_AUTH_URL}/usuario/sesion', headers=headers)
+    return requests.get(f'{CHOTUVE_AUTH_URL}/usuario/sesion', headers={
+        'Authorization': headers.get('Authorization', '')
+    })
 
 def get_usuario(usuario_id):
     return requests.get(f'{CHOTUVE_AUTH_URL}/usuario/{int(usuario_id)}')
