@@ -12,7 +12,7 @@ REACCIONES = {'me-gusta': TipoReaccion.ME_GUSTA,
 class VideoReaccion(VideoBaseResource):
     @login_requerido
     def post(self, video_id):
-        if not request.content_type == 'application/json':
+        if not request.content_type == 'application/json; charset=UTF-8':
             abort(400)
 
         reaccion = request.get_json().get('reaccion')
