@@ -12,7 +12,7 @@ USUARIO_ELIMINADO = '<eliminado>'
 class VideoComentario(VideoBaseResource):
     @login_requerido
     def post(self, video_id):
-        if not request.content_type == 'application/json; charset=UTF-8':
+        if not 'application/json' in request.content_type:
             abort(400)
 
         comentario = request.get_json().get('comentario')
