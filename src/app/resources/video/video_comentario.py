@@ -17,7 +17,6 @@ class VideoComentario(VideoBaseResource):
 
         comentario = request.get_json().get('comentario')
         if not isinstance(comentario, str) or not 0 < len(comentario) <= MAX_LEN_COMENTARIO:
-
             return {"error": f'El comentario {comentario} es inválido'}, 400
 
         response = media_server_api.obtener_video(video_id)
