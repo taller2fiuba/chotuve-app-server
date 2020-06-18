@@ -193,6 +193,15 @@ class VideoReaccionesTestCase(LoginMockTestCase):
             data=body)
         self.assertEquals(response.status_code, 400)
 
+    @mock.patch('media_server_api.obtener_video')
+    def test_reaccionar_content_type_con_charset_devuelve_201(self, mock):
+        self.cargar_mock_obtener_video(mock, "5edcd01cd3cf810031d865db")
+
+        body = {"reaccion": "me-gusta"}
+        response = self.app.post("/video/5edcd01cd3cf810031d865db/reaccion", json=body,
+                                 headers={"Content-Type": 'application/json; charset=UTF-8'})
+        self.assertEquals(response.status_code, 201)
+
 
 if __name__ == '__main__':
     unittest.main()
