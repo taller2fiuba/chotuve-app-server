@@ -15,7 +15,8 @@ api = Api(app)
 configurar_logger()
 log = logging.getLogger(__name__)
 
-from .resources import Ping, Sesion, UsuarioResource, BaseDeDatosResource, VideoResource, VideoIdResource, VideoReaccion, VideoComentario
+from .resources import Ping, Sesion, UsuarioResource, BaseDeDatosResource, PerfilUsuarioResource, PerfilOtroUsuarioResource, VideoResource, VideoIdResource, VideoReaccion, VideoComentario
+
 api.add_resource(Ping, '/ping')
 api.add_resource(VideoResource, '/video')
 api.add_resource(VideoIdResource, '/video/<video_id>')
@@ -23,6 +24,8 @@ api.add_resource(VideoReaccion, '/video/<video_id>/reaccion')
 api.add_resource(VideoComentario, '/video/<video_id>/comentario')
 api.add_resource(UsuarioResource, '/usuario', '/usuario/')
 api.add_resource(UsuarioResource, '/usuario/<int:usuario_id>', methods=["GET"], endpoint='UsuarioConIdResource')
+api.add_resource(PerfilUsuarioResource, '/usuario/perfil', methods=["PUT", "GET"], endpoint='PerfilUsuario')
+api.add_resource(PerfilOtroUsuarioResource, '/usuario/<int:usuario_id>/perfil', methods=["GET"], endpoint='PerfilOtroUsuario')
 api.add_resource(Sesion, '/usuario/sesion')
 api.add_resource(BaseDeDatosResource, '/base_de_datos')
 
