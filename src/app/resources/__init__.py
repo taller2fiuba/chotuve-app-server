@@ -1,5 +1,5 @@
 from .ping import Ping
-from .video import VideoResource, VideoIdResource, VideoReaccion
+from .video import VideoResource, VideoIdResource, VideoReaccion, VideoComentario
 from .usuario import UsuarioResource
 from .usuario import PerfilUsuarioResource
 from .usuario import PerfilOtroUsuarioResource
