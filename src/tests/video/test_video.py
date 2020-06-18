@@ -123,7 +123,10 @@ class VideoTestCase(LoginMockTestCase):
                 'id': 'c78',
                 'titulo': 'mi video',
                 'url': '/test/video.mp4',
-                'visibilidad': 'publico'
+                'visibilidad': 'publico',
+                'no-me-gustas': 0,
+                'me-gustas': 0,
+                'mi-reaccion': None
             }
         ]
 
@@ -193,7 +196,10 @@ class VideoTestCase(LoginMockTestCase):
             'titulo': 'mi video',
             'url': '/test/video.mp4',
             'visibilidad': 'publico',
-            'descripcion': 'una descripción'
+            'descripcion': 'una descripción',
+            'no-me-gustas': 0,
+            'me-gustas': 0,
+            'mi-reaccion': None
         }
 
         self.assertEqual(response.status_code, 200)
