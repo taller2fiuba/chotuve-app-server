@@ -28,6 +28,14 @@ api.add_resource(PerfilUsuarioResource, '/usuario/perfil')
 api.add_resource(PerfilUsuarioResource, '/usuario/<int:usuario_id>/perfil', methods=["GET"], endpoint='PerfilOtroUsuario')
 api.add_resource(Sesion, '/usuario/sesion')
 api.add_resource(BaseDeDatosResource, '/base_de_datos')
+api.add_resource(SolicitudContactoResource, '/usuario/solicitud-contacto')
+api.add_resource(SolicitudContactoResource, 
+                 '/usuario/solicitud-contacto/<int:solicitud_id>',
+                 endpoint='SolicitudContactoIdResource')
+api.add_resource(ContactoResource, '/usuario/contacto')
+api.add_resource(ContactoResource, 
+                 '/usuario/<int:usuario_id>/contacto',
+                 endpoint='ContactoIdResource')
 
 @app.errorhandler(Exception)
 def unhandled_exception(e):
