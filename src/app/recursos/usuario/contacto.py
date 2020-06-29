@@ -1,5 +1,5 @@
 from flask_restful import Resource
-from flask import request, g
+from flask import g
 import auth_server_api
 from app.login_requerido_decorator import login_requerido
 
