@@ -21,4 +21,3 @@ class UsuarioResource(Resource):
         response = auth_server_api.get_usuario(usuario_id)
 
         return response.json(), response.status_code
-

@@ -8,7 +8,7 @@ class PerfilUsuarioResource(Resource):
     def get(self, usuario_id=None):
         if usuario_id is None:
             usuario_id = g.usuario_actual
-        
+
         response = auth_server_api.get_perfil(usuario_id)
         return response.json(), response.status_code
 
