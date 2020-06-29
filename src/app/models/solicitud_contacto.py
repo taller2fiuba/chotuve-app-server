@@ -8,6 +8,15 @@ class SolicitudContacto(db.Model):
     usuario_emisor = db.Column(db.Integer)
     usuario_receptor = db.Column(db.Integer)
 
+    def __repr__(self):
+        return f'<SolicitudContacto id={self.id} ' + \
+               f'emisor={self.usuario_emisor} ' + \
+               f'receptor={self.usuario_receptor}>'
+
+    def __eq__(self, otro):
+        return self.usuario_emisor == otro.usuario_emisor and \
+               self.usuario_receptor == otro.usuario_receptor
+
     @staticmethod
     def obtener_solicitudes_pendientes(usuario_id):
         '''
