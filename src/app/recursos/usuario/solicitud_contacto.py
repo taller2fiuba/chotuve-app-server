@@ -17,7 +17,7 @@ class SolicitudContactoResource(Resource):
         usuarios = [s.usuario_emisor for s in data]
         response = auth_server_api.obtener_usuarios({'ids': ','.join(map(str, usuarios))})
         if response.status_code != 200:
-            return response
+            return response.json(), response.status_code
 
         data_usuarios = {e['id']:e['email'] for e in response.json()}
         ret = []
@@ -63,7 +63,7 @@ class SolicitudContactoResource(Resource):
         if accion not in ('aceptar', 'rechazar'):
             return {'mensaje': 'Acción inválida'}, 400
 
-        solicitud = SolicitudContacto.query.filter_by(id=solicitud_id).one_or_none()
+        solicitud = SolicitudContacto.obtener_por_id(solicitud_id)
         if not solicitud or solicitud.usuario_receptor != g.usuario_actual:
             abort(404)
 
@@ -78,7 +78,7 @@ class SolicitudContactoResource(Resource):
 
     @login_requerido
     def delete(self, solicitud_id):
-        solicitud = SolicitudContacto.query.filter_by(id=solicitud_id).one_or_none()
+        solicitud = SolicitudContacto.obtener_por_id(solicitud_id)
         if not solicitud or solicitud.usuario_emisor != g.usuario_actual:
             abort(404)
 

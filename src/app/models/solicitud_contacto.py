@@ -1,6 +1,3 @@
-# pylint: skip-file
-import enum
-from sqlalchemy import func
 from app import db
 
 class SolicitudContacto(db.Model):
@@ -33,3 +30,11 @@ class SolicitudContacto(db.Model):
         return SolicitudContacto.query.\
                     filter_by(usuario_emisor=usuario_emisor,
                               usuario_receptor=usuario_receptor).one_or_none()
+
+    @staticmethod
+    def obtener_por_id(solicitud_id):
+        '''
+        Devuelve la solicitud de contacto con el ID indicado.
+        Si no se encontró la solicitud devuelve None.
+        '''
+        return SolicitudContacto.query.filter_by(id=solicitud_id).one_or_none()

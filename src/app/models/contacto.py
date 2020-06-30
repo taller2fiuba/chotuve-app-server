@@ -1,5 +1,3 @@
-# pylint: skip-file
-import enum
 from sqlalchemy import or_
 from app import db
 
@@ -27,11 +25,11 @@ class Contacto(db.Model):
                                          Contacto.usuario_2 == usuario_id)).all()
 
         ret = []
-        for c in data:
-            if c.usuario_1 == usuario_id:
-                ret.append(c.usuario_2)
+        for contacto in data:
+            if contacto.usuario_1 == usuario_id:
+                ret.append(contacto.usuario_2)
             else:
-                ret.append(c.usuario_1)
+                ret.append(contacto.usuario_1)
 
         return ret
 
