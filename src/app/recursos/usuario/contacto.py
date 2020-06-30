@@ -17,7 +17,7 @@ class ContactoResource(Resource):
 
         response = auth_server_api.obtener_usuarios({'ids': ','.join(map(str, contactos))})
         if response.status_code != 200:
-            return response
+            return response.json(), response.status_code
 
         ret = [{'id': u['id'], 'email': u['email']} for u in response.json()]
 
