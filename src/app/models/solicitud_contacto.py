@@ -5,7 +5,7 @@ class SolicitudContacto(db.Model):
     usuario_emisor = db.Column(db.Integer)
     usuario_receptor = db.Column(db.Integer)
 
-    def __repr__(self):
+    def __repr__(self): # pragma: no cover
         return f'<SolicitudContacto id={self.id} ' + \
                f'emisor={self.usuario_emisor} ' + \
                f'receptor={self.usuario_receptor}>'

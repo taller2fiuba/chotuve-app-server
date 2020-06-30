@@ -6,7 +6,7 @@ class Contacto(db.Model):
     usuario_1 = db.Column(db.Integer)
     usuario_2 = db.Column(db.Integer)
 
-    def __repr__(self):
+    def __repr__(self): # pragma: no cover
         return f'<Contacto id={self.id} ' + \
                f'usuario_1={self.usuario_1} ' + \
                f'usuario_2={self.usuario_2}>'
