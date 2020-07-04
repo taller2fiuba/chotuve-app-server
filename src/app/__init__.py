@@ -36,6 +36,12 @@ api.add_resource(ContactoResource, '/usuario/contacto')
 api.add_resource(ContactoResource, 
                  '/usuario/<int:usuario_id>/contacto',
                  endpoint='ContactoIdResource')
+api.add_resource(VideoUsuarioResource, 
+                 '/usuario/<int:usuario_id>/video',
+                 endpoint='UsuarioVideoIdResource')
+api.add_resource(VideoUsuarioResource, 
+                 '/usuario/video',
+                 endpoint='UsuarioVideoResource')
 
 @app.errorhandler(Exception)
 def unhandled_exception(e):
