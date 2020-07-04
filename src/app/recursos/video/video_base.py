@@ -1,6 +1,7 @@
 from flask import g
 from flask_restful import Resource
 from app.models.reaccion import Reaccion, TipoReaccion
+from app.models.comentario import Comentario
 
 REACCIONES = {TipoReaccion.ME_GUSTA: 'me-gusta',
               TipoReaccion.NO_ME_GUSTA: 'no-me-gusta'}
@@ -19,8 +20,10 @@ class VideoBaseResource(Resource):
                 'usuario_id': autor['id'],
                 'nombre': autor['nombre'],
                 'apellido': autor['apellido'],
-                'email': autor['email']
+                'email': autor['email'],
+                'foto': autor['foto']
             },
+            'cantidad-comentarios': Comentario.contar_comentarios(video['_id']),
             "no-me-gustas": Reaccion.contar_reacciones(video['_id'],
                                                        TipoReaccion.NO_ME_GUSTA),
             "me-gustas": Reaccion.contar_reacciones(video['_id'],

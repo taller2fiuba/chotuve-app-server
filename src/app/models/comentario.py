@@ -11,3 +11,6 @@ class Comentario(db.Model):
     comentario = db.Column(db.String(MAX_LEN_COMENTARIO))
     fecha = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
+    @staticmethod
+    def contar_comentarios(video_id):
+        return Comentario.query.filter_by(video=video_id).count()
