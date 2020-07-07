@@ -5,16 +5,16 @@ from tests.base import BaseTestCase, LoginMockTestCase
 
 class UsuarioTestCase(BaseTestCase):
     @mock.patch('auth_server_api.requests.post')
-    def test_post_signup_exitoso(self, mock_post):
-        mock_post.return_value.json = lambda: {'Token': '11111'}
+    def test_post_registro_de_usuario_exitoso(self, mock_post):
+        mock_post.return_value.json = lambda: {'auth_token': '11111', 'id': 1}
         mock_post.return_value.status_code = 201
         response = self.app.post('/usuario', json={
             'email': 'value', 'password': 'data'})
         self.assertEqual(response.status_code, 201)
-        self.assertEqual({'Token': '11111'}, response.json)
+        self.assertEqual({'auth_token': '11111', 'id': 1}, response.json)
 
     @mock.patch('auth_server_api.requests.post')
-    def test_post_signup_fallido(self, mock_post):
+    def test_post_registro_de_usuario_fallido(self, mock_post):
         error = {'errores': {'email': 'El mail ya se encuentra registrado'}}
         mock_post.return_value.json = lambda: error
         mock_post.return_value.status_code = 400
