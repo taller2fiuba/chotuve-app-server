@@ -35,5 +35,10 @@ class Config:
     CHOTUVE_MEDIA_URL = os.environ.get('CHOTUVE_MEDIA_URL') or "http://localhost:27080"
     CHOTUVE_AUTH_URL = os.environ.get('CHOTUVE_AUTH_URL') or "http://localhost:26080"
     FLASK_ENV = os.environ.get('FLASK_ENV') or 'development'
+    FIREBASE_CREDENCIALES = os.environ.get('FIREBASE_CREDENCIALES')
+    FIREBASE_CHAT_DB_URL = os.environ.get('FIREBASE_CHAT_DB_URL')
+    FIREBASE_CHAT_DB_RAIZ = os.environ.get('FIREBASE_CHAT_DB_RAIZ')
+    FIREBASE_CHAT_DB_RECURSO_CHATS = os.environ.get('FIREBASE_CHAT_DB_RECURSO_CHATS')
+    FIREBASE_CHAT_DB_RECURSO_MENSAJES = os.environ.get('FIREBASE_CHAT_DB_RECURSO_MENSAJES')
     APP_VERSION = "0.0.1"
 

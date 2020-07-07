@@ -44,6 +44,22 @@ container /var/www/app # cd src
 container /var/www/app/src # flask [args]
 ```
 
+## Configuración de Firebase
+Las siguientes variables de entorno deben configurarse para que el App server
+pueda contactarse con Firebase:
+
+- `FIREBASE_CREDENCIALES`: Credenciales de Firebase obtenidas desde la consola. El
+ contenido de esta variable de entorno debe ser el contenido del archivo JSON 
+ codificado en base 64. Por ejemplo, en Unix:
+ ```bash
+ export FIREBASE_CREDENCIALES=`base64 archivo.json` 
+ ```
+- `FIREBASE_CHAT_DB_URL`: URL que identifica la base de datos de tiempo real que
+se utilizará para los chats. Por ejemplo: `https://base-de-datos.firebase.com`.
+- `FIREBASE_CHAT_DB_RAIZ`: Nodo raíz dentro de la base de datos dentro del cual se ubicarán los subnodos `RECURSO_CHATS` y `RECURSO_MENSAJES`. Por ejemplo: `app-server`.
+- `FIREBASE_CHAT_DB_RECURSO_CHATS`: Nombre del subnodo donde se almacenará la metainformación de los chats. Por ejemplo: `chats`.
+- `FIREBASE_CHAT_DB_RECURSO_MENSAJES`: Nombre del subnodo donde se almacenará la metainformación de los mensajes. Por ejemplo: `mensajes`.
+
 ## Despliegue
 
 ### Sólo el servidor de Flask
