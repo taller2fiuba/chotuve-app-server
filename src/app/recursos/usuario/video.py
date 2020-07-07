@@ -12,12 +12,15 @@ class VideoUsuarioResource(Resource):
     def get(self, usuario_id=None):
         if not usuario_id:
             usuario_id = g.usuario_actual
-        else:
-            otro_usuario = auth_server_api.get_usuario(usuario_id)
-            if otro_usuario.status_code == 404:
-                return {}, 404
-
+        usuario = auth_server_api.get_usuario(usuario_id)
+        if usuario.status_code == 404: #no existe el usuario
+            return {}, 404
         offset = int(request.args.get('offset', OFFSET_POR_DEFECTO))
         cantidad = int(request.args.get('cantidad', CANTIDAD_POR_DEFECTO))
-        response = media_server_api.obtener_videos_usuario(usuario_id, offset, cantidad)
-        return response.json(), response.status_code
+        media_response = media_server_api.obtener_videos_usuario(usuario_id, offset, cantidad)
+        response = {
+            "perfil": usuario.json(),
+            "videos": media_response.json(),
+            "cantidad_de_videos": len(media_response.json())
+            }
+        return response, media_response.status_code
