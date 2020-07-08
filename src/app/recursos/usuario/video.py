@@ -3,7 +3,7 @@ from flask import request, g
 import media_server_api
 import auth_server_api
 from app.login_requerido_decorator import login_requerido
-from app.recursos.video.video_base import VideoBaseResource
+from app.recursos.video.video_base import formatear_video
 
 OFFSET_POR_DEFECTO = 0
 CANTIDAD_POR_DEFECTO = 10
@@ -17,13 +17,16 @@ class VideoUsuarioResource(Resource):
         if usuario.status_code == 404: #no existe el usuario
             return {}, 404
 
-        offset = request.args.get('offset', OFFSET_POR_DEFECTO)
-        cantidad = request.args.get('cantidad', CANTIDAD_POR_DEFECTO)
-        if not isdigit(offset) or not isdigit(cantidad):
+        try:
+            offset = int(request.args.get('offset', OFFSET_POR_DEFECTO))
+            cantidad = int(request.args.get('cantidad', CANTIDAD_POR_DEFECTO))
+        except ValueError:
             return {}, 500
+
         media_response = media_server_api.obtener_videos_usuario(usuario_id, offset, cantidad)
         videos = media_response.json()
-        for video in range(len(videos)):
-            videos[video] = VideoBaseResource.armar_video(videos[video], usuario)
+        datos_usuario = usuario.json()
+        #datos_usuario["cantidad_de_videos"] = len(videos)
+        videos = [formatear_video(video, ) for video in videos]
 
-        return response, media_response.status_code
+        return videos, media_response.status_code
