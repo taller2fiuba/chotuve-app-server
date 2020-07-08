@@ -103,7 +103,8 @@ class VideoTestCase(LoginMockTestCase):
                 'id': 123,
                 'nombre': 'autor_test',
                 'apellido': 'apellido_test',
-                'email': 'apellidos_test'
+                'email': 'apellidos_test',
+                'foto': 'foto.jpg'
             }
         ]
 
@@ -115,7 +116,8 @@ class VideoTestCase(LoginMockTestCase):
                     'apellido': 'apellido_test',
                     'email': 'apellidos_test',
                     'nombre': 'autor_test',
-                    'usuario_id': 123
+                    'usuario_id': 123,
+                    'foto': 'foto.jpg'
                 },
                 'creacion': '2019-07-02',
                 'descripcion': 'una descripción',
@@ -126,7 +128,8 @@ class VideoTestCase(LoginMockTestCase):
                 'visibilidad': 'publico',
                 'no-me-gustas': 0,
                 'me-gustas': 0,
-                'mi-reaccion': None
+                'mi-reaccion': None,
+                'cantidad-comentarios': 0
             }
         ]
 
@@ -178,7 +181,8 @@ class VideoTestCase(LoginMockTestCase):
             'id': 456,
             'nombre': 'autor_test',
             'apellido': 'apellido_test',
-            'email': 'apellidos_test'
+            'email': 'apellidos_test',
+            'foto': 'foto.jpg'
         }
 
         response = self.app.get(f'/video/1loR8g7')
@@ -188,7 +192,8 @@ class VideoTestCase(LoginMockTestCase):
                 'apellido': 'apellido_test',
                 'email': 'apellidos_test',
                 'nombre': 'autor_test',
-                'usuario_id': 456
+                'usuario_id': 456,
+                'foto': 'foto.jpg'
             },
             'creacion': '2019-07-02',
             'duracion': 600,
@@ -199,7 +204,8 @@ class VideoTestCase(LoginMockTestCase):
             'descripcion': 'una descripción',
             'no-me-gustas': 0,
             'me-gustas': 0,
-            'mi-reaccion': None
+            'mi-reaccion': None,
+            'cantidad-comentarios': 0
         }
 
         self.assertEqual(response.status_code, 200)
