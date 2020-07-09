@@ -29,7 +29,7 @@ def _configurar_chat(app):
     global chat
 
     if app.config.get('FIREBASE_CHAT_DB_URL'):
-        from .servicio_chat import ChatFirebase
+        from .servicio_chat.chat_firebase import ChatFirebase
         chat = ChatFirebase(
             app.config.get('FIREBASE_CREDENCIALES'),
             app.config.get('FIREBASE_CHAT_DB_URL'),
@@ -38,5 +38,5 @@ def _configurar_chat(app):
             app.config.get('FIREBASE_CHAT_DB_RECURSO_MENSAJES')
         )
     else:
-        from .servicio_chat import ChatNulo
+        from .servicio_chat.chat_nulo import ChatNulo
         chat = ChatNulo()
