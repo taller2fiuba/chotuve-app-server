@@ -1,13 +1,13 @@
 import base64
 import unittest
-import mock
+from unittest import TestCase
 
+import mock
 from mock import MagicMock
 
-from tests.base import BaseTestCase
 from app.servicios.servicio_chat.chat_firebase import ChatFirebase
 
-class ChatFirebaseTestCase(BaseTestCase):
+class ChatFirebaseTestCase(TestCase):
     @mock.patch('firebase_admin.credentials.Certificate')
     @mock.patch('firebase_admin.db.reference')
     @mock.patch('firebase_admin.initialize_app')

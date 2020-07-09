@@ -1,9 +1,9 @@
 import unittest
 
-from tests.base import BaseTestCase
+from unittest import TestCase
 from app.servicios.servicio_chat.chat_nulo import ChatNulo
 
-class ChatNuloTestCase(BaseTestCase):
+class ChatNuloTestCase(TestCase):
     def test_permite_enviar_mensaje(self):
         chat = ChatNulo()
         self.assertTrue(hasattr(chat, 'enviar_mensaje'))
