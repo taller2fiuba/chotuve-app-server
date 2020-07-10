@@ -49,11 +49,12 @@ Las siguientes variables de entorno deben configurarse para que el App server
 pueda contactarse con Firebase:
 
 - `FIREBASE_CREDENCIALES`: Credenciales de Firebase obtenidas desde la consola. El
- contenido de esta variable de entorno debe ser el contenido del archivo JSON 
+ contenido de esta variable de entorno debe ser el contenido del archivo JSON
  codificado en base 64. Por ejemplo, en Unix:
  ```bash
- export FIREBASE_CREDENCIALES=`base64 archivo.json` 
+ export FIREBASE_CREDENCIALES=`base64 archivo.json`
  ```
+ Las credenciales se obtienen desde https://console.firebase.google.com/u/0/project/chotuve-a8587/settings/serviceaccounts/adminsdk?hl=es y tocas Generar nueva clase privada.
 - `FIREBASE_CHAT_DB_URL`: URL que identifica la base de datos de tiempo real que
 se utilizará para los chats. Por ejemplo: `https://base-de-datos.firebase.com`.
 - `FIREBASE_CHAT_DB_RAIZ`: Nodo raíz dentro de la base de datos dentro del cual se ubicarán los subnodos `RECURSO_CHATS` y `RECURSO_MENSAJES`. Por ejemplo: `app-server`.
