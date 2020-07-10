@@ -3,9 +3,10 @@ from flask import Flask
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from config import Config, configurar_logger
 import logging
 import traceback
+
+from config import Config, configurar_logger
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -14,6 +15,9 @@ migrate = Migrate(app, db)
 api = Api(app)
 configurar_logger()
 log = logging.getLogger(__name__)
+
+from .servicios import configurar_servicios
+configurar_servicios(app)
 
 from .recursos import *
 
@@ -36,6 +40,7 @@ api.add_resource(ContactoResource, '/usuario/contacto')
 api.add_resource(ContactoResource, 
                  '/usuario/<int:usuario_id>/contacto',
                  endpoint='ContactoIdResource')
+api.add_resource(ChatResource, '/chat/<int:destinatario_id>')
 
 @app.errorhandler(Exception)
 def unhandled_exception(e):
