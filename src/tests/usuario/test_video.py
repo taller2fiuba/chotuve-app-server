@@ -8,7 +8,10 @@ class UsuarioVideoTestCase(LoginMockTestCase):
     @mock.patch('media_server_api.obtener_videos_usuario')
     def test_get_mis_videos_sin_videos_devuelve_vacio(self, mock_media, mock_auth):
 
-        mock_media.return_value.json = lambda: []
+        mock_media.return_value.json = lambda: {
+            "videos": [],
+            "total": 0
+        }
         mock_media.return_value.status_code = 200
 
         perfil = {
@@ -70,7 +73,10 @@ class UsuarioVideoTestCase(LoginMockTestCase):
             "__v": 0
         }
 
-        mock_media.return_value.json = lambda: [video]
+        mock_media.return_value.json = lambda: {
+            "videos": [video],
+            "total": 1
+        }
         mock_media.return_value.status_code = 200
 
         response = self.app.get('/usuario/video')
@@ -108,7 +114,10 @@ class UsuarioVideoTestCase(LoginMockTestCase):
         mock_auth.return_value.json = lambda: {}
         mock_auth.return_value.status_code = 404
 
-        mock_media.return_value.json = lambda: []
+        mock_media.return_value.json = lambda: {
+            "videos": [0],
+            "total": 0
+        }
         mock_media.return_value.status_code = 200
 
         response = self.app.get('/usuario/1234/video')
@@ -141,7 +150,10 @@ class UsuarioVideoTestCase(LoginMockTestCase):
         mock_auth.return_value.json = lambda: autor
         mock_media.return_value.status_code = 200
 
-        mock_media.return_value.json = lambda: []
+        mock_media.return_value.json = lambda: {
+            "videos": [],
+            "total": 0
+        }
         mock_media.return_value.status_code = 200
 
         respuesta = {
@@ -174,7 +186,7 @@ class UsuarioVideoTestCase(LoginMockTestCase):
         }
 
         mock_auth.return_value.json = lambda: perfil
-        mock_media.return_value.status_code = 200
+        mock_auth.return_value.status_code = 200
 
         video = {
             "descripcion": None,
@@ -190,8 +202,12 @@ class UsuarioVideoTestCase(LoginMockTestCase):
             "__v": 0
         }
 
-        mock_media.return_value.json = lambda: [video]
+        mock_media.return_value.json = lambda: {
+            "videos": [video],
+            "total": 1
+        }
         mock_media.return_value.status_code = 200
+
         video_response = {
             'id': "5ef4cb51c69cbf0072a6abdb",
             'url': "https://urltest.com/video/123456",

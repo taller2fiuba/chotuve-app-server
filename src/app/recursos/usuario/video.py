@@ -21,7 +21,7 @@ class VideoUsuarioResource(VideoBaseResource):
         except ValueError:
             abort(400)
         media_response = media_server_api.obtener_videos_usuario(usuario_id, offset, cantidad)
-        videos = media_response.json()
+        videos = media_response.json()["videos"]
 
         for i, video in enumerate(videos):
             videos[i] = self.armar_video_sin_autor(video)
