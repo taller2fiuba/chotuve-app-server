@@ -34,8 +34,8 @@ class SolicitudContactoTestCase(LoginMockTestCase):
     @mock.patch('app.models.solicitud_contacto.SolicitudContacto.obtener_solicitudes_pendientes')
     def test_get_mis_solicitudes_devuelve_solicitudes(self, mock_sol, mock_auth):
         mock_auth.return_value.json = lambda: [
-            {'id': 2, 'email': 'test-2@test.com'},
-            {'id': 3, 'email': 'test-3@test.com'},
+            {'id': 2, 'email': 'test-2@test.com', 'foto': 'url2'},
+            {'id': 3, 'email': 'test-3@test.com', 'foto': 'url3'},
         ]
         mock_auth.return_value.status_code = 200
         mock_sol.return_value = [
@@ -46,8 +46,8 @@ class SolicitudContactoTestCase(LoginMockTestCase):
 
         self.assertEqual(200, response.status_code)
         self.assertEqual([
-            {'id': 10, 'usuario_id': 2, 'email': 'test-2@test.com'},
-            {'id': 11, 'usuario_id': 3, 'email': 'test-3@test.com'},
+            {'id': 10, 'usuario_id': 2, 'email': 'test-2@test.com', 'foto': 'url2'},
+            {'id': 11, 'usuario_id': 3, 'email': 'test-3@test.com', 'foto': 'url3'},
         ], response.json)
 
     @mock.patch('app.models.solicitud_contacto.SolicitudContacto.hay_solicitud')

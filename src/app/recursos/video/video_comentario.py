@@ -48,6 +48,6 @@ class VideoComentario(VideoBaseResource):
 
         return [{
             'autor': autores.get(comentario.usuario, USUARIO_ELIMINADO),
-            'fecha': str(comentario.fecha),
+            'fecha': comentario.fecha.isoformat(),
             'comentario': comentario.comentario
         } for comentario in comentarios], 200
