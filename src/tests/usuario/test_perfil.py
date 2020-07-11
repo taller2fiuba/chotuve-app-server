@@ -68,7 +68,7 @@ class UsuarioConsultarPerfilMockTestCase(LoginMockTestCase):
 
         mock_media.return_value.json = lambda: {
             "videos": [],
-            "cantidad_de_videos": 20
+            "total": 20
         }
         mock_media.return_value.status_code = 200
 
@@ -101,7 +101,7 @@ class UsuarioConsultarPerfilMockTestCase(LoginMockTestCase):
 
         mock_media.return_value.json = lambda: {
             "videos": [],
-            "cantidad_de_videos": 20
+            "total": 20
         }
         mock_media.return_value.status_code = 200
 
@@ -134,7 +134,7 @@ class UsuarioConsultarPerfilMockTestCase(LoginMockTestCase):
 
         mock_media.return_value.json = lambda: {
             "videos": [],
-            "cantidad_de_videos": 20
+            "total": 20
         }
         mock_media.return_value.status_code = 200
 
@@ -167,7 +167,7 @@ class UsuarioConsultarPerfilMockTestCase(LoginMockTestCase):
 
         mock_media.return_value.json = lambda: {
             "videos": [],
-            "cantidad_de_videos": 20
+            "total": 20
         }
         mock_media.return_value.status_code = 200
 

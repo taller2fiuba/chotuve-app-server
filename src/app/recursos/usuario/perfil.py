@@ -19,7 +19,7 @@ class PerfilUsuarioResource(Resource):
         perfil = response.json()
         perfil['cantidad-contactos'] = Contacto.obtener_cantidad_contactos(usuario_id)
         videos = media_server_api.obtener_videos_usuario(usuario_id, 0, 0).json()
-        perfil["cantidad-videos"] = videos["cantidad_de_videos"]
+        perfil["cantidad-videos"] = videos["total"]
 
         if usuario_id != g.usuario_actual:
             if Contacto.es_contacto(g.usuario_actual, usuario_id):
