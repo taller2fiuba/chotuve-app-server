@@ -103,7 +103,7 @@ class VideoTestCase(LoginMockTestCase):
                 'id': 123,
                 'nombre': 'autor_test',
                 'apellido': 'apellido_test',
-                'email': 'apellidos_test',
+                'email': 'email@test',
                 'foto': 'foto.jpg'
             }
         ]
@@ -113,10 +113,10 @@ class VideoTestCase(LoginMockTestCase):
         valor_esperado = [
             {
                 'autor': {
-                    'apellido': 'apellido_test',
-                    'email': 'apellidos_test',
-                    'nombre': 'autor_test',
                     'usuario_id': 123,
+                    'email': 'email@test',
+                    'apellido': 'apellido_test',
+                    'nombre': 'autor_test',
                     'foto': 'foto.jpg'
                 },
                 'creacion': '2019-07-02',
@@ -181,7 +181,7 @@ class VideoTestCase(LoginMockTestCase):
             'id': 456,
             'nombre': 'autor_test',
             'apellido': 'apellido_test',
-            'email': 'apellidos_test',
+            'email': 'email@test',
             'foto': 'foto.jpg'
         }
 
@@ -189,10 +189,10 @@ class VideoTestCase(LoginMockTestCase):
 
         valor_esperado = {
             'autor': {
-                'apellido': 'apellido_test',
-                'email': 'apellidos_test',
-                'nombre': 'autor_test',
                 'usuario_id': 456,
+                'email': 'email@test',
+                'apellido': 'apellido_test',
+                'nombre': 'autor_test',
                 'foto': 'foto.jpg'
             },
             'creacion': '2019-07-02',
