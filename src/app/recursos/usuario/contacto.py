@@ -19,6 +19,6 @@ class ContactoResource(Resource):
         if response.status_code != 200:
             return response.json(), response.status_code
 
-        ret = [{'id': u['id'], 'email': u['email']} for u in response.json()]
+        ret = [{'id': u['id'], 'email': u['email'], 'foto': u['foto']} for u in response.json()]
 
         return ret
