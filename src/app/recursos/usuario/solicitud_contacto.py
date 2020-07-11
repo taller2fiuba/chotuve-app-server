@@ -22,7 +22,10 @@ class SolicitudContactoResource(Resource):
         data_usuarios = {e['id']: e for e in response.json()}
         ret = []
         for solicitud in data:
-            data_usuario = data_usuarios.get(solicitud.usuario_emisor, {'email': '<eliminado>', 'foto': None})
+            data_usuario = data_usuarios.get(
+                solicitud.usuario_emisor,
+                {'email': '<eliminado>', 'foto': None}
+            )
             ret.append({
                 'id': solicitud.id,
                 'usuario_id': solicitud.usuario_emisor,
