@@ -8,7 +8,6 @@ RUTA_VIDEO = '/video'
 def post_to_media_server(ruta, datos):
     return requests.post(CHOTUVE_MEDIA_URL + ruta, json=datos)
 
-
 def get_to_media_server(ruta, params):
     return requests.get(CHOTUVE_MEDIA_URL + ruta, params=params)
 
@@ -25,9 +24,9 @@ def obtener_video(video_id):
     return requests.get(f'{CHOTUVE_MEDIA_URL}/video/{video_id}')
 
 def obtener_videos_usuario(usuario_id, offset, cantidad):
-    param = {
+    params = {
         'usuario_id': usuario_id,
         'offset': offset,
         'cantidad': cantidad
     }
-    return requests.get(f'{CHOTUVE_MEDIA_URL}/video', params=param)
+    return obtener_videos(params=params)
