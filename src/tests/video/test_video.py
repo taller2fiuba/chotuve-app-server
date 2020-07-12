@@ -103,7 +103,7 @@ class VideoTestCase(LoginMockTestCase):
                     'descripcion': 'una descripción'
                 }
             ],
-            "total": 0
+            "total": 1
         }
 
         mock_obtener_usuarios.return_value.status_code = 200
