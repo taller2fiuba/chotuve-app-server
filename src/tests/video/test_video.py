@@ -51,7 +51,10 @@ class VideoTestCase(LoginMockTestCase):
     @mock.patch('media_server_api.obtener_videos')
     def test_obtener_videos_sin_parametros(self, mock_obtener_videos, mock_obtener_usuarios):
 
-        mock_obtener_videos.return_value.json = lambda: []
+        mock_obtener_videos.return_value.json = lambda: {
+            "videos": [],
+            "total": 0
+        }
         mock_obtener_videos.return_value.status_code = 200
         mock_obtener_usuarios.return_value.json = lambda: []
         mock_obtener_usuarios.return_value.status_code = 200
@@ -66,7 +69,10 @@ class VideoTestCase(LoginMockTestCase):
     @mock.patch('auth_server_api.obtener_usuarios')
     @mock.patch('media_server_api.obtener_videos')
     def test_obtener_videos_con_parametros(self, mock_obtener_videos, mock_obtener_usuarios):
-        mock_obtener_videos.return_value.json = lambda: []
+        mock_obtener_videos.return_value.json = lambda: {
+            "videos": [],
+            "total": 0
+        }
         mock_obtener_videos.return_value.status_code = 200
         mock_obtener_usuarios.return_value.json = lambda: []
         mock_obtener_usuarios.return_value.status_code = 200
@@ -84,18 +90,21 @@ class VideoTestCase(LoginMockTestCase):
     @mock.patch('media_server_api.obtener_videos')
     def test_obtener_videos_correcto(self, mock_obtener_videos, mock_obtener_usuarios):
         mock_obtener_videos.return_value.status_code = 200
-        mock_obtener_videos.return_value.json = lambda: [
-            {
-                '_id':'c78',
-                'url': '/test/video.mp4',
-                'titulo': 'mi video',
-                'duracion': 600,
-                'time_stamp': '2019-07-02',
-                'visibilidad': 'publico',
-                'usuario_id': 123,
-                'descripcion': 'una descripción'
-            }
-        ]
+        mock_obtener_videos.return_value.json = lambda: {
+            "videos": [
+                {
+                    '_id':'c78',
+                    'url': '/test/video.mp4',
+                    'titulo': 'mi video',
+                    'duracion': 600,
+                    'time_stamp': '2019-07-02',
+                    'visibilidad': 'publico',
+                    'usuario_id': 123,
+                    'descripcion': 'una descripción'
+                }
+            ],
+            "total": 0
+        }
 
         mock_obtener_usuarios.return_value.status_code = 200
         mock_obtener_usuarios.return_value.json = lambda: [
@@ -151,7 +160,10 @@ class VideoTestCase(LoginMockTestCase):
     def test_obtener_videos_falla_porque_no_se_pudo_obtener_usuarios(self,
                                                                      mock_obtener_videos,
                                                                      mock_obtener_usuarios):
-        mock_obtener_videos.return_value.json = lambda: []
+        mock_obtener_videos.return_value.json = lambda: {
+            "videos": [],
+            "total": 0
+        }
         mock_obtener_videos.return_value.status_code = 200
         mock_obtener_usuarios.return_value.json = lambda: {}
         mock_obtener_usuarios.return_value.status_code = 400

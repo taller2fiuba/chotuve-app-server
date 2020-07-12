@@ -30,7 +30,7 @@ class VideoResource(VideoBaseResource):
             return response.json(), response.status_code
 
         # remover los videos del usuario actual
-        videos = response.json()
+        videos = response.json()["videos"]
         videos = list(filter(lambda video: (video['usuario_id'] != g.usuario_actual), videos))
 
         response = self._obtener_autores(videos, offset, cantidad)
