@@ -30,9 +30,10 @@ class ClienteHttpBase:
         '''
         Realiza una solicitud PUT al servidor de autenticación.
         '''
-        return self._do_http_request(requests.delete, path, json=json, params=params, 
+        return self._do_http_request(requests.delete, path, json=json, params=params,
                                      headers=headers)
 
+    # pylint: disable=too-many-arguments
     def _do_http_request(self, method, path: str, json=None, params=None, headers=None):
         '''
         Realiza una solicitud al servidor de autenticación utilizado el método pasado por parámetro.

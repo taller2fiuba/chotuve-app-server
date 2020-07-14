@@ -7,12 +7,6 @@ class AuthServerError(Exception):
         self.payload = response.json()
 
 class AuthServer(ClienteHttpBase):
-    def __init__(self, url: str, app_token=None):
-        '''
-        url: URL del servidor de autenticación
-        '''
-        super().__init__(url, app_token)
-
     def autenticar(self, token: str):
         '''
         Valida un token de autenticación.

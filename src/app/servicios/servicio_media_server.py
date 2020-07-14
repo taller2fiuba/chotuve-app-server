@@ -7,12 +7,6 @@ class MediaServerError(Exception):
         self.payload = response.json()
 
 class MediaServer(ClienteHttpBase):
-    def __init__(self, url: str, app_token=None):
-        '''
-        url: URL del servidor de medios
-        '''
-        super().__init__(url, app_token)
-
     def obtener_video(self, video_id: str):
         '''
         Obtiene la información de un video.
