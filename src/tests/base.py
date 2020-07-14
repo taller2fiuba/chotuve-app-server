@@ -6,6 +6,7 @@ from app.repositorios import usuario_actual_repositorio
 from config import Config
 
 from app.servicios.servicio_auth_server import AuthServerError
+from app.servicios.servicio_media_server import MediaServerError
 
 class BaseTestCase(unittest.TestCase):
     def setUp(self):
@@ -16,9 +17,14 @@ class BaseTestCase(unittest.TestCase):
         db.session.commit()
 
     def auth_server_error(self, status_code=500, data=None):
-        def auth_error(_):
+        def auth_error(*_, **__):
             raise AuthServerError(MagicMock(status_code=status_code, json=lambda: data))
         return auth_error
+    
+    def media_server_error(self, status_code=500, data=None):
+        def media_error(*_, **__):
+            raise MediaServerError(MagicMock(status_code=status_code, json=lambda: data))
+        return media_error
 
     def tearDown(self):
         db.session.remove()

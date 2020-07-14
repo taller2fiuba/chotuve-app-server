@@ -12,18 +12,25 @@ durante el inicio de la aplicación.
 # Servicios exportados
 auth_server = None
 chat = None
+media_server = None
 
 def configurar_servicios(app):
     '''
     Inicializa y exporta los servicios configurados.
     '''
     _configurar_auth_server(app)
+    _configurar_media_server(app)
     _configurar_chat(app)
 
 def _configurar_auth_server(app):
     global auth_server
     from .servicio_auth_server import AuthServer
     auth_server = AuthServer(app.config.get('CHOTUVE_AUTH_URL'))
+
+def _configurar_media_server(app):
+    global media_server
+    from .servicio_media_server import MediaServer
+    media_server = MediaServer(app.config.get('CHOTUVE_MEDIA_URL'))
 
 def _configurar_chat(app):
     global chat

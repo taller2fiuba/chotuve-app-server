@@ -1,8 +1,10 @@
 from flask import request, abort, g
+
 from app import db
 from app.login_requerido_decorator import login_requerido
 from app.models.reaccion import Reaccion, TipoReaccion
-import media_server_api
+from app.servicios import media_server
+
 from .video_base import VideoBaseResource
 
 
@@ -19,9 +21,8 @@ class VideoReaccion(VideoBaseResource):
         if not reaccion or reaccion not in REACCIONES:
             return {"error": f'La reaccion {reaccion} es inválida'}, 400
 
-        response = media_server_api.obtener_video(video_id)
-        if response.status_code != 200:
-            abort(404)
+        if not media_server.obtener_video(video_id):
+            return {"error": "El video no existe."}, 404
 
         query = Reaccion.query
         query = query.filter_by(video=video_id, usuario=g.usuario_actual)

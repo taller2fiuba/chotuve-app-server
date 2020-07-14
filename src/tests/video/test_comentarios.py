@@ -9,8 +9,7 @@ CHOTUVE_MEDIA_URL = app.config.get('CHOTUVE_MEDIA_URL')
 
 class VideoComentariosTestCase(LoginMockTestCase):
     def cargar_mock_obtener_video(self, mock, id):
-        mock.return_value.status_code = 200
-        mock.return_value.json = lambda: {
+        mock.return_value = {
             "descripcion": None,
             "ubicacion": None,
             "visibilidad": "publico",
@@ -27,7 +26,7 @@ class VideoComentariosTestCase(LoginMockTestCase):
         return mock
 
     @mock.patch('app.servicios.auth_server.obtener_usuarios')
-    @mock.patch('media_server_api.obtener_video')
+    @mock.patch('app.servicios.media_server.obtener_video')
     def test_obtener_comentarios_video_sin_comentarios(self, mock_obtener_video, mock_auth):
         self.cargar_mock_obtener_video(mock_obtener_video, "5edcd01cd3cf810031d865db")
         mock_auth.return_value = {}
@@ -37,7 +36,7 @@ class VideoComentariosTestCase(LoginMockTestCase):
         self.assertEquals(response.status_code, 200)
         self.assertEquals(response.json, [])
     
-    @mock.patch('media_server_api.obtener_video')
+    @mock.patch('app.servicios.media_server.obtener_video')
     def test_agregar_comentario_devuelve_201(self, mock):
         self.cargar_mock_obtener_video(mock, "5edcd01cd3cf810031d865db")
         body = {"comentario": "test"}
@@ -48,7 +47,7 @@ class VideoComentariosTestCase(LoginMockTestCase):
         self.assertEquals(response.json, {})
     
     @mock.patch('app.servicios.auth_server.obtener_usuarios')
-    @mock.patch('media_server_api.obtener_video')
+    @mock.patch('app.servicios.media_server.obtener_video')
     def test_obtener_comentarios_video_con_comentarios(self, mock, mock_auth):
         self.cargar_mock_obtener_video(mock, "5edcd01cd3cf810031d865db")
         autor = {
@@ -76,7 +75,7 @@ class VideoComentariosTestCase(LoginMockTestCase):
         self.assertIn("fecha", response.json[0])
         self.assertIsNotNone(response.json[0]["fecha"])
 
-    @mock.patch('media_server_api.obtener_video')
+    @mock.patch('app.servicios.media_server.obtener_video')
     def test_agregar_comentario_con_content_type_erroneo_devuelve_400(self, mock):
         self.cargar_mock_obtener_video(mock, "5edcd01cd3cf810031d865db")
         
@@ -85,7 +84,7 @@ class VideoComentariosTestCase(LoginMockTestCase):
             data=body)
         self.assertEquals(response.status_code, 400)
     
-    @mock.patch('media_server_api.obtener_video')
+    @mock.patch('app.servicios.media_server.obtener_video')
     def test_agregar_comentario_body_sin_clave_comentario_devuelve_400(self, mock):
         self.cargar_mock_obtener_video(mock, "5edcd01cd3cf810031d865db")
         body = {}
@@ -93,7 +92,7 @@ class VideoComentariosTestCase(LoginMockTestCase):
             json=body)
         self.assertEquals(response.status_code, 400)
     
-    @mock.patch('media_server_api.obtener_video')
+    @mock.patch('app.servicios.media_server.obtener_video')
     def test_agregar_comentario_vacio_devuelve_400(self, mock):
         self.cargar_mock_obtener_video(mock, "5edcd01cd3cf810031d865db")
         body = {"comentario": ""}
@@ -101,7 +100,7 @@ class VideoComentariosTestCase(LoginMockTestCase):
             json=body)
         self.assertEquals(response.status_code, 400)
     
-    @mock.patch('media_server_api.obtener_video')
+    @mock.patch('app.servicios.media_server.obtener_video')
     def test_agregar_comentario_nulo_devuelve_400(self, mock):
         self.cargar_mock_obtener_video(mock, "5edcd01cd3cf810031d865db")
         body = {"comentario": None}
@@ -109,7 +108,7 @@ class VideoComentariosTestCase(LoginMockTestCase):
             json=body)
         self.assertEquals(response.status_code, 400)
     
-    @mock.patch('media_server_api.obtener_video')
+    @mock.patch('app.servicios.media_server.obtener_video')
     def test_agregar_comentario_tipo_incorrecto_devuelve_400(self, mock):
         self.cargar_mock_obtener_video(mock, "5edcd01cd3cf810031d865db")
         body = {"comentario": 17}
@@ -122,15 +121,15 @@ class VideoComentariosTestCase(LoginMockTestCase):
             json=body)
         self.assertEquals(response.status_code, 400)
     
-    @mock.patch('media_server_api.obtener_video')
+    @mock.patch('app.servicios.media_server.obtener_video')
     def test_agregar_comentario_a_video_inexistente_devuelve_404(self, mock):
-        mock.return_value.status_code = 404
+        mock.return_value = None
         body = {"comentario": "test"}
         response = self.app.post("/video/5edcd01cd3cf810031d865db/comentario", 
             json=body)
         self.assertEquals(response.status_code, 404)
    
-    @mock.patch('media_server_api.obtener_video')
+    @mock.patch('app.servicios.media_server.obtener_video')
     def test_agregar_comentario_content_type_con_charset_devuelve_201(self, mock):
         self.cargar_mock_obtener_video(mock, "5edcd01cd3cf810031d865db")
         

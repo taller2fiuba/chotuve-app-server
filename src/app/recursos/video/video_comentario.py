@@ -1,9 +1,10 @@
 from flask import request, abort, g
+
 from app import db
 from app.login_requerido_decorator import login_requerido
 from app.models.comentario import Comentario, MAX_LEN_COMENTARIO
-from app.servicios import auth_server
-import media_server_api
+from app.servicios import auth_server, media_server
+
 from .video_base import VideoBaseResource
 
 CANTIDAD_POR_DEFECTO = 10
@@ -19,9 +20,8 @@ class VideoComentario(VideoBaseResource):
         if not isinstance(comentario, str) or not 0 < len(comentario) <= MAX_LEN_COMENTARIO:
             return {"error": f'El comentario {comentario} es inválido'}, 400
 
-        response = media_server_api.obtener_video(video_id)
-        if response.status_code != 200:
-            abort(response.status_code)
+        if not media_server.obtener_video(video_id):
+            return {"error": "El video no existe."}, 404
 
         db.session.add(Comentario(
             video=video_id,

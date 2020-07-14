@@ -48,6 +48,12 @@ def auth_error(e):
     log.error('Error del auth server: (%r) %r', e.status_code, e.payload)
     return e.payload, e.status_code
 
+from app.servicios.servicio_media_server import MediaServerError
+@app.errorhandler(MediaServerError)
+def media_error(e):
+    log.error('Error del media server: (%r) %r', e.status_code, e.payload)
+    return e.payload, e.status_code
+
 @app.errorhandler(Exception)
 def unhandled_exception(e):
     tb = traceback.format_exc()
