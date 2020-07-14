@@ -84,8 +84,9 @@ class AuthServer(ClienteHttpBase):
         '''
         # Asegurarse de que son enteros mediante `map(int, usuarios_id)`
         # Convertirlos a `str` ya que `.join` no lo hace internamente
-        ids = ','.join({str(uid) for uid in map(int, usuarios_id)})
-        params = {'ids': ids, 'cantidad': len(ids)}
+        ids_filtrados = {str(uid) for uid in map(int, usuarios_id)}
+        ids = ','.join(sorted(ids_filtrados))
+        params = {'ids': ids, 'cantidad': len(ids_filtrados)}
 
         response = self._get("/usuario", params=params)
         if response.status_code != 200:
@@ -97,6 +98,8 @@ class AuthServer(ClienteHttpBase):
         '''
         Actualiza la información de un usuario.
         data: dict con nombre de campo como clave y como valor el nuevo dato.
+        Devuelve True si se actualizó correctamente, o False si el usuario no
+        existe.
         '''
         data_saneada = {}
         for campo in ("nombre", "apellido", "telefono", "direccion", "foto"):
@@ -107,8 +110,13 @@ class AuthServer(ClienteHttpBase):
             raise ValueError('Campos desconocido: ' + ','.join(data.keys()))
 
         response = self._put(f"/usuario/{usuario_id}", json=data_saneada)
-        if response.status_code != 200:
-            raise AuthServerError(response)
+
+        if response.status_code == 200:
+            return True
+        if response.status_code == 404:
+            return False
+
+        raise AuthServerError(response)
 
     def limpiar_base_de_datos(self):
         '''

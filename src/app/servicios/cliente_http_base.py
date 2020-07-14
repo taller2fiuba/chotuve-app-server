@@ -39,7 +39,9 @@ class ClienteHttpBase:
         Realiza una solicitud al servidor de autenticación utilizado el método pasado por parámetro.
         method: requests.get, requests.post o requests.put
         '''
-        extra_headers = {'X-APP-SERVER-TOKEN': self._app_token}
+        extra_headers = {}
+        if self._app_token:
+            extra_headers['X-APP-SERVER-TOKEN'] = self._app_token
         extra_headers.update(headers or {})
 
         return method(f"{self._url}{path}", params=params, headers=extra_headers, json=json)

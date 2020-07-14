@@ -38,5 +38,6 @@ class PerfilUsuarioResource(Resource):
         if not all(parametros in post_data for parametros in campos_requeridos):
             return {}, 400
 
-        auth_server.actualizar_usuario(g.usuario_actual, post_data)
+        if not auth_server.actualizar_usuario(g.usuario_actual, post_data):
+            return {}, 404
         return {}, 200
