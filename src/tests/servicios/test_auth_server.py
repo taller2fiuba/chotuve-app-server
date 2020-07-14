@@ -23,7 +23,7 @@ class AuthServerTestCase(MockClienteHttpTestCase):
 
         uid = self.auth_server.autenticar('token-de-auth')
 
-        self.assertEqual(uid, 1)
+        self.assertEqual(uid, (1, False))
 
     def test_autenticar_devuelve_none_con_token_invalido(self):
         self.mock_get.return_value.status_code = 401

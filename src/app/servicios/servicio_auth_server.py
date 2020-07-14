@@ -15,7 +15,8 @@ class AuthServer(ClienteHttpBase):
         '''
         response = self._get('/usuario/sesion', headers={'Authorization': f'Bearer {token}'})
         if response.status_code == 200:
-            return response.json()['usuario_id']
+            data = response.json()
+            return data['usuario_id'], data.get('es_admin', False)
         if response.status_code == 401:
             return None
 

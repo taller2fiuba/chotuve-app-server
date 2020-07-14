@@ -33,5 +33,4 @@ class BaseTestCase(unittest.TestCase):
 class LoginMockTestCase(BaseTestCase):
     def setUp(self):
         super().setUp()
-        usuario_actual_repositorio.get_usuario_actual = MagicMock(return_value=1)
-        login_requerido_decorator.auth_server.autenticar = MagicMock(return_value=1)
+        login_requerido_decorator.auth_server.autenticar = MagicMock(return_value=(1, False))

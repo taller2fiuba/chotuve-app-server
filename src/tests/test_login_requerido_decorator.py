@@ -7,7 +7,7 @@ class LoginRequeridoDecoratorTestCase(BaseTestCase):
     @mock.patch('app.servicios.auth_server.obtener_usuario')
     @mock.patch('app.servicios.auth_server.autenticar')
     def test_middleware_autenticacion_exitosa(self, autenticar, obtener_usuario):
-        autenticar.return_value = 3
+        autenticar.return_value = (3, False)
         obtener_usuario.return_value = {'email': 'test@test.com'}
         token = 'token-valido'
         response = self.app.get('/usuario/1', headers={
