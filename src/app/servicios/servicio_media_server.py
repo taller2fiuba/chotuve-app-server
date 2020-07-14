@@ -1,4 +1,4 @@
-import requests
+from app.servicios.cliente_http_base import ClienteHttpBase
 
 class MediaServerError(Exception):
     def __init__(self, response):
@@ -6,12 +6,12 @@ class MediaServerError(Exception):
         self.status_code = response.status_code
         self.payload = response.json()
 
-class MediaServer:
-    def __init__(self, url: str):
+class MediaServer(ClienteHttpBase):
+    def __init__(self, url: str, app_token=None):
         '''
         url: URL del servidor de medios
         '''
-        self._url = url.rstrip('/')
+        super().__init__(url, app_token)
 
     def obtener_video(self, video_id: str):
         '''
@@ -19,7 +19,7 @@ class MediaServer:
         Devuelve un diccionario con toda la información del video, o None si
         no hay un video con ese ID.
         '''
-        response = requests.get(f"{self._url}/video/{video_id}")
+        response = self._get(f"/video/{video_id}")
         if response.status_code == 200:
             return response.json()
         if response.status_code == 404:
@@ -36,7 +36,7 @@ class MediaServer:
         Devuelve un iterable donde cada elemento es un diccionario con la
         información del video.
         '''
-        response = requests.get(f"{self._url}/video", params={
+        response = self._get("/video", params={
             'cantidad': cantidad,
             'offset': offset
         })
@@ -52,7 +52,7 @@ class MediaServer:
 
         data: Diccionario con toda la información del video a subir.
         '''
-        response = requests.post(f"{self._url}/video", json=data)
+        response = self._post("/video", json=data)
 
         if response.status_code != 201:
             raise MediaServerError(response)
@@ -63,5 +63,5 @@ class MediaServer:
 
         Devuelve True si se borró correctamente, False en caso contrario.
         '''
-        response = requests.delete(f'{self._url}/base_de_datos')
+        response = self._delete('/base_de_datos')
         return response.status_code == 200

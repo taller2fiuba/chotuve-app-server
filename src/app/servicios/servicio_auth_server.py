@@ -1,4 +1,4 @@
-import requests
+from app.servicios.cliente_http_base import ClienteHttpBase
 
 class AuthServerError(Exception):
     def __init__(self, response):
@@ -6,12 +6,12 @@ class AuthServerError(Exception):
         self.status_code = response.status_code
         self.payload = response.json()
 
-class AuthServer:
-    def __init__(self, url: str):
+class AuthServer(ClienteHttpBase):
+    def __init__(self, url: str, app_token=None):
         '''
         url: URL del servidor de autenticación
         '''
-        self._url = url.rstrip('/')
+        super().__init__(url, app_token)
 
     def autenticar(self, token: str):
         '''
@@ -19,9 +19,7 @@ class AuthServer:
         Devuelve el ID del usuario autenticado o None si el token es
         inválido.
         '''
-        response = requests.get(f'{self._url}/usuario/sesion', headers={
-            'Authorization': f'Bearer {token}'
-        })
+        response = self._get('/usuario/sesion', headers={'Authorization': f'Bearer {token}'})
         if response.status_code == 200:
             return response.json()['usuario_id']
         if response.status_code == 401:
@@ -36,7 +34,7 @@ class AuthServer:
         Devuelve una tupla con el token generado y el ID de usuario del estilo
         (token, ID) en caso de éxito o None si el email o clave es erróneo.
         '''
-        response = requests.post(f"{self._url}/usuario/sesion", json={
+        response = self._post("/usuario/sesion", json={
             "email": email,
             "password": clave
         })
@@ -56,7 +54,7 @@ class AuthServer:
         Devuelve su token de autenticación y el ID de usuario en una tupla
         (token, ID). Si ya hay un e-mail registrado con ese email devuelve None.
         '''
-        response = requests.post(f"{self._url}/usuario", json={
+        response = self._post("/usuario", json={
             'email': email,
             'password': clave
         })
@@ -74,7 +72,7 @@ class AuthServer:
         Devuelve un diccionario con la información del usuario
         o None si el usuario no existe.
         '''
-        response = requests.get(f'{self._url}/usuario/{usuario_id}')
+        response = self._get(f"/usuario/{usuario_id}")
         if response.status_code == 404:
             return None
 
@@ -95,7 +93,7 @@ class AuthServer:
         ids = ','.join({str(uid) for uid in map(int, usuarios_id)})
         params = {'ids': ids, 'cantidad': len(ids)}
 
-        response = requests.get(f"{self._url}/usuario", params=params)
+        response = self._get("/usuario", params=params)
         if response.status_code != 200:
             raise AuthServerError(response)
 
@@ -114,7 +112,7 @@ class AuthServer:
         if len(data) != 0:
             raise ValueError('Campos desconocido: ' + ','.join(data.keys()))
 
-        response = requests.put(f"{self._url}/usuario/{usuario_id}", json=data_saneada)
+        response = self._put(f"/usuario/{usuario_id}", json=data_saneada)
         if response.status_code != 200:
             raise AuthServerError(response)
 
@@ -124,5 +122,5 @@ class AuthServer:
 
         Devuelve True si se borró correctamente, False en caso contrario.
         '''
-        response = requests.delete(f"{self._url}/base_de_datos")
+        response = self._delete("/base_de_datos")
         return response.status_code == 200

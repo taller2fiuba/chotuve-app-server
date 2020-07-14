@@ -25,12 +25,14 @@ def configurar_servicios(app):
 def _configurar_auth_server(app):
     global auth_server
     from .servicio_auth_server import AuthServer
-    auth_server = AuthServer(app.config.get('CHOTUVE_AUTH_URL'))
+    auth_server = AuthServer(app.config.get('CHOTUVE_AUTH_URL'), 
+                             app.config.get('APP_SERVER_TOKEN'))
 
 def _configurar_media_server(app):
     global media_server
     from .servicio_media_server import MediaServer
-    media_server = MediaServer(app.config.get('CHOTUVE_MEDIA_URL'))
+    media_server = MediaServer(app.config.get('CHOTUVE_MEDIA_URL'),
+                               app.config.get('APP_SERVER_TOKEN'))
 
 def _configurar_chat(app):
     global chat
