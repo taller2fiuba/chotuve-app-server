@@ -26,12 +26,11 @@ class VideoComentariosTestCase(LoginMockTestCase):
         
         return mock
 
-    @mock.patch('auth_server_api.obtener_usuarios')
+    @mock.patch('app.servicios.auth_server.obtener_usuarios')
     @mock.patch('media_server_api.obtener_video')
     def test_obtener_comentarios_video_sin_comentarios(self, mock_obtener_video, mock_auth):
         self.cargar_mock_obtener_video(mock_obtener_video, "5edcd01cd3cf810031d865db")
-        mock_auth.return_value.status_code = 200
-        mock_auth.return_value.json = lambda: []
+        mock_auth.return_value = {}
 
         response = self.app.get("/video/5edcd01cd3cf810031d865db/comentario")
         
@@ -48,7 +47,7 @@ class VideoComentariosTestCase(LoginMockTestCase):
         self.assertEquals(response.status_code, 201)
         self.assertEquals(response.json, {})
     
-    @mock.patch('auth_server_api.obtener_usuarios')
+    @mock.patch('app.servicios.auth_server.obtener_usuarios')
     @mock.patch('media_server_api.obtener_video')
     def test_obtener_comentarios_video_con_comentarios(self, mock, mock_auth):
         self.cargar_mock_obtener_video(mock, "5edcd01cd3cf810031d865db")
@@ -60,8 +59,7 @@ class VideoComentariosTestCase(LoginMockTestCase):
             "telefono": "",
             "foto": ""
         }
-        mock_auth.return_value.status_code = 200
-        mock_auth.return_value.json = lambda: [autor]
+        mock_auth.return_value = {autor['id']: autor}
 
         body = {"comentario": "test"}
 

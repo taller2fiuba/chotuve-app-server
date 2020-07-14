@@ -1,9 +1,10 @@
 from flask import request, g
 from app import app
 from app.login_requerido_decorator import login_requerido
+from app.servicios import auth_server
 import media_server_api
-import auth_server_api
 from .video_base import VideoBaseResource
+
 
 CHOTUVE_MEDIA_URL = app.config.get('CHOTUVE_MEDIA_URL')
 OFFSET_POR_DEFECTO = 0
@@ -32,17 +33,15 @@ class VideoResource(VideoBaseResource):
         # remover los videos del usuario actual
         videos = response.json()
         videos = list(filter(lambda video: (video['usuario_id'] != g.usuario_actual), videos))
+        if not videos:
+            return [], 200
 
-        response = self._obtener_autores(videos, offset, cantidad)
-        if response.status_code != 200:
-            return response.json(), response.status_code
+        autores = auth_server.obtener_usuarios({v['usuario_id'] for v in videos})
 
-        autores = response.json()
         for i, video in enumerate(videos):
-            autor = [autor for autor in autores if autor['id'] == video['usuario_id']][0]
-            videos[i] = self.armar_video(video, autor)
+            videos[i] = self.armar_video(video, autores[video['usuario_id']])
 
-        return videos, response.status_code
+        return videos, 200
 
     def _obtener_datos(self, post_data):
         return {
@@ -59,4 +58,4 @@ class VideoResource(VideoBaseResource):
         ids = ','.join({str(video['usuario_id']) for video in videos})
         params = {'ids': ids, 'offset': offset, 'cantidad': cantidad}
 
-        return auth_server_api.obtener_usuarios(params)
+        return auth_server.obtener_usuarios(params)

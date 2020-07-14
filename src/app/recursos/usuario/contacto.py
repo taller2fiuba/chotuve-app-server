@@ -1,9 +1,10 @@
 from flask_restful import Resource
 from flask import g
-import auth_server_api
+
 from app.login_requerido_decorator import login_requerido
 
 from app.models.contacto import Contacto
+from app.servicios import auth_server
 
 class ContactoResource(Resource):
     @login_requerido
@@ -15,10 +16,5 @@ class ContactoResource(Resource):
         if len(contactos) == 0:
             return []
 
-        response = auth_server_api.obtener_usuarios({'ids': ','.join(map(str, contactos))})
-        if response.status_code != 200:
-            return response.json(), response.status_code
-
-        ret = [{'id': u['id'], 'email': u['email'], 'foto': u['foto']} for u in response.json()]
-
-        return ret
+        usuarios = auth_server.obtener_usuarios(contactos)
+        return [{'id': u['id'], 'email': u['email'], 'foto': u['foto']} for u in usuarios.values()]

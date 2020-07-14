@@ -1,9 +1,10 @@
 from flask_restful import Resource
 from flask import request, g
-import auth_server_api
+
 from app.login_requerido_decorator import login_requerido
 from app.models.contacto import Contacto
 from app.models.solicitud_contacto import SolicitudContacto
+from app.servicios import auth_server
 
 class PerfilUsuarioResource(Resource):
     @login_requerido
@@ -11,11 +12,10 @@ class PerfilUsuarioResource(Resource):
         if usuario_id is None:
             usuario_id = g.usuario_actual
 
-        response = auth_server_api.get_perfil(usuario_id)
-        if response.status_code != 200:
-            return response.json(), response.status_code
+        perfil = auth_server.obtener_usuario(usuario_id)
+        if not perfil:
+            return {}, 404
 
-        perfil = response.json()
         perfil['cantidad-contactos'] = Contacto.obtener_cantidad_contactos(usuario_id)
 
         if usuario_id != g.usuario_actual:
@@ -38,13 +38,5 @@ class PerfilUsuarioResource(Resource):
         if not all(parametros in post_data for parametros in campos_requeridos):
             return {}, 400
 
-        nombre = post_data['nombre']
-        apellido = post_data['apellido']
-        telefono = post_data['telefono']
-        direccion = post_data['direccion']
-        foto = post_data['foto']
-
-        response = auth_server_api.actualizar_perfil_usuario(nombre, apellido, telefono, direccion,
-                                                             foto)
-
-        return response.json(), response.status_code
+        auth_server.actualizar_usuario(g.usuario_actual, post_data)
+        return {}, 200

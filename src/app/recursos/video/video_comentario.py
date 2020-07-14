@@ -2,8 +2,8 @@ from flask import request, abort, g
 from app import db
 from app.login_requerido_decorator import login_requerido
 from app.models.comentario import Comentario, MAX_LEN_COMENTARIO
+from app.servicios import auth_server
 import media_server_api
-import auth_server_api
 from .video_base import VideoBaseResource
 
 CANTIDAD_POR_DEFECTO = 10
@@ -39,12 +39,7 @@ class VideoComentario(VideoBaseResource):
         query = Comentario.query.filter_by(video=video_id)
         query = query.offset(offset).limit(cantidad)
         comentarios = query.all()
-        params = {
-            'ids': ','.join({str(comentario.usuario) for comentario in comentarios}),
-            'cantidad': cantidad
-        }
-        autores = {u['id']: u
-                   for u in auth_server_api.obtener_usuarios(params).json()}
+        autores = auth_server.obtener_usuarios({c.usuario for c in comentarios})
 
         return [{
             'autor': autores.get(comentario.usuario, USUARIO_ELIMINADO),

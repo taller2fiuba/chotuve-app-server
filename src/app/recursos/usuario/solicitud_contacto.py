@@ -1,11 +1,12 @@
 from flask_restful import Resource
 from flask import request, g, abort
-import auth_server_api
+
 from app.login_requerido_decorator import login_requerido
 
 from app import db
 from app.models.solicitud_contacto import SolicitudContacto
 from app.models.contacto import Contacto
+from app.servicios import auth_server
 
 class SolicitudContactoResource(Resource):
     @login_requerido
@@ -15,11 +16,8 @@ class SolicitudContactoResource(Resource):
             return []
 
         usuarios = [s.usuario_emisor for s in data]
-        response = auth_server_api.obtener_usuarios({'ids': ','.join(map(str, usuarios))})
-        if response.status_code != 200:
-            return response.json(), response.status_code
+        data_usuarios = auth_server.obtener_usuarios(usuarios)
 
-        data_usuarios = {e['id']: e for e in response.json()}
         ret = []
         for solicitud in data:
             data_usuario = data_usuarios.get(

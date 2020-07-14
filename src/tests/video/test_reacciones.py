@@ -106,12 +106,11 @@ class VideoReaccionesTestCase(LoginMockTestCase):
         
         self.assertEquals(response.status_code, 200)
 
-    @mock.patch('auth_server_api.get_usuario')
+    @mock.patch('app.servicios.auth_server.obtener_usuario')
     @mock.patch('media_server_api.obtener_video')
     def test_agregar_me_gusta_video_trae_reacciones(self, mock_obtener_video, mock_get_usuario):
         self.cargar_mock_obtener_video(mock_obtener_video, "5edcd01cd3cf810031d865db")
-        mock_get_usuario.return_value.status_code = 200
-        mock_get_usuario.return_value.json = lambda: {
+        mock_get_usuario.return_value = {
             "id": 1,
             "nombre": "",
             "apellido": "",
@@ -136,12 +135,11 @@ class VideoReaccionesTestCase(LoginMockTestCase):
         assert 'mi-reaccion' in data
         self.assertEquals(data['mi-reaccion'], 'me-gusta')
     
-    @mock.patch('auth_server_api.get_usuario')
+    @mock.patch('app.servicios.auth_server.obtener_usuario')
     @mock.patch('media_server_api.obtener_video')
     def test_agregar_no_me_gusta_video_trae_reacciones(self, mock_obtener_video, mock_get_usuario):
         self.cargar_mock_obtener_video(mock_obtener_video, "5edcd01cd3cf810031d865db")
-        mock_get_usuario.return_value.status_code = 200
-        mock_get_usuario.return_value.json = lambda: {
+        mock_get_usuario.return_value = {
             "id": 1,
             "nombre": "",
             "apellido": "",
