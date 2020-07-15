@@ -1,8 +1,9 @@
 from flask import request, g, abort
-import media_server_api
+import media_server_api as media
 import auth_server_api
 from app.login_requerido_decorator import login_requerido
 from app.recursos.video.video_base import VideoBaseResource
+from app.models.contacto import Contacto
 
 OFFSET_POR_DEFECTO = 0
 CANTIDAD_POR_DEFECTO = 10
@@ -23,8 +24,8 @@ class VideoUsuarioResource(VideoBaseResource):
             cantidad = int(request.args.get('cantidad', CANTIDAD_POR_DEFECTO))
         except ValueError:
             abort(400)
-
-        media_response = media_server_api.obtener_videos_usuario(usuario_id, offset, cantidad)
+        contactos = Contacto.obtener_contactos(g.usuario_actual)
+        media_response = media.obtener_videos_usuario(usuario_id, offset, cantidad, contactos)
         videos = media_response.json()["videos"]
         videos = list(map(self.armar_video_sin_autor, videos))
         return videos, media_response.status_code

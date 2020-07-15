@@ -1,6 +1,7 @@
 from flask import request, g
 from app import app
 from app.login_requerido_decorator import login_requerido
+from app.models.contacto import Contacto
 import media_server_api
 import auth_server_api
 from .video_base import VideoBaseResource
@@ -24,7 +25,8 @@ class VideoResource(VideoBaseResource):
     def get(self):
         offset = int(request.args.get('offset', OFFSET_POR_DEFECTO))
         cantidad = int(request.args.get('cantidad', CANTIDAD_POR_DEFECTO))
-        params = {'offset': offset, 'cantidad': cantidad}
+        contactos = Contacto.obtener_contactos(g.usuario_actual)
+        params = {'offset': offset, 'cantidad': cantidad, 'contactos': contactos}
         response = media_server_api.obtener_videos(params)
         if response.status_code != 200:
             return response.json(), response.status_code
