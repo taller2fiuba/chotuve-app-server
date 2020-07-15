@@ -83,13 +83,17 @@ class MediaServerTestCase(MockClienteHttpTestCase):
 
         self.mock_post.assert_called_with(f"/video", json={'titulo': 'Lucho'})
 
-    def test_subir_video_lanza_excepcion_en_bad_request(self):
+    def test_subir_video_devuelve_true_en_exito(self):
+        self.mock_post.return_value.status_code = 201
+        self.mock_post.return_value.json = lambda: {}
+
+        self.assertTrue(self.media_server.subir_video({'titulo': 'Lucho'}))
+
+    def test_subir_video_devuelve_false_en_bad_request(self):
         self.mock_post.return_value.status_code = 400
         self.mock_post.return_value.json = lambda: {}
 
-        self.assertRaises(MediaServerError,
-                          self.media_server.subir_video,
-                          {'titulo': 'Lucho'})
+        self.assertFalse(self.media_server.subir_video({'titulo': 'Lucho'}))
 
     def test_subir_video_lanza_excepcion_en_error(self):
         self.mock_post.return_value.status_code = 500

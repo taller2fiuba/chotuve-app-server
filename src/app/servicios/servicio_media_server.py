@@ -45,11 +45,17 @@ class MediaServer(ClienteHttpBase):
         Sube un nuevo video al servidor de medios.
 
         data: Diccionario con toda la información del video a subir.
+
+        Devuelve True si pudo subir el video o False en caso contrario.
         '''
         response = self._post("/video", json=data)
 
-        if response.status_code != 201:
-            raise MediaServerError(response)
+        if response.status_code == 201:
+            return True
+        if response.status_code == 400:
+            return False
+
+        raise MediaServerError(response)
 
     def limpiar_base_de_datos(self):
         '''

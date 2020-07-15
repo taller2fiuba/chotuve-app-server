@@ -13,8 +13,7 @@ class VideoResource(VideoBaseResource):
     @login_requerido
     def post(self):
         post_data = request.get_json(force=True)
-
-        media_server.subir_video({
+        data_video = {
             'url': post_data.get('url', None),
             'titulo': post_data.get('titulo', None),
             'descripcion': post_data.get('descripcion', None),
@@ -22,7 +21,10 @@ class VideoResource(VideoBaseResource):
             'duracion': post_data.get('duracion', DURACION_POR_DEFECTO),
             'usuario_id': g.usuario_actual,
             'visibilidad': post_data.get('visibilidad', 'publico')
-        })
+        }
+
+        if not media_server.subir_video(data_video):
+            return {}, 400
 
         return {}, 201
 
