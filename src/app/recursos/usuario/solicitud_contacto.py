@@ -19,13 +19,18 @@ class SolicitudContactoResource(Resource):
         if response.status_code != 200:
             return response.json(), response.status_code
 
-        data_usuarios = {e['id']:e['email'] for e in response.json()}
+        data_usuarios = {e['id']: e for e in response.json()}
         ret = []
         for solicitud in data:
+            data_usuario = data_usuarios.get(
+                solicitud.usuario_emisor,
+                {'email': '<eliminado>', 'foto': None}
+            )
             ret.append({
                 'id': solicitud.id,
                 'usuario_id': solicitud.usuario_emisor,
-                'email': data_usuarios.get(solicitud.usuario_emisor, '<eliminado>')
+                'email': data_usuario['email'],
+                'foto': data_usuario['foto']
             })
 
         return ret
