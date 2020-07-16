@@ -61,7 +61,7 @@ class VideoTestCase(LoginMockTestCase):
 
         response = self.app.get('/video')
 
-        mock_obtener_videos.assert_called_with({'offset': 0, 'cantidad': 10, 'contactos': []})
+        mock_obtener_videos.assert_called_with({'offset': 0, 'cantidad': 10, 'contactos': [" "]})
         mock_obtener_usuarios.assert_called_with({'ids':'', 'offset': 0, 'cantidad': 10})
         self.assertEqual(response.status_code, 200)
         self.assertEqual([], response.json)
@@ -82,7 +82,7 @@ class VideoTestCase(LoginMockTestCase):
         response = self.app.get(f'/video?offset={offset}&cantidad={cantidad}')
 
         mock_obtener_videos.assert_called_with({
-            'offset': offset, 'cantidad': cantidad, 'contactos': []
+            'offset': offset, 'cantidad': cantidad, 'contactos': [" "]
         })
         mock_obtener_usuarios.assert_called_with({'ids':'', 'offset': offset, 'cantidad': cantidad})
         self.assertEqual(response.status_code, 200)

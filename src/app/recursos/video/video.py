@@ -26,6 +26,8 @@ class VideoResource(VideoBaseResource):
         offset = int(request.args.get('offset', OFFSET_POR_DEFECTO))
         cantidad = int(request.args.get('cantidad', CANTIDAD_POR_DEFECTO))
         contactos = Contacto.obtener_contactos(g.usuario_actual)
+        if len(contactos) == 0:
+            contactos = [' ']
         params = {'offset': offset, 'cantidad': cantidad, 'contactos': contactos}
         response = media_server_api.obtener_videos(params)
         if response.status_code != 200:

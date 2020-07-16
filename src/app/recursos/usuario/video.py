@@ -25,6 +25,8 @@ class VideoUsuarioResource(VideoBaseResource):
         except ValueError:
             abort(400)
         contactos = Contacto.obtener_contactos(g.usuario_actual)
+        if len(contactos) == 0:
+            contactos = [' ']
         media_response = media.obtener_videos_usuario(usuario_id, offset, cantidad, contactos)
         videos = media_response.json()["videos"]
         videos = list(map(self.armar_video_sin_autor, videos))

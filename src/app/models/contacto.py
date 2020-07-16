@@ -30,8 +30,6 @@ class Contacto(db.Model):
                 ret.append(contacto.usuario_2)
             else:
                 ret.append(contacto.usuario_1)
-        if len(ret) == 0:
-            ret = [' ']
         return ret
 
     @staticmethod
