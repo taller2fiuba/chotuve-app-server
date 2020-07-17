@@ -56,6 +56,20 @@ class SolicitudContactoTestCase(LoginMockTestCase):
     @mock.patch('app.models.solicitud_contacto.SolicitudContacto.hay_solicitud')
     @mock.patch('app.models.contacto.Contacto.es_contacto')
     @mock.patch('app.db.session')
+    def test_crear_solicitud_envia_notificacion(self, _, es_contacto, hay_solicitud):
+        es_contacto.return_value = False
+        hay_solicitud.return_value = False
+
+        response = self.app.post('/usuario/solicitud-contacto', json={
+            'usuario_id': 2
+        })
+
+        self.assertEqual(201, response.status_code)
+        self.assertEqual({}, response.json)
+
+    @mock.patch('app.models.solicitud_contacto.SolicitudContacto.hay_solicitud')
+    @mock.patch('app.models.contacto.Contacto.es_contacto')
+    @mock.patch('app.db.session')
     def test_crear_solicitud_sin_data_devuelve_400(self, db_session, es_contacto, hay_solicitud):
         response = self.app.post('/usuario/solicitud-contacto', json={})
         self.assertEqual(400, response.status_code)

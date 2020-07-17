@@ -1,6 +1,6 @@
 from .interfaz_notificador import InterfazNotificador
 
-class NotificadorNulo(InterfazNotificador):
+class NotificadorNulo(InterfazNotificador): # pragma: no cover
     def __init__(self, log):
         self.log = log
 
