@@ -3,7 +3,7 @@ from flask import request, abort, g
 from app import db
 from app.login_requerido_decorator import login_requerido
 from app.models.reaccion import Reaccion, TipoReaccion
-from app.servicios import media_server
+from app.servicios import media_server, notificador
 
 from .video_base import VideoBaseResource
 
@@ -21,7 +21,8 @@ class VideoReaccion(VideoBaseResource):
         if not reaccion or reaccion not in REACCIONES:
             return {"error": f'La reaccion {reaccion} es inválida'}, 400
 
-        if not media_server.obtener_video(video_id):
+        video = media_server.obtener_video(video_id)
+        if not video:
             return {"error": "El video no existe."}, 404
 
         query = Reaccion.query
@@ -40,4 +41,6 @@ class VideoReaccion(VideoBaseResource):
                 tipo=REACCIONES[reaccion]))
 
         db.session.commit()
+        if not reaccion_guardada and reaccion == 'me-gusta':
+            notificador.reaccionar_me_gusta_video(video, g.usuario_actual)
         return {}, 200 if reaccion_guardada else 201

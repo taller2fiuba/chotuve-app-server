@@ -6,7 +6,7 @@ from app.login_requerido_decorator import login_requerido
 from app import db
 from app.models.solicitud_contacto import SolicitudContacto
 from app.models.contacto import Contacto
-from app.servicios import auth_server
+from app.servicios import auth_server, notificador
 
 class SolicitudContactoResource(Resource):
     @login_requerido
@@ -57,6 +57,7 @@ class SolicitudContactoResource(Resource):
                                       usuario_receptor=usuario_receptor)
         db.session.add(solicitud)
         db.session.commit()
+        notificador.enviar_solicitud_contacto(g.usuario_actual, usuario_receptor)
         return {}, 201
 
     @login_requerido
@@ -77,6 +78,8 @@ class SolicitudContactoResource(Resource):
 
         db.session.delete(solicitud)
         db.session.commit()
+        if accion == 'aceptar':
+            notificador.aceptar_solicitud_contacto(g.usuario_actual, solicitud.usuario_emisor)
         return {}
 
     @login_requerido

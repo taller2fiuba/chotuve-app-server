@@ -13,19 +13,21 @@ durante el inicio de la aplicación.
 auth_server = None
 chat = None
 media_server = None
+notificador = None
 
-def configurar_servicios(app):
+def configurar_servicios(app, log):
     '''
     Inicializa y exporta los servicios configurados.
     '''
     _configurar_auth_server(app)
     _configurar_media_server(app)
     _configurar_chat(app)
+    _configurar_notificador(log)
 
 def _configurar_auth_server(app):
     global auth_server
     from .servicio_auth_server import AuthServer
-    auth_server = AuthServer(app.config.get('CHOTUVE_AUTH_URL'), 
+    auth_server = AuthServer(app.config.get('CHOTUVE_AUTH_URL'),
                              app.config.get('APP_SERVER_TOKEN'))
 
 def _configurar_media_server(app):
@@ -49,3 +51,8 @@ def _configurar_chat(app):
     else:
         from .servicio_chat.chat_nulo import ChatNulo
         chat = ChatNulo()
+
+def _configurar_notificador(log):
+    global notificador
+    from .servicio_notificaciones.notificador_nulo import NotificadorNulo
+    notificador = NotificadorNulo(log)
