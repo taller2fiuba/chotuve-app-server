@@ -33,13 +33,19 @@ api.add_resource(PerfilUsuarioResource, '/usuario/<int:usuario_id>/perfil', meth
 api.add_resource(Sesion, '/usuario/sesion')
 api.add_resource(BaseDeDatosResource, '/base_de_datos')
 api.add_resource(SolicitudContactoResource, '/usuario/solicitud-contacto')
-api.add_resource(SolicitudContactoResource, 
+api.add_resource(SolicitudContactoResource,
                  '/usuario/solicitud-contacto/<int:solicitud_id>',
                  endpoint='SolicitudContactoIdResource')
 api.add_resource(ContactoResource, '/usuario/contacto')
-api.add_resource(ContactoResource, 
+api.add_resource(ContactoResource,
                  '/usuario/<int:usuario_id>/contacto',
                  endpoint='ContactoIdResource')
+api.add_resource(VideoUsuarioResource,
+                 '/usuario/<int:usuario_id>/video',
+                 endpoint='UsuarioVideoIdResource')
+api.add_resource(VideoUsuarioResource,
+                 '/usuario/video',
+                 endpoint='UsuarioVideoResource')
 api.add_resource(ChatResource, '/chat/<int:destinatario_id>')
 
 from app.servicios.servicio_auth_server import AuthServerError

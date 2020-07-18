@@ -48,7 +48,7 @@ class VideoTestCase(LoginMockTestCase):
 
         response = self.app.get('/video')
 
-        mock_obtener_videos.assert_called_with(offset=0, cantidad=10)
+        mock_obtener_videos.assert_called_with(contactos=[], offset=0, cantidad=10)
         mock_obtener_usuarios.assert_not_called()
         self.assertEqual(response.status_code, 200)
         self.assertEqual([], response.json)
@@ -64,7 +64,7 @@ class VideoTestCase(LoginMockTestCase):
 
         response = self.app.get(f'/video?offset={offset}&cantidad={cantidad}')
 
-        mock_obtener_videos.assert_called_with(offset=offset, cantidad=cantidad)
+        mock_obtener_videos.assert_called_with(contactos=[], offset=offset, cantidad=cantidad)
         mock_obtener_usuarios.assert_not_called()
         self.assertEqual(response.status_code, 200)
         self.assertEqual([], response.json)
@@ -90,7 +90,7 @@ class VideoTestCase(LoginMockTestCase):
                 'id': 123,
                 'nombre': 'autor_test',
                 'apellido': 'apellido_test',
-                'email': 'apellidos_test',
+                'email': 'email@test',
                 'foto': 'foto.jpg'
             }
         }
@@ -100,10 +100,10 @@ class VideoTestCase(LoginMockTestCase):
         valor_esperado = [
             {
                 'autor': {
-                    'apellido': 'apellido_test',
-                    'email': 'apellidos_test',
-                    'nombre': 'autor_test',
                     'usuario_id': 123,
+                    'email': 'email@test',
+                    'apellido': 'apellido_test',
+                    'nombre': 'autor_test',
                     'foto': 'foto.jpg'
                 },
                 'creacion': '2019-07-02',
@@ -163,7 +163,7 @@ class VideoTestCase(LoginMockTestCase):
             'id': 456,
             'nombre': 'autor_test',
             'apellido': 'apellido_test',
-            'email': 'apellidos_test',
+            'email': 'email@test',
             'foto': 'foto.jpg'
         }
 
@@ -171,10 +171,10 @@ class VideoTestCase(LoginMockTestCase):
 
         valor_esperado = {
             'autor': {
-                'apellido': 'apellido_test',
-                'email': 'apellidos_test',
-                'nombre': 'autor_test',
                 'usuario_id': 456,
+                'email': 'email@test',
+                'apellido': 'apellido_test',
+                'nombre': 'autor_test',
                 'foto': 'foto.jpg'
             },
             'creacion': '2019-07-02',

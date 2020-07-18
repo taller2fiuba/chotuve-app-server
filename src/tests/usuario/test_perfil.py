@@ -44,8 +44,10 @@ class UsuarioActualizarPerfilTestCase(LoginMockTestCase):
         self.assertEqual({}, response.json)
 
 class UsuarioConsultarPerfilTestCase(LoginMockTestCase):
+    @mock.patch('app.servicios.media_server.obtener_cantidad_videos')
     @mock.patch('app.servicios.auth_server.obtener_usuario')
-    def test_get_mi_perfil_sin_campos_completados(self, mock_get):
+    def test_get_mi_perfil_sin_campos_completados(self, mock_get, mock_videos):
+        mock_videos.return_value = 20
         mock_get.return_value = {
             'id': 1,
             'nombre': None,
@@ -66,11 +68,14 @@ class UsuarioConsultarPerfilTestCase(LoginMockTestCase):
             'telefono': None,
             'direccion': None,
             'foto': None,
-            'cantidad-contactos': 0
+            'cantidad-contactos': 0,
+            'cantidad-videos': 20
         }, response.json)
 
+    @mock.patch('app.servicios.media_server.obtener_cantidad_videos')
     @mock.patch('app.servicios.auth_server.obtener_usuario')
-    def test_get_otro_perfil_sin_campos_completados(self, mock_get):
+    def test_get_otro_perfil_sin_campos_completados(self, mock_get, mock_videos):
+        mock_videos.return_value = 20
         mock_get.return_value = {
             'id': 1,
             'nombre': None,
@@ -91,11 +96,14 @@ class UsuarioConsultarPerfilTestCase(LoginMockTestCase):
             'telefono': None,
             'direccion': None,
             'foto': None,
-            'cantidad-contactos': 0
+            'cantidad-contactos': 0,
+            'cantidad-videos': 20
         }, response.json)
 
+    @mock.patch('app.servicios.media_server.obtener_cantidad_videos')
     @mock.patch('app.servicios.auth_server.obtener_usuario')
-    def test_get_mi_perfil_con_todos_los_campos(self, mock_get):
+    def test_get_mi_perfil_con_todos_los_campos(self, mock_get, mock_videos):
+        mock_videos.return_value = 20
         mock_get.return_value = {
             'id': 1,
             'nombre': 'Lucas',
@@ -116,11 +124,14 @@ class UsuarioConsultarPerfilTestCase(LoginMockTestCase):
             'telefono': '123456789',
             'direccion': 'Calle falsa 123',
             'foto': None,
-            'cantidad-contactos': 0
+            'cantidad-contactos': 0,
+            'cantidad-videos': 20
         }, response.json)
 
+    @mock.patch('app.servicios.media_server.obtener_cantidad_videos')
     @mock.patch('app.servicios.auth_server.obtener_usuario')
-    def test_get_otro_perfil_con_todos_los_campos(self, mock_get):
+    def test_get_otro_perfil_con_todos_los_campos(self, mock_get, mock_videos):
+        mock_videos.return_value = 20
         mock_get.return_value = {
             'id': 2,
             'nombre': 'Lucas',
@@ -142,7 +153,8 @@ class UsuarioConsultarPerfilTestCase(LoginMockTestCase):
             'direccion': 'Calle falsa 123',
             'foto': None,
             'cantidad-contactos': 0,
-            'estado-contacto': None
+            'estado-contacto': None,
+            'cantidad-videos': 20
         }, response.json)
 
     @mock.patch('app.servicios.auth_server.obtener_usuario')
