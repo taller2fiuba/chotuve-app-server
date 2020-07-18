@@ -8,6 +8,11 @@ REACCIONES = {TipoReaccion.ME_GUSTA: 'me-gusta',
 
 class VideoBaseResource(Resource):
     def armar_video(self, video, autor):
+        video = self.armar_video_sin_autor(video)
+        video.update(self.armar_autor(autor))
+        return video
+
+    def armar_video_sin_autor(self, video):
         return {
             'id': video['_id'],
             'url': video['url'],
@@ -16,13 +21,6 @@ class VideoBaseResource(Resource):
             'creacion': video['time_stamp'],
             'visibilidad': video['visibilidad'],
             'descripcion': video['descripcion'],
-            'autor': {
-                'usuario_id': autor['id'],
-                'nombre': autor['nombre'],
-                'apellido': autor['apellido'],
-                'email': autor['email'],
-                'foto': autor['foto']
-            },
             'cantidad-comentarios': Comentario.contar_comentarios(video['_id']),
             "no-me-gustas": Reaccion.contar_reacciones(video['_id'],
                                                        TipoReaccion.NO_ME_GUSTA),
@@ -30,4 +28,15 @@ class VideoBaseResource(Resource):
                                                     TipoReaccion.ME_GUSTA),
             "mi-reaccion": REACCIONES.get(Reaccion.obtener_reaccion(video['_id'],
                                                                     g.usuario_actual))
+        }
+
+    def armar_autor(self, autor):
+        return {
+            'autor': {
+                'usuario_id': autor['id'],
+                'email': autor['email'],
+                'nombre': autor['nombre'],
+                'apellido': autor['apellido'],
+                'foto': autor['foto']
+            },
         }

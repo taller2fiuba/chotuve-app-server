@@ -21,16 +21,21 @@ class MediaServer(ClienteHttpBase):
 
         raise MediaServerError(response)
 
-    def obtener_videos(self, offset=0, cantidad=10):
+    def obtener_videos(self, contactos=None, offset=0, cantidad=10):
         '''
         Obtiene videos desde el media server.
+        contactos: Obtener también videos privados de los usuarios de este iterable.
         offset: Ignorar tantos videos como este parámetro indique.
         cantidad: Obtener, como máximo, tantos videos como este parámetro indique.
 
         Devuelve un iterable donde cada elemento es un diccionario con la
         información del video.
         '''
+        if not contactos:
+            contactos = [' ']
+
         response = self._get("/video", params={
+            'contactos': list(contactos),
             'cantidad': cantidad,
             'offset': offset
         })
@@ -38,7 +43,24 @@ class MediaServer(ClienteHttpBase):
         if response.status_code != 200:
             raise MediaServerError(response)
 
-        return response.json()
+        return response.json()['videos']
+
+    def obtener_videos_usuario(self, usuario_id: int, con_privados=False, offset=0, cantidad=10):
+        '''
+        Obtiene los videos de un usuario.
+        '''
+        data = self._obtener_videos_usuario(usuario_id,
+                                            con_privados,
+                                            offset=offset,
+                                            cantidad=cantidad)
+        return data['videos']
+
+    def obtener_cantidad_videos(self, usuario_id: int, con_privados=False):
+        '''
+        Devuelve la cantidad de videos subidos que tiene el usuario.
+        Si con_privados es False devuelve sólo la cantidad de videos públicos.
+        '''
+        return self._obtener_videos_usuario(usuario_id, con_privados, offset=0, cantidad=0)['total']
 
     def subir_video(self, data: dict):
         '''
@@ -65,3 +87,18 @@ class MediaServer(ClienteHttpBase):
         '''
         response = self._delete('/base_de_datos')
         return response.status_code == 200
+
+    def _obtener_videos_usuario(self, usuario_id: int, con_privados: bool, offset=0, cantidad=10):
+        '''
+        Obtiene los videos de un usuario.
+        '''
+        response = self._get("/video", params={
+            'cantidad': cantidad,
+            'offset': offset,
+            'contactos': [usuario_id] if con_privados else [' ']
+        })
+
+        if response.status_code != 200:
+            raise MediaServerError(response)
+
+        return response.json()

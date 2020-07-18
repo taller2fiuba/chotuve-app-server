@@ -1,7 +1,8 @@
-from flask import request, g
+from flask import request, g, abort
 
 from app.login_requerido_decorator import login_requerido
 from app.servicios import auth_server, media_server
+from app.models.contacto import Contacto
 
 from .video_base import VideoBaseResource
 
@@ -30,16 +31,19 @@ class VideoResource(VideoBaseResource):
 
     @login_requerido
     def get(self):
-        offset = int(request.args.get('offset', OFFSET_POR_DEFECTO))
-        cantidad = int(request.args.get('cantidad', CANTIDAD_POR_DEFECTO))
-        videos = media_server.obtener_videos(offset=offset, cantidad=cantidad)
+        offset = request.args.get('offset', str(OFFSET_POR_DEFECTO))
+        cantidad = request.args.get('cantidad', str(CANTIDAD_POR_DEFECTO))
+        if not offset.isdigit() or not cantidad.isdigit():
+            abort(400)
 
-        # remover los videos del usuario actual
+        contactos = Contacto.obtener_contactos(g.usuario_actual)
+        videos = media_server.obtener_videos(contactos=contactos,
+                                             offset=int(offset),
+                                             cantidad=int(cantidad))
+
         videos = [v for v in videos if v['usuario_id'] != g.usuario_actual]
-        if not videos:
-            return [], 200
-
-        autores = auth_server.obtener_usuarios({v['usuario_id'] for v in videos})
+        if len(videos) > 0:
+            autores = auth_server.obtener_usuarios({v['usuario_id'] for v in videos})
 
         for i, video in enumerate(videos):
             videos[i] = self.armar_video(video, autores[video['usuario_id']])
