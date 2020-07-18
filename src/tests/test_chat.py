@@ -1,9 +1,9 @@
 import unittest
 import mock
 
-from tests.base import BaseTestCase
+from tests.base import LoginMockTestCase
 
-class ChatTestCase(BaseTestCase):
+class ChatTestCase(LoginMockTestCase):
     @mock.patch('app.servicios.chat.enviar_mensaje')
     @mock.patch('app.servicios.auth_server.obtener_usuario')
     @mock.patch('app.models.contacto.Contacto.es_contacto')

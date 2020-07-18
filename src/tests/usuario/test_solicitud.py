@@ -6,38 +6,24 @@ from app.models.solicitud_contacto import SolicitudContacto
 from app.models.contacto import Contacto
 
 class SolicitudContactoTestCase(LoginMockTestCase):
-    @mock.patch('auth_server_api.obtener_usuarios')
+    @mock.patch('app.servicios.auth_server.obtener_usuarios')
     @mock.patch('app.models.solicitud_contacto.SolicitudContacto.obtener_solicitudes_pendientes')
     def test_get_mis_solicitudes_devuelve_vacio_sin_solicitudes(self, mock_sol, mock_auth):
-        mock_auth.return_value.json = lambda: []
-        mock_auth.return_value.status_code = 200
+        mock_auth.return_value = []
         mock_sol.return_value = []
         response = self.app.get('/usuario/solicitud-contacto')
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual([], response.json)
 
-    @mock.patch('auth_server_api.obtener_usuarios')
-    @mock.patch('app.models.solicitud_contacto.SolicitudContacto.obtener_solicitudes_pendientes')
-    def test_get_mis_solicitudes_forwardea_mala_respuesta_del_auth(self, mock_sol, mock_auth):
-        mock_auth.return_value.json = lambda: {}
-        mock_auth.return_value.status_code = 500
-        mock_sol.return_value = [
-            SolicitudContacto(id=1, usuario_emisor=1, usuario_receptor=2)
-        ]
-        response = self.app.get('/usuario/solicitud-contacto')
-
-        self.assertEqual(response.status_code, 500)
-        self.assertEqual({}, response.json)
-
-    @mock.patch('auth_server_api.obtener_usuarios')
+    @mock.patch('app.servicios.auth_server.obtener_usuarios')
     @mock.patch('app.models.solicitud_contacto.SolicitudContacto.obtener_solicitudes_pendientes')
     def test_get_mis_solicitudes_devuelve_solicitudes(self, mock_sol, mock_auth):
-        mock_auth.return_value.json = lambda: [
-            {'id': 2, 'email': 'test-2@test.com', 'foto': 'url2'},
-            {'id': 3, 'email': 'test-3@test.com', 'foto': 'url3'},
-        ]
-        mock_auth.return_value.status_code = 200
+        mock_auth.return_value = {
+            2: {'id': 2, 'email': 'test-2@test.com', 'foto': 'url2'},
+            3: {'id': 3, 'email': 'test-3@test.com', 'foto': 'url3'},
+        }
+
         mock_sol.return_value = [
             SolicitudContacto(id=10, usuario_emisor=2, usuario_receptor=1),
             SolicitudContacto(id=11, usuario_emisor=3, usuario_receptor=1),

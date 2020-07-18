@@ -3,12 +3,9 @@ import mock
 
 from tests.base import LoginMockTestCase
 
-class UsuarioActualizarPerfilMockTestCase(LoginMockTestCase):
-    @mock.patch('auth_server_api.requests.put')
-    def test_actualizar_perfil_exitosamente(self, mock_put):
-        mock_put.return_value.json = lambda: {}
-        mock_put.return_value.status_code = 200
-
+class UsuarioActualizarPerfilTestCase(LoginMockTestCase):
+    @mock.patch('app.servicios.auth_server.actualizar_usuario')
+    def test_actualizar_perfil_exitosamente(self, _):
         nuevo_nombre = "Lucas"
         nuevo_apellido = "Perez"
         nueva_direccion = "La Pampa 1111"
@@ -25,21 +22,15 @@ class UsuarioActualizarPerfilMockTestCase(LoginMockTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual({}, response.json)
 
-    @mock.patch('auth_server_api.requests.put')
-    def test_actualizar_perfil_sin_campos_falla(self, mock_put):
-        mock_put.return_value.json = lambda: {}
-        mock_put.return_value.status_code = 400
-
+    @mock.patch('app.servicios.auth_server.actualizar_usuario')
+    def test_actualizar_perfil_sin_campos_falla(self, _):
         response = self.app.put('/usuario/perfil')
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual({}, response.json)
 
-    @mock.patch('auth_server_api.requests.put')
-    def test_actualizar_perfil_sin_un_campos_obligatorio(self, mock_put):
-        mock_put.return_value.json = lambda: {}
-        mock_put.return_value.status_code = 400
-
+    @mock.patch('app.servicios.auth_server.actualizar_usuario')
+    def test_actualizar_perfil_sin_un_campos_obligatorio(self, _):
         nuevo_nombre = "Lucas"
         nueva_direccion = "La Pampa 1111"
         nuevo_telefono = "123456879"
@@ -52,25 +43,20 @@ class UsuarioActualizarPerfilMockTestCase(LoginMockTestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual({}, response.json)
 
-class UsuarioConsultarPerfilMockTestCase(LoginMockTestCase):
-    @mock.patch('media_server_api.obtener_videos_usuario')
-    @mock.patch('auth_server_api.requests.get')
-    def test_get_mi_perfil_sin_campos_completados(self, mock_get, mock_media):
-        mock_get.return_value.json = lambda: {
+class UsuarioConsultarPerfilTestCase(LoginMockTestCase):
+    @mock.patch('app.servicios.media_server.obtener_cantidad_videos')
+    @mock.patch('app.servicios.auth_server.obtener_usuario')
+    def test_get_mi_perfil_sin_campos_completados(self, mock_get, mock_videos):
+        mock_videos.return_value = 20
+        mock_get.return_value = {
             'id': 1,
             'nombre': None,
             'apellido': None,
             'email': 'test@test',
             'telefono': None,
             'direccion': None,
-            'foto': None}
-        mock_get.return_value.status_code = 200
-
-        mock_media.return_value.json = lambda: {
-            "videos": [],
-            "total": 20
+            'foto': None
         }
-        mock_media.return_value.status_code = 200
 
         response = self.app.get('/usuario/perfil')
         self.assertEqual(response.status_code, 200)
@@ -86,24 +72,19 @@ class UsuarioConsultarPerfilMockTestCase(LoginMockTestCase):
             'cantidad-videos': 20
         }, response.json)
 
-    @mock.patch('media_server_api.obtener_videos_usuario')
-    @mock.patch('auth_server_api.requests.get')
-    def test_get_otro_perfil_sin_campos_completados(self, mock_get, mock_media):
-        mock_get.return_value.json = lambda: {
+    @mock.patch('app.servicios.media_server.obtener_cantidad_videos')
+    @mock.patch('app.servicios.auth_server.obtener_usuario')
+    def test_get_otro_perfil_sin_campos_completados(self, mock_get, mock_videos):
+        mock_videos.return_value = 20
+        mock_get.return_value = {
             'id': 1,
             'nombre': None,
             'apellido': None,
             'email': 'test@test',
             'telefono': None,
             'direccion': None,
-            'foto': None}
-        mock_get.return_value.status_code = 200
-
-        mock_media.return_value.json = lambda: {
-            "videos": [],
-            "total": 20
+            'foto': None
         }
-        mock_media.return_value.status_code = 200
 
         response = self.app.get('/usuario/1/perfil')
         self.assertEqual(response.status_code, 200)
@@ -119,24 +100,19 @@ class UsuarioConsultarPerfilMockTestCase(LoginMockTestCase):
             'cantidad-videos': 20
         }, response.json)
 
-    @mock.patch('media_server_api.obtener_videos_usuario')
-    @mock.patch('auth_server_api.requests.get')
-    def test_get_mi_perfil_con_todos_los_campos(self, mock_get, mock_media):
-        mock_get.return_value.json = lambda: {
+    @mock.patch('app.servicios.media_server.obtener_cantidad_videos')
+    @mock.patch('app.servicios.auth_server.obtener_usuario')
+    def test_get_mi_perfil_con_todos_los_campos(self, mock_get, mock_videos):
+        mock_videos.return_value = 20
+        mock_get.return_value = {
             'id': 1,
             'nombre': 'Lucas',
             'apellido': 'Perez',
             'email': 'test@test',
             'telefono': '123456789',
             'direccion': 'Calle falsa 123',
-            'foto': None}
-        mock_get.return_value.status_code = 200
-
-        mock_media.return_value.json = lambda: {
-            "videos": [],
-            "total": 20
+            'foto': None
         }
-        mock_media.return_value.status_code = 200
 
         response = self.app.get('/usuario/perfil')
         self.assertEqual(response.status_code, 200)
@@ -152,24 +128,19 @@ class UsuarioConsultarPerfilMockTestCase(LoginMockTestCase):
             'cantidad-videos': 20
         }, response.json)
 
-    @mock.patch('media_server_api.obtener_videos_usuario')
-    @mock.patch('auth_server_api.requests.get')
-    def test_get_otro_perfil_con_todos_los_campos(self, mock_get, mock_media):
-        mock_get.return_value.json = lambda: {
+    @mock.patch('app.servicios.media_server.obtener_cantidad_videos')
+    @mock.patch('app.servicios.auth_server.obtener_usuario')
+    def test_get_otro_perfil_con_todos_los_campos(self, mock_get, mock_videos):
+        mock_videos.return_value = 20
+        mock_get.return_value = {
             'id': 2,
             'nombre': 'Lucas',
             'apellido': 'Perez',
             'email': 'test@test',
             'telefono': '123456789',
             'direccion': 'Calle falsa 123',
-            'foto': None}
-        mock_get.return_value.status_code = 200
-
-        mock_media.return_value.json = lambda: {
-            "videos": [],
-            "total": 20
+            'foto': None
         }
-        mock_media.return_value.status_code = 200
 
         response = self.app.get('/usuario/2/perfil')
         self.assertEqual(response.status_code, 200)
@@ -186,10 +157,10 @@ class UsuarioConsultarPerfilMockTestCase(LoginMockTestCase):
             'cantidad-videos': 20
         }, response.json)
 
-    @mock.patch('auth_server_api.requests.get')
+    @mock.patch('app.servicios.auth_server.obtener_usuario')
     def test_get_otro_perfil_identificador_inexistente(self, mock_get):
-        mock_get.return_value.json = lambda: {}
-        mock_get.return_value.status_code = 404
+        mock_get.return_value = None
+
         response = self.app.get('/usuario/10215/perfil')
         self.assertEqual(response.status_code, 404)
         self.assertEqual({}, response.json)

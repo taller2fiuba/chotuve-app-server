@@ -5,12 +5,9 @@ import mock
 from tests.base import LoginMockTestCase
 from app import app, log
 
-CHOTUVE_MEDIA_URL = app.config.get('CHOTUVE_MEDIA_URL')
-
 class VideoReaccionesTestCase(LoginMockTestCase):
     def cargar_mock_obtener_video(self, mock, id):
-        mock.return_value.status_code = 200
-        mock.return_value.json = lambda: {
+        mock.return_value = {
             "descripcion": None,
             "ubicacion": None,
             "visibilidad": "publico",
@@ -26,7 +23,7 @@ class VideoReaccionesTestCase(LoginMockTestCase):
         
         return mock
 
-    @mock.patch('media_server_api.obtener_video')
+    @mock.patch('app.servicios.media_server.obtener_video')
     def test_agregar_me_gusta_a_video_sin_me_gusta_devuelve_201(self, mock_obtener_video):
         self.cargar_mock_obtener_video(mock_obtener_video, "5edcd01cd3cf810031d865db")
         body = {"reaccion": "me-gusta"}
@@ -36,7 +33,7 @@ class VideoReaccionesTestCase(LoginMockTestCase):
         
         self.assertEquals(response.status_code, 201)
     
-    @mock.patch('media_server_api.obtener_video')
+    @mock.patch('app.servicios.media_server.obtener_video')
     def test_agregar_me_gusta_a_video_con_me_gusta_devuelve_200(self, mock):
         self.cargar_mock_obtener_video(mock, "5edcd01cd3cf810031d865db")
         body = {"reaccion": "me-gusta"}
@@ -52,7 +49,7 @@ class VideoReaccionesTestCase(LoginMockTestCase):
         
         self.assertEquals(response.status_code, 200)
     
-    @mock.patch('media_server_api.obtener_video')
+    @mock.patch('app.servicios.media_server.obtener_video')
     def test_agregar_no_me_gusta_a_video_sin_no_me_gusta_devuelve_201(self, mock):
         self.cargar_mock_obtener_video(mock, "5edcd01cd3cf810031d865db")
         body = {"reaccion": "no-me-gusta"}
@@ -62,7 +59,7 @@ class VideoReaccionesTestCase(LoginMockTestCase):
         
         self.assertEquals(response.status_code, 201)
     
-    @mock.patch('media_server_api.obtener_video')
+    @mock.patch('app.servicios.media_server.obtener_video')
     def test_agregar_no_me_gusta_a_video_con_no_me_gusta_devuelve_200(self, mock):
         self.cargar_mock_obtener_video(mock, "5edcd01cd3cf810031d865db")
         
@@ -76,7 +73,7 @@ class VideoReaccionesTestCase(LoginMockTestCase):
         
         self.assertEquals(response.status_code, 200)
     
-    @mock.patch('media_server_api.obtener_video')
+    @mock.patch('app.servicios.media_server.obtener_video')
     def test_agregar_me_gusta_a_video_con_no_me_gusta_devuelve_200(self, mock):
         self.cargar_mock_obtener_video(mock, "5edcd01cd3cf810031d865db")
         
@@ -91,7 +88,7 @@ class VideoReaccionesTestCase(LoginMockTestCase):
         
         self.assertEquals(response.status_code, 200)
     
-    @mock.patch('media_server_api.obtener_video')
+    @mock.patch('app.servicios.media_server.obtener_video')
     def test_agregar_no_me_gusta_a_video_con_me_gusta_devuelve_200(self, mock):
         self.cargar_mock_obtener_video(mock, "5edcd01cd3cf810031d865db")
         
@@ -106,12 +103,11 @@ class VideoReaccionesTestCase(LoginMockTestCase):
         
         self.assertEquals(response.status_code, 200)
 
-    @mock.patch('auth_server_api.get_usuario')
-    @mock.patch('media_server_api.obtener_video')
+    @mock.patch('app.servicios.auth_server.obtener_usuario')
+    @mock.patch('app.servicios.media_server.obtener_video')
     def test_agregar_me_gusta_video_trae_reacciones(self, mock_obtener_video, mock_get_usuario):
         self.cargar_mock_obtener_video(mock_obtener_video, "5edcd01cd3cf810031d865db")
-        mock_get_usuario.return_value.status_code = 200
-        mock_get_usuario.return_value.json = lambda: {
+        mock_get_usuario.return_value = {
             "id": 1,
             "nombre": "",
             "apellido": "",
@@ -136,12 +132,11 @@ class VideoReaccionesTestCase(LoginMockTestCase):
         assert 'mi-reaccion' in data
         self.assertEquals(data['mi-reaccion'], 'me-gusta')
     
-    @mock.patch('auth_server_api.get_usuario')
-    @mock.patch('media_server_api.obtener_video')
+    @mock.patch('app.servicios.auth_server.obtener_usuario')
+    @mock.patch('app.servicios.media_server.obtener_video')
     def test_agregar_no_me_gusta_video_trae_reacciones(self, mock_obtener_video, mock_get_usuario):
         self.cargar_mock_obtener_video(mock_obtener_video, "5edcd01cd3cf810031d865db")
-        mock_get_usuario.return_value.status_code = 200
-        mock_get_usuario.return_value.json = lambda: {
+        mock_get_usuario.return_value = {
             "id": 1,
             "nombre": "",
             "apellido": "",
@@ -166,7 +161,7 @@ class VideoReaccionesTestCase(LoginMockTestCase):
         assert 'mi-reaccion' in data
         self.assertEquals(data['mi-reaccion'], 'no-me-gusta')
     
-    @mock.patch('media_server_api.obtener_video')
+    @mock.patch('app.servicios.media_server.obtener_video')
     def test_reaccion_invalida_devuelve_400(self, mock):
         self.cargar_mock_obtener_video(mock, "5edcd01cd3cf810031d865db")
         
@@ -175,16 +170,16 @@ class VideoReaccionesTestCase(LoginMockTestCase):
             json=body)
         self.assertEquals(response.status_code, 400)
     
-    @mock.patch('media_server_api.obtener_video')
+    @mock.patch('app.servicios.media_server.obtener_video')
     def test_agregar_me_gusta_a_video_inexistente_devuelve_404(self, mock):
-        mock.return_value.status_code = 404
+        mock.return_value = None
         
         body = {"reaccion": "me-gusta"}
         response = self.app.post("/video/5edcd01cd3cf810031d865db/reaccion", 
             json=body)
         self.assertEquals(response.status_code, 404)
     
-    @mock.patch('media_server_api.obtener_video')
+    @mock.patch('app.servicios.media_server.obtener_video')
     def test_reaccionar_con_content_type_erroneo_devuelve_400(self, mock):
         self.cargar_mock_obtener_video(mock, "5edcd01cd3cf810031d865db")
         
@@ -193,7 +188,7 @@ class VideoReaccionesTestCase(LoginMockTestCase):
             data=body)
         self.assertEquals(response.status_code, 400)
 
-    @mock.patch('media_server_api.obtener_video')
+    @mock.patch('app.servicios.media_server.obtener_video')
     def test_reaccionar_content_type_con_charset_devuelve_201(self, mock):
         self.cargar_mock_obtener_video(mock, "5edcd01cd3cf810031d865db")
 
