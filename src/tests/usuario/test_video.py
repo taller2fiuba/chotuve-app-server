@@ -4,16 +4,11 @@ import mock
 from tests.base import LoginMockTestCase
 
 class UsuarioVideoTestCase(LoginMockTestCase):
-    @mock.patch('auth_server_api.get_usuario')
-    @mock.patch('media_server_api.obtener_videos_usuario')
+    @mock.patch('app.servicios.auth_server.obtener_usuario')
+    @mock.patch('app.servicios.media_server.obtener_videos_usuario')
     def test_get_mis_videos_sin_videos_devuelve_vacio(self, mock_media, mock_auth):
-        mock_media.return_value.json = lambda: {
-            "videos": [],
-            "total": 0
-        }
-        mock_media.return_value.status_code = 200
-
-        perfil = {
+        mock_media.return_value = []
+        mock_auth.return_value = {
             "id": 2,
             "email": "test@test.com",
             "nombre": None,
@@ -22,20 +17,18 @@ class UsuarioVideoTestCase(LoginMockTestCase):
             "telefono": None,
             "foto": "url/foto"
         }
-        mock_auth.return_value.json = lambda: perfil
-        mock_auth.return_value.status_code = 200
 
         response = self.app.get('/usuario/video')
+
         self.assertEqual(200, response.status_code)
         self.assertEqual([], response.json)
 
-    @mock.patch('auth_server_api.get_usuario')
-    @mock.patch('media_server_api.obtener_videos_usuario')
-    def test_get_mis_videos_con_videos_devulve_mis_videos(self, mock_media, mock_auth):
-        perfil = {
+    @mock.patch('app.servicios.auth_server.obtener_usuario')
+    @mock.patch('app.servicios.media_server.obtener_videos_usuario')
+    def test_get_mis_videos_con_videos_devuelve_mis_videos(self, mock_media, mock_auth):
+        mock_auth.return_value = {
             "id": 2,
             "email": "test@test.com",
-            "password": "pswd",
             "nombre": None,
             "apellido": None,
             "direccion": None,
@@ -43,10 +36,7 @@ class UsuarioVideoTestCase(LoginMockTestCase):
             "foto": "url/foto"
         }
 
-        mock_auth.return_value.json = lambda: perfil
-        mock_auth.return_value.status_code = 200
-
-        video = {
+        mock_media.return_value = [{
             "descripcion": None,
             "ubicacion": None,
             "visibilidad": "publico",
@@ -58,13 +48,7 @@ class UsuarioVideoTestCase(LoginMockTestCase):
             "duracion": 60,
             "time_stamp": "2020-06-25T16:05:37.091Z",
             "__v": 0
-        }
-
-        mock_media.return_value.json = lambda: {
-            "videos": [video],
-            "total": 1
-        }
-        mock_media.return_value.status_code = 200
+        }]
 
         response = self.app.get('/usuario/video')
         video_response = {
@@ -84,27 +68,25 @@ class UsuarioVideoTestCase(LoginMockTestCase):
         self.assertEqual(200, response.status_code)
         self.assertEqual([video_response], response.json)
 
-    @mock.patch('auth_server_api.get_usuario')
+    @mock.patch('app.servicios.auth_server.obtener_usuario')
     def test_get_videos_usuario_inexistente_da_error(self, mock_auth):
-        mock_auth.return_value.json = lambda: {}
-        mock_auth.return_value.status_code = 404
+        mock_auth.return_value = None
 
         response = self.app.get('/usuario/1234/video')
 
         self.assertEqual(404, response.status_code)
         self.assertEqual({}, response.json)
 
-    @mock.patch('auth_server_api.get_usuario')
+    @mock.patch('app.servicios.auth_server.obtener_usuario')
     def test_get_videos_con_offset_string_da_400(self, mock_auth):
-        mock_auth.return_value.json = lambda: {}
-        mock_auth.return_value.status_code = 200
+        mock_auth.return_value = {'id': 1234}
 
         response = self.app.get('/usuario/1234/video?offset="asd"')
 
         self.assertEqual(400, response.status_code)
 
-    @mock.patch('auth_server_api.get_usuario')
-    @mock.patch('media_server_api.obtener_videos_usuario')
+    @mock.patch('app.servicios.auth_server.obtener_usuario')
+    @mock.patch('app.servicios.media_server.obtener_videos_usuario')
     def test_get_videos_de_usuario_sin_videos_devuelve_vacio(self, mock_media, mock_auth):
         autor = {
             "id": 1234,
@@ -116,23 +98,17 @@ class UsuarioVideoTestCase(LoginMockTestCase):
             "foto": "url/foto"
         }
 
-        mock_auth.return_value.json = lambda: autor
-        mock_media.return_value.status_code = 200
-
-        mock_media.return_value.json = lambda: {
-            "videos": [],
-            "total": 0
-        }
-        mock_media.return_value.status_code = 200
+        mock_auth.return_value = autor
+        mock_media.return_value = []
 
         response = self.app.get('/usuario/1234/video')
         self.assertEqual(200, response.status_code)
         self.assertEqual([], response.json)
 
-    @mock.patch('auth_server_api.get_usuario')
-    @mock.patch('media_server_api.obtener_videos_usuario')
-    def test_get_videos_de_usuario_con_videos_devulve_sus_videos(self, mock_media, mock_auth):
-        perfil = {
+    @mock.patch('app.servicios.auth_server.obtener_usuario')
+    @mock.patch('app.servicios.media_server.obtener_videos_usuario')
+    def test_get_videos_de_usuario_con_videos_devuelve_sus_videos(self, mock_media, mock_auth):
+        mock_auth.return_value = {
             "id": 1234,
             "email": "test@test.com",
             "nombre": None,
@@ -142,14 +118,11 @@ class UsuarioVideoTestCase(LoginMockTestCase):
             "foto": "url/foto"
         }
 
-        mock_auth.return_value.json = lambda: perfil
-        mock_auth.return_value.status_code = 200
-
-        video = {
+        mock_media.return_value = [{
             "descripcion": None,
             "ubicacion": None,
             "visibilidad": "publico",
-            "habilitado": False,
+            "habilitado": True,
             "_id": "5ef4cb51c69cbf0072a6abdb",
             "url": "https://urltest.com/video/123456",
             "titulo": "video test",
@@ -157,13 +130,7 @@ class UsuarioVideoTestCase(LoginMockTestCase):
             "duracion": 60,
             "time_stamp": "2020-06-25T16:05:37.091Z",
             "__v": 0
-        }
-
-        mock_media.return_value.json = lambda: {
-            "videos": [video],
-            "total": 1
-        }
-        mock_media.return_value.status_code = 200
+        }]
 
         video_response = {
             'id': "5ef4cb51c69cbf0072a6abdb",
@@ -178,6 +145,7 @@ class UsuarioVideoTestCase(LoginMockTestCase):
             "me-gustas":0,
             "mi-reaccion": None
         }
+
         response = self.app.get('/usuario/1234/video')
         self.assertEqual(200, response.status_code)
         self.assertEqual([video_response], response.json)

@@ -1,6 +1,7 @@
 from flask_restful import Resource
 from flask import request
-import auth_server_api
+
+from app.servicios import auth_server
 
 class Sesion(Resource):
     def post(self):
@@ -8,6 +9,9 @@ class Sesion(Resource):
         email = post_data['email']
         password = post_data['password']
 
-        response = auth_server_api.iniciar_sesion(email, password)
+        data = auth_server.iniciar_sesion(email, password)
+        if not data:
+            return {'mensaje': 'Email o constraseña invalidos'}, 400
 
-        return response.json(), response.status_code
+        token, uid = data
+        return {'auth_token': token, 'id': uid}, 200

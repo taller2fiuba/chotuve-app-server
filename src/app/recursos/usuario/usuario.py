@@ -1,7 +1,8 @@
 from flask_restful import Resource
 from flask import request, g
-import auth_server_api
+
 from app.login_requerido_decorator import login_requerido
+from app.servicios import auth_server
 
 class UsuarioResource(Resource):
     def post(self):
@@ -9,15 +10,20 @@ class UsuarioResource(Resource):
         email = post_data['email']
         password = post_data['password']
 
-        response = auth_server_api.registro_nuevo_usuario(email, password)
+        data = auth_server.registrar_usuario(email, password)
+        if not data:
+            return {'errores': {'email': 'El mail ya se encuentra registrado'}}, 400
 
-        return response.json(), response.status_code
+        token, uid = data
+        return {'auth_token': token, 'id': uid}, 201
 
     @login_requerido
     def get(self, usuario_id=None):
         if not usuario_id:
             usuario_id = g.usuario_actual
 
-        response = auth_server_api.get_usuario(usuario_id)
+        data = auth_server.obtener_usuario(usuario_id)
+        if not data:
+            return {}, 404
 
-        return response.json(), response.status_code
+        return data, 200

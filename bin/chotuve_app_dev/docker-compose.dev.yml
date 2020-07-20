@@ -19,6 +19,7 @@ services:
             FIREBASE_CHAT_DB_RAIZ: ${FIREBASE_CHAT_DB_RAIZ:-}
             FIREBASE_CHAT_DB_RECURSO_CHATS: ${FIREBASE_CHAT_DB_RECURSO_CHATS:-}
             FIREBASE_CHAT_DB_RECURSO_MENSAJES: ${FIREBASE_CHAT_DB_RECURSO_MENSAJES:-}
+            APP_SERVER_TOKEN: ${APP_SERVER_TOKEN:-}
 
             DATABASE_URL: "postgres://chotuve_app:chotuve_app@localhost:28032/chotuve_app"
 

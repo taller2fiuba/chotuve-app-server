@@ -1,0 +1,903 @@
+swagger: '2.0'
+info:
+  description: API de Chotuve
+  version: 1.0.0
+  title: Chotuve App Server
+
+paths:
+  /ping:
+    get:
+      summary: Estado del servidor
+      description: Verificación de salud del servidor.
+      produces:
+      - application/json
+      responses:
+        200:
+          description: El servidor está activo
+  /video:
+    post:
+      summary: Subir un video
+      description: Crea un nuevo video en la colección del usuario.
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: Authorization
+          description: Token de autenticación de usuario
+          required: true
+          type: string
+        - in: body
+          name: video
+          schema:
+            $ref: '#/definitions/SolicitudSubirVideo'
+      responses:
+        201:
+          description: Video creado correctamente
+        400:
+          description: Falta un campo obligatorio
+        401:
+          description: Falta el token de autenticación o es inválido.
+          schema:
+            $ref: '#/definitions/ErrorNoAutorizado'
+    get:
+      summary: Ver el muro de videos
+      description: Devuelve una lista con los videos del muro de videos del usuario.
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: Authorization
+          description: Token de autenticación de usuario
+          required: true
+          type: string
+        - in: query
+          name: offset
+          description: Cantidad de registros a omitir para paginación
+          type: integer
+          format: int32
+          minimum: 0
+          default: 0
+        - in: query
+          name: limit
+          description: Cantidad máxima de registros a devolver
+          type: integer
+          format: int32
+          minimum: 0
+          default: 10
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Video'
+        400:
+          description: Parámetros de paginación inválidos.
+        401:
+          description: Falta el token de autenticación o es inválido.
+          schema:
+            $ref: '#/definitions/ErrorNoAutorizado'
+  /video/{video_id}:
+    get:
+      summary: Ver información sobre un video
+      description: Devuelve toda la información disponible sobre un video a partir de su ID.
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: Authorization
+          description: Token de autenticación de usuario
+          required: true
+          type: string
+        - in: path
+          name: video_id
+          description: ID de video
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Video'
+        401:
+          description: Falta el token de autenticación o es inválido.
+          schema:
+            $ref: '#/definitions/ErrorNoAutorizado'
+        404:
+          description: No hay un video con el ID indicado
+  /video/{video_id}/reaccion:
+    post:
+      summary: Agrega o elimina una reacción a un video
+      description: |
+        Agrega o elimina una reacción a un video. Si se envía dos veces la misma reacción, la 
+        segunda solicitud eliminará la reacción. Si se envía primero una reacción y luego la 
+        reacción contraria se modificará la reacción por la segunda enviada.
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: Authorization
+          description: Token de autenticación de usuario
+          required: true
+          type: string
+        - in: path
+          name: video_id
+          description: ID de video
+          required: true
+          type: string
+        - in: body
+          name: reaccion
+          description: Reacción a enviar
+          required: true
+          schema:
+            $ref: '#/definitions/SolicitudReaccion'
+      responses:
+        200:
+          description: La reacción fue eliminada o modificada.
+        201:
+          description: La reacción fue agregada
+        400:
+          description: La reacción enviada es inválida
+        401:
+          description: Falta el token de autenticación o es inválido.
+          schema:
+            $ref: '#/definitions/ErrorNoAutorizado'
+        404:
+          description: El video no existe
+  /video/{video_id}/comentario:
+    post:
+      summary: Comentar un video
+      description: Agrega un comentario a un video.
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: Authorization
+          description: Token de autenticación de usuario
+          required: true
+          type: string
+        - in: path
+          name: video_id
+          description: ID de video
+          required: true
+          type: string
+        - in: body
+          name: comentario
+          description: Texto del comentario
+          required: true
+          schema:
+            $ref: '#/definitions/SolicitudComentario'
+      responses:
+        201:
+          description: Se agregó correctamente el comentario
+        400:
+          description: Falta un parámetro requerido
+        401:
+          description: Falta el token de autenticación o es inválido.
+          schema:
+            $ref: '#/definitions/ErrorNoAutorizado'
+        404:
+          description: El video no existe
+    get:
+      summary: Ver comentarios
+      description: Obtiene una lista paginada de comentarios de un video
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: Authorization
+          description: Token de autenticación de usuario
+          required: true
+          type: string
+        - in: path
+          name: video_id
+          description: ID de video
+          required: true
+          type: string
+        - in: query
+          name: offset
+          description: Cantidad de registros a omitir para paginación
+          type: integer
+          format: int32
+          minimum: 0
+          default: 0
+        - in: query
+          name: limit
+          description: Cantidad máxima de registros a devolver
+          type: integer
+          format: int32
+          minimum: 0
+          default: 10
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Comentario'
+        400:
+          description: Un parámetro de paginación tiene un valor inválido.
+        401:
+          description: Falta el token de autenticación o es inválido.
+          schema:
+            $ref: '#/definitions/ErrorNoAutorizado'
+        404:
+          description: El video no existe
+  /usuario:
+    post:
+      summary: Crea un nuevo usuario
+      description: Registra a un nuevo usuario en la red de Chotuve
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: usuario
+          description: Información del nuevo usuario
+          schema:
+            $ref: '#/definitions/SolicitudCrearUsuario'
+      responses:
+        201:
+          description: Usuario registrado correctamente
+        400:
+          description: El usuario ya existe o falta un parámetro requerido.
+    get:
+      summary: Ver el perfil del usuario actual
+      description: Obtiene toda la información del usuario.
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: Authorization
+          description: Token de autenticación de usuario
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Usuario'
+        401:
+          description: Falta el token de autenticación o es inválido.
+          schema:
+            $ref: '#/definitions/ErrorNoAutorizado'
+  /usuario/{usuario_id}:
+    get:
+      summary: Ver información de un usuario
+      description: Obtiene toda la información de un usuario a partir de su ID.
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: Authorization
+          description: Token de autenticación de usuario
+          required: true
+          type: string
+        - in: path
+          name: usuario_id
+          description: ID del usuario solicitado
+          type: integer
+          required: true
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Usuario'
+        401:
+          description: Falta el token de autenticación o es inválido.
+          schema:
+            $ref: '#/definitions/ErrorNoAutorizado'
+        404:
+          description: El usuario no existe
+  /usuario/sesion:
+    post: # 200, 400
+      summary: Autenticar un usuario
+      description: Genera un nuevo token de autenticación para un usuario según su e-mail y clave.
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: datos_usuario
+          schema:
+            $ref: '#/definitions/SolicitudCrearSesion'
+      responses:
+        200:
+          description: Token generado
+          schema:
+            $ref: '#/definitions/Token'
+        400:
+          description: Faltan datos o son inválidos
+  /usuario/perfil:
+    get:
+      summary: Ver perfil de usuario
+      description: Obtiene el perfil del usuario actual
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: Authorization
+          description: Token de autenticación de usuario
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Usuario'
+        401:
+          description: Falta el token de autenticación o es inválido.
+          schema:
+            $ref: '#/definitions/ErrorNoAutorizado'
+    put:
+      summary: Actualizar perfil
+      description: Modifica parcial o totalmente la información del usuario actual.
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: Authorization
+          description: Token de autenticación de usuario
+          required: true
+          type: string
+        - in: body
+          name: datos_usuario
+          description: Información a modificar
+          required: true
+          schema:
+            $ref: '#/definitions/SolicitudModificarUsuario'
+      responses:
+        200:
+          description: Modificación realizada correctamente
+        400:
+          description: Falta algún parámetro requerido
+        401:
+          description: Falta el token de autenticación o es inválido.
+          schema:
+            $ref: '#/definitions/ErrorNoAutorizado'
+  /usuario/{usuario_id}/perfil:
+    get:
+      summary: Ver información de un usuario
+      description: Obtiene toda la información de un usuario a partir de su ID.
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: Authorization
+          description: Token de autenticación de usuario
+          required: true
+          type: string
+        - in: path
+          name: usuario_id
+          description: ID del usuario solicitado
+          type: integer
+          required: true
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Usuario'
+        401:
+          description: Falta el token de autenticación o es inválido.
+          schema:
+            $ref: '#/definitions/ErrorNoAutorizado'
+        404:
+          description: El usuario no existe
+  /usuario/contacto:
+    get:
+      summary: Resumen
+      description: Descripción
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: Authorization
+          description: Token de autenticación de usuario
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Contacto'
+        401:
+          description: Falta el token de autenticación o es inválido.
+          schema:
+            $ref: '#/definitions/ErrorNoAutorizado'
+  /usuario/{usuario_id}/contacto:
+    get: # 200 [404 --falta]
+      summary: Ver contactos de un usuario
+      description: Obtiene la lista de contactos de un usuario
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: Authorization
+          description: Token de autenticación de usuario
+          required: true
+          type: string
+        - in: path
+          name: usuario_id
+          type: integer
+          required: true          
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Contacto'
+        401:
+          description: Falta el token de autenticación o es inválido.
+          schema:
+            $ref: '#/definitions/ErrorNoAutorizado'
+        404:
+          description: El usuario no existe.
+  /usuario/video:
+    get:
+      summary: Ver mis videos
+      description: Devuelve una lista paginada de los videos que subí.
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: Authorization
+          description: Token de autenticación de usuario
+          required: true
+          type: string
+        - in: query
+          name: offset
+          description: Cantidad de registros a omitir para paginación
+          type: integer
+          format: int32
+          minimum: 0
+          default: 0
+        - in: query
+          name: limit
+          description: Cantidad máxima de registros a devolver
+          type: integer
+          format: int32
+          minimum: 0
+          default: 10
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items: 
+              $ref: '#/definitions/Video'
+        400:
+          description: Algún parámetro de paginado tiene un valor incorrecto
+        401:
+          description: Falta el token de autenticación o es inválido.
+          schema:
+            $ref: '#/definitions/ErrorNoAutorizado'
+  /usuario/{usuario_id}/video:
+    get:
+      summary: Ver videos de un usuario
+      description: Devuelve una lista paginada de los videos de un usuario.
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: Authorization
+          description: Token de autenticación de usuario
+          required: true
+          type: string
+        - in: path
+          name: usuario_id
+          type: integer
+          description: ID del usuario del cual quiero ver sus videos
+          required: true
+        - in: query
+          name: offset
+          description: Cantidad de registros a omitir para paginación
+          type: integer
+          format: int32
+          minimum: 0
+          default: 0
+        - in: query
+          name: limit
+          description: Cantidad máxima de registros a devolver
+          type: integer
+          format: int32
+          minimum: 0
+          default: 10
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items: 
+              $ref: '#/definitions/Video'
+        400:
+          description: Algún parámetro de paginado tiene un valor incorrecto
+        401:
+          description: Falta el token de autenticación o es inválido.
+          schema:
+            $ref: '#/definitions/ErrorNoAutorizado'
+        404:
+          description: El usuario no existe
+  /usuario/solicitud-contacto:
+    post:
+      summary: Enviar una solicitud de contacto
+      description: Envía una nueva solicitud de contacto
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: Authorization
+          description: Token de autenticación de usuario
+          required: true
+          type: string
+        - in: body
+          name: solicitud
+          description: Usuario al que se le envía la solicitud
+          required: true
+          schema:
+            $ref: '#/definitions/SolicitudEnviarSolicitudContacto'
+      responses:
+        201:
+          description: Solicitud enviada
+        400:
+          description: Error en la solicitud. Detalles en la respuesta.
+          schema:
+            $ref: '#/definitions/ErrorEnSolicitud'
+        401:
+          description: Falta el token de autenticación o es inválido.
+          schema:
+            $ref: '#/definitions/ErrorNoAutorizado'
+    get:
+      summary: Ver mis solicitudes de contacto
+      description: Devuelve una lista con las solicitudes de contacto que me enviaron.
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: Authorization
+          description: Token de autenticación de usuario
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/SolicitudContacto'
+        401:
+          description: Falta el token de autenticación o es inválido.
+          schema:
+            $ref: '#/definitions/ErrorNoAutorizado'
+  /usuario/solicitud-contacto/{solicitud_id}:
+    delete:
+      summary: Descarta una solicitud de contacto
+      description: Elimina una solicitud de contacto recibida
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: Authorization
+          description: Token de autenticación de usuario
+          required: true
+          type: string
+        - in: path
+          name: solicitud_id
+          description: ID de la solicitud a eliminar
+          type: integer
+          required: true
+      responses:
+        200:
+          description: Solicitud eliminada correctamente
+        401:
+          description: Falta el token de autenticación o es inválido.
+          schema:
+            $ref: '#/definitions/ErrorNoAutorizado'
+        404:
+          description: La solicitud no existe
+    put:
+      summary: Responder una solicitud de contacto
+      description: Acepta o rechaza una solicitud de contacto
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: Authorization
+          description: Token de autenticación de usuario
+          required: true
+          type: string
+        - in: path
+          name: solicitud_id
+          description: ID de la solicitud a eliminar
+          type: integer
+          required: true
+        - in: body
+          name: respuesta
+          description: Respuesta a la solicitud
+          schema:
+            $ref: '#/definitions/SolicitudResponderSolicitudContacto'
+      responses:
+        200:
+          description: Respuesta enviada correctamente
+        400:
+          description: Falta algún parámetro o tiene un valor incorrecto.
+        401:
+          description: Falta el token de autenticación o es inválido.
+          schema:
+            $ref: '#/definitions/ErrorNoAutorizado'
+        404:
+          description: La solicitud no existe
+  /chat/{usuario_id}:
+    post:
+      summary: Enviar un mensaje
+      description: Envia un mensaje de chat a un usuario
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: Authorization
+          description: Token de autenticación de usuario
+          required: true
+          type: string
+        - in: path
+          name: usuario_id
+          type: integer
+          description: ID del usuario que recibirá el mensaje
+          required: true
+        - in: body
+          name: mensaje
+          description: Mensaje a enviar
+          schema:
+            $ref: '#/definitions/SolicitudEnviarChat'
+      responses:
+        201:
+          description: Mensaje enviado
+        400:
+          description: Falta un parámetro requerido.
+        401:
+          description: Falta el token de autenticación o es inválido.
+          schema:
+            $ref: '#/definitions/ErrorNoAutorizado'
+        404: 
+          description: El destinatario no existe
+
+definitions:
+  Comentario:
+    properties:
+      autor:
+        $ref: '#/definitions/Usuario'
+      fecha:
+        type: string
+        example: "2020-07-02"
+      comentario:
+        type: string
+        example: Que buen video
+  Contacto:
+    properties:
+      id:
+        type: integer
+        example: 123
+      email:
+        type: string
+        format: email
+        example: juan@perez.com
+      foto:
+        type: string
+        format: url
+        example: http://firebase.com/foto.jpg
+  SolicitudContacto:
+    properties:
+      id:
+        type: integer
+        example: 123
+      usuario_id:
+        type: integer
+        example: 456
+      email:
+        type: string
+        format: email
+        example: juan@perez.com
+      foto:
+        type: string
+        format: url
+        example: http://firebase.com/foto.jpg
+  Token:
+    properties:
+      id:
+        type: integer
+        example: 123
+        description: ID del usuario autenticado
+      auth_token:
+        type: string
+        example: 6652ba4e3e6702ecfa7578127ee5209b
+  Usuario:
+    properties:
+      id:
+        type: integer
+        example: 123
+      nombre:
+        type: string
+        example: Pedro
+      apellido:
+        type: string
+        example: López
+      telefono:
+        type: string
+        example: 11-44986532
+      direccion:
+        type: string
+        example: Av Las Heras 1200
+      foto:
+        type: string
+        format: url
+        example:  https://www.firebase.com/poerw/plopez.png
+      habilitado:
+        type: boolean
+        example: false
+  Video:
+    properties:
+      id:
+        type: string
+        example: Asasda987987aErdaX2
+      titulo:
+        type: string
+        example: Mi primer video
+      url:
+        type: string
+        format: url
+        example:  https://www.firebase.com/poerw/asdsd.mp4
+        description: URL donde del recurso
+      usuario_id:
+        type: integer
+        format: int64
+        example: 126
+        minimum: 1
+      duracion: 
+        type: integer
+        format: int64
+        description: duracion en segundos
+        example: 120
+      descripcion:
+        type: string
+        example: Fue grabado con mi webcam
+      ubicacion:
+        type: string
+        example: Av Paseo Colón 800
+      visibilidad:
+        type: string
+        enum: [publico, privado]
+        default: publico
+        example: privado
+      habilitado:
+        type: boolean
+        default: true
+        example: true
+      time_stamp:
+        type: string
+        format: date-time
+        example: 2016-08-29T09:12:33.001Z
+
+  SolicitudComentario:
+    properties:
+      comentario:
+        type: string
+        example: Que buen video
+  
+  SolicitudCrearSesion:
+    properties:
+      email:
+        type: string
+        example: juan@perez.com
+      password:
+        type: string
+        example: s3cr3t0!
+      
+  SolicitudCrearUsuario:
+    properties:
+      email:
+        type: string
+        example: juan@perez.com
+      password:
+        type: string
+        example: s3cr3t0!
+      
+  SolicitudEnviarChat:
+    properties:
+      mensaje:
+        type: string
+        example: Hola, ¿qué tal?
+      
+  SolicitudEnviarSolicitudContacto:
+    properties:
+      usuario_id:
+        type: integer
+        example: 123
+      
+  SolicitudModificarUsuario:
+    properties:
+      nombre:
+        type: string
+        example: Pedro
+      apellido:
+        type: string
+        example: López
+      telefono:
+        type: string
+        example: 11-44986532
+      direccion:
+        type: string
+        example: Av Las Heras 1200
+      foto:
+        type: string
+        format: url
+        example:  https://www.firebase.com/poerw/plopez.png
+      habilitado:
+        type: boolean
+        example: false
+
+  SolicitudReaccion:
+    properties:
+      reaccion:
+        type: string
+        enum: ["me-gusta", "no-me-gusta"]
+        example: "me-gusta"
+      
+  SolicitudResponderSolicitudContacto:
+    properties:
+      accion:
+        type: string
+        enum: ["aceptar", "rechazar"]
+        example: "aceptar"
+      
+  SolicitudSubirVideo:
+    required: 
+      - titulo
+      - url
+      - usuario_id
+      - duracion
+    properties:
+      titulo:
+        type: string
+        example: Mi primer video
+      url:
+        type: string
+        format: url
+        example:  https://www.firebase.com/poerw/asdsd.mp4
+        description: URL donde del recurso
+      usuario_id:
+        type: integer
+        format: int64
+        example: 126
+        minimum: 1
+      duracion: 
+        type: integer
+        format: int64
+        description: duracion en segundos
+        example: 120
+      descripcion:
+        type: string
+        example: Fue grabado con mi webcam
+      ubicacion:
+        type: string
+        example: Av Paseo Colón 800
+      visibilidad:
+        type: string
+        enum: [publico, privado]
+        default: publico
+        example: privado
+  
+  ErrorEnSolicitud:
+    properties:
+      mensaje:
+        type: string
+        example: 'El parámetro <parametro> tiene un valor incorrecto'
+  ErrorNoAutorizado:
+    properties:
+      mensaje:
+        type: string
+        example: El token de autenticación es inválido
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /Chotuve1/ChotuveAppServer/1.0.0
+schemes:
+ - https
