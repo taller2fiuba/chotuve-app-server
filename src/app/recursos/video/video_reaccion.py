@@ -3,7 +3,7 @@ from flask import request, abort, g
 from app import db
 from app.login_requerido_decorator import login_requerido
 from app.models.reaccion import Reaccion, TipoReaccion
-from app.servicios import media_server, notificador
+from app.servicios import auth_server, media_server, notificador
 
 from .video_base import VideoBaseResource
 
@@ -42,5 +42,6 @@ class VideoReaccion(VideoBaseResource):
 
         db.session.commit()
         if not reaccion_guardada and reaccion == 'me-gusta':
-            notificador.reaccionar_me_gusta_video(video, g.usuario_actual)
+            notificador.reaccionar_me_gusta_video(video,
+                                                  auth_server.obtener_usuario(g.usuario_actual))
         return {}, 200 if reaccion_guardada else 201

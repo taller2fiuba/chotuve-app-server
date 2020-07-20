@@ -22,7 +22,7 @@ def configurar_servicios(app, log):
     _configurar_auth_server(app)
     _configurar_media_server(app)
     _configurar_chat(app)
-    _configurar_notificador(log)
+    _configurar_notificador(app, log)
 
 def _configurar_auth_server(app):
     global auth_server
@@ -52,7 +52,21 @@ def _configurar_chat(app):
         from .servicio_chat.chat_nulo import ChatNulo
         chat = ChatNulo()
 
-def _configurar_notificador(log):
+def _configurar_notificador(app, log):
     global notificador
-    from .servicio_notificaciones.notificador_nulo import NotificadorNulo
-    notificador = NotificadorNulo(log)
+    
+    if app.config.get('FIREBASE_CREDENCIALES'):
+        from .servicio_notificaciones.backend_firebase import BackendFirebase
+        backend = BackendFirebase(
+            log,
+            app.config.get('FIREBASE_CREDENCIALES'),
+            app.config.get('FIREBASE_NOTIFICADOR_DB_URL'),
+            app.config.get('FIREBASE_NOTIFICADOR_DB_RAIZ'),
+            app.config.get('FIREBASE_NOTIFICADOR_DB_RECURSO')
+        )
+    else:
+        from .servicio_notificaciones.backend_logger import BackendLogger
+        backend = BackendLogger(log)
+    
+    from .servicio_notificaciones.notificador_texto_plano import NotificadorTextoPlano
+    notificador = NotificadorTextoPlano(backend)

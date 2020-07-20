@@ -38,9 +38,9 @@ class ChatFirebase(InterfazChat):
         cred = credentials.Certificate(json.loads(
             base64.decodebytes(bytes(credenciales, 'utf-8'))
         ))
-        firebase_admin.initialize_app(cred, {'databaseURL': db_url})
-        self.db_chats = db.reference(f'/{raiz}{recurso_chats}')
-        self.db_mensajes = db.reference(f'/{raiz}{recurso_mensajes}')
+        app = firebase_admin.initialize_app(cred, {'databaseURL': db_url}, name='chotuve-chat')
+        self.db_chats = db.reference(f'/{raiz}{recurso_chats}', app=app)
+        self.db_mensajes = db.reference(f'/{raiz}{recurso_mensajes}', app=app)
 
     def enviar_mensaje(self, mensaje, remitente, destinatario):
         nombre_chat = f'{remitente}-{destinatario}'

@@ -11,11 +11,14 @@ class ChatResource(Resource):
         data = request.json
         if not data or not 'mensaje' in data:
             return {'mensaje': 'Falta el mensaje'}, 400
-        if not auth_server.obtener_usuario(destinatario_id):
+        destinatario = auth_server.obtener_usuario(destinatario_id)
+        if not destinatario:
             return {'mensaje': 'El destinatario no existe.'}, 404
         if not Contacto.es_contacto(g.usuario_actual, destinatario_id):
             return {'mensaje': 'El destinatario no es contacto.'}, 400
 
         chat.enviar_mensaje(data['mensaje'], g.usuario_actual, destinatario_id)
-        notificador.enviar_mensaje_chat(data['mensaje'], g.usuario_actual, destinatario_id)
+        notificador.enviar_mensaje_chat(data['mensaje'],
+                                        auth_server.obtener_usuario(g.usuario_actual),
+                                        destinatario)
         return {}, 201

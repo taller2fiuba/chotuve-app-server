@@ -31,7 +31,9 @@ class VideoComentario(VideoBaseResource):
         ))
 
         db.session.commit()
-        notificador.comentar_video(comentario, video, g.usuario_actual)
+        notificador.comentar_video(comentario,
+                                   video,
+                                   auth_server.obtener_usuario(g.usuario_actual))
         return {}, 201
 
     @login_requerido

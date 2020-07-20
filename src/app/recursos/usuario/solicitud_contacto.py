@@ -53,11 +53,17 @@ class SolicitudContactoResource(Resource):
         if Contacto.es_contacto(g.usuario_actual, usuario_receptor):
             return {'mensaje': 'El usuario ya es un contacto'}, 400
 
+        receptor = auth_server.obtener_usuario(usuario_receptor)
+
+        if not receptor:
+            return {}, 404
+
         solicitud = SolicitudContacto(usuario_emisor=g.usuario_actual,
                                       usuario_receptor=usuario_receptor)
         db.session.add(solicitud)
         db.session.commit()
-        notificador.enviar_solicitud_contacto(g.usuario_actual, usuario_receptor)
+        notificador.enviar_solicitud_contacto(auth_server.obtener_usuario(g.usuario_actual),
+                                              receptor)
         return {}, 201
 
     @login_requerido
@@ -79,7 +85,9 @@ class SolicitudContactoResource(Resource):
         db.session.delete(solicitud)
         db.session.commit()
         if accion == 'aceptar':
-            notificador.aceptar_solicitud_contacto(g.usuario_actual, solicitud.usuario_emisor)
+            usuario_actual = auth_server.obtener_usuario(g.usuario_actual)
+            usuario_emisor = auth_server.obtener_usuario(solicitud.usuario_emisor)
+            notificador.aceptar_solicitud_contacto(usuario_actual, usuario_emisor)
         return {}
 
     @login_requerido
