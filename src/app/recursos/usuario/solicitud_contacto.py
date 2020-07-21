@@ -34,7 +34,7 @@ class SolicitudContactoResource(Resource):
         return ret
 
     @login_requerido
-    def post(self):
+    def post(self): # pylint: disable=too-many-return-statements
         post_data = request.get_json()
         if not 'usuario_id' in post_data:
             return {'mensaje': 'Falta usuario_id.'}, 400

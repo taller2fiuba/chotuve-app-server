@@ -6,6 +6,7 @@ from firebase_admin import credentials, db, messaging
 from .interfaz_backend import InterfazBackend
 
 class BackendFirebase(InterfazBackend):
+    # pylint: disable=too-many-arguments
     def __init__(self, log, credenciales, db_url, raiz, recurso_notificaciones):
         '''
         Inicializa el servicio de notificaciones a través de Firebase Cloud
@@ -33,12 +34,12 @@ class BackendFirebase(InterfazBackend):
         recurso_notificaciones: str, nombre del recurso de notificaciones
         '''
         self.log = log
-        credenciales = str(credenciales)
-        db_url = str(db_url)
         raiz = str(raiz).rstrip('/')
         if raiz:
             raiz += '/'
+        credenciales = str(credenciales)
         recurso_notificaciones = str(recurso_notificaciones)
+        db_url = str(db_url)
 
         cred = credentials.Certificate(json.loads(
             base64.decodebytes(bytes(credenciales, 'utf-8'))
