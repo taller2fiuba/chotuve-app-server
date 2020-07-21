@@ -170,6 +170,46 @@ class AuthServerTestCase(MockClienteHttpTestCase):
 
         self.assertRaises(AuthServerError, self.auth_server.obtener_usuarios, {1, 2, 3})
 
+    def test_actualizar_clave_envia_solicitud_correcta(self):
+        self.mock_put.return_value.status_code = 200
+        self.mock_put.return_value.json = lambda: {}
+
+        uid = 1
+        self.auth_server.actualizar_clave(uid, 'nueva-clave')
+
+        self.mock_put.assert_called_with(f"/usuario/{uid}/clave",
+                                         json={'password': 'nueva-clave'})
+
+    def test_actualizar_clave_devuelve_true_en_exito(self):
+        self.mock_put.return_value.status_code = 200
+        self.mock_put.return_value.json = lambda: {}
+
+        self.assertTrue(self.auth_server.actualizar_clave(1, 'nueva-clave'))
+
+    def test_actualizar_clave_devuelve_false_en_400(self):
+        self.mock_put.return_value.status_code = 400
+        self.mock_put.return_value.json = lambda: {}
+
+        self.assertFalse(self.auth_server.actualizar_clave(1, ''))
+
+    def test_actualizar_clave_lanza_excepcion_en_error(self):
+        self.mock_put.return_value.status_code = 500
+        self.mock_put.return_value.json = lambda: {}
+
+        self.assertRaises(AuthServerError,
+                          self.auth_server.actualizar_clave,
+                          1,
+                          'nueva-clave')
+
+    def test_actualizar_clave_lanza_excepcion_en_404(self):
+        self.mock_put.return_value.status_code = 404
+        self.mock_put.return_value.json = lambda: {}
+
+        self.assertRaises(AuthServerError,
+                          self.auth_server.actualizar_clave,
+                          1,
+                          'nueva-clave')
+
     def test_actualizar_usuario_envia_solicitud_correcta(self):
         self.mock_put.return_value.status_code = 200
         self.mock_put.return_value.json = lambda: {}
