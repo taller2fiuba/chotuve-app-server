@@ -1,8 +1,8 @@
 import mock
 
-from tests.base import BaseTestCase
+from tests.base import LoginMockTestCase
 
-class UsuarioClaveTestCase(BaseTestCase):
+class UsuarioClaveTestCase(LoginMockTestCase):
     @mock.patch('app.servicios.auth_server.actualizar_clave')
     def test_actualizar_clave_correctamente(self, mock_auth):
         mock_auth.return_value = True
