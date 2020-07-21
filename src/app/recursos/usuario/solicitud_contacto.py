@@ -6,7 +6,7 @@ from app.login_requerido_decorator import login_requerido
 from app import db
 from app.models.solicitud_contacto import SolicitudContacto
 from app.models.contacto import Contacto
-from app.servicios import auth_server
+from app.servicios import auth_server, notificador
 
 class SolicitudContactoResource(Resource):
     @login_requerido
@@ -34,7 +34,7 @@ class SolicitudContactoResource(Resource):
         return ret
 
     @login_requerido
-    def post(self):
+    def post(self): # pylint: disable=too-many-return-statements
         post_data = request.get_json()
         if not 'usuario_id' in post_data:
             return {'mensaje': 'Falta usuario_id.'}, 400
@@ -53,10 +53,17 @@ class SolicitudContactoResource(Resource):
         if Contacto.es_contacto(g.usuario_actual, usuario_receptor):
             return {'mensaje': 'El usuario ya es un contacto'}, 400
 
+        receptor = auth_server.obtener_usuario(usuario_receptor)
+
+        if not receptor:
+            return {}, 404
+
         solicitud = SolicitudContacto(usuario_emisor=g.usuario_actual,
                                       usuario_receptor=usuario_receptor)
         db.session.add(solicitud)
         db.session.commit()
+        notificador.enviar_solicitud_contacto(auth_server.obtener_usuario(g.usuario_actual),
+                                              receptor)
         return {}, 201
 
     @login_requerido
@@ -77,6 +84,10 @@ class SolicitudContactoResource(Resource):
 
         db.session.delete(solicitud)
         db.session.commit()
+        if accion == 'aceptar':
+            usuario_actual = auth_server.obtener_usuario(g.usuario_actual)
+            usuario_emisor = auth_server.obtener_usuario(solicitud.usuario_emisor)
+            notificador.aceptar_solicitud_contacto(usuario_actual, usuario_emisor)
         return {}
 
     @login_requerido

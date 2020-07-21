@@ -13,19 +13,21 @@ durante el inicio de la aplicación.
 auth_server = None
 chat = None
 media_server = None
+notificador = None
 
-def configurar_servicios(app):
+def configurar_servicios(app, log):
     '''
     Inicializa y exporta los servicios configurados.
     '''
     _configurar_auth_server(app)
     _configurar_media_server(app)
     _configurar_chat(app)
+    _configurar_notificador(app, log)
 
 def _configurar_auth_server(app):
     global auth_server
     from .servicio_auth_server import AuthServer
-    auth_server = AuthServer(app.config.get('CHOTUVE_AUTH_URL'), 
+    auth_server = AuthServer(app.config.get('CHOTUVE_AUTH_URL'),
                              app.config.get('APP_SERVER_TOKEN'))
 
 def _configurar_media_server(app):
@@ -49,3 +51,22 @@ def _configurar_chat(app):
     else:
         from .servicio_chat.chat_nulo import ChatNulo
         chat = ChatNulo()
+
+def _configurar_notificador(app, log):
+    global notificador
+    
+    if app.config.get('FIREBASE_CREDENCIALES'):
+        from .servicio_notificaciones.backend_firebase import BackendFirebase
+        backend = BackendFirebase(
+            log,
+            app.config.get('FIREBASE_CREDENCIALES'),
+            app.config.get('FIREBASE_NOTIFICADOR_DB_URL'),
+            app.config.get('FIREBASE_NOTIFICADOR_DB_RAIZ'),
+            app.config.get('FIREBASE_NOTIFICADOR_DB_RECURSO')
+        )
+    else:
+        from .servicio_notificaciones.backend_logger import BackendLogger
+        backend = BackendLogger(log)
+    
+    from .servicio_notificaciones.notificador_texto_plano import NotificadorTextoPlano
+    notificador = NotificadorTextoPlano(backend)
