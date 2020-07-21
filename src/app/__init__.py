@@ -17,7 +17,7 @@ configurar_logger()
 log = logging.getLogger(__name__)
 
 from .servicios import configurar_servicios
-configurar_servicios(app)
+configurar_servicios(app, log)
 
 from .recursos import *
 

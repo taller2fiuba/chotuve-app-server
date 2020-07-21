@@ -37,7 +37,8 @@ class VideoComentariosTestCase(LoginMockTestCase):
         self.assertEquals(response.json, [])
     
     @mock.patch('app.servicios.media_server.obtener_video')
-    def test_agregar_comentario_devuelve_201(self, mock):
+    @mock.patch('app.servicios.auth_server.obtener_usuario')
+    def test_agregar_comentario_devuelve_201(self, _, mock):
         self.cargar_mock_obtener_video(mock, "5edcd01cd3cf810031d865db")
         body = {"comentario": "test"}
 
@@ -48,7 +49,8 @@ class VideoComentariosTestCase(LoginMockTestCase):
     
     @mock.patch('app.servicios.auth_server.obtener_usuarios')
     @mock.patch('app.servicios.media_server.obtener_video')
-    def test_obtener_comentarios_video_con_comentarios(self, mock, mock_auth):
+    @mock.patch('app.servicios.auth_server.obtener_usuario')
+    def test_obtener_comentarios_video_con_comentarios(self, _, mock, mock_auth):
         self.cargar_mock_obtener_video(mock, "5edcd01cd3cf810031d865db")
         autor = {
             "id": 1,
@@ -130,7 +132,8 @@ class VideoComentariosTestCase(LoginMockTestCase):
         self.assertEquals(response.status_code, 404)
    
     @mock.patch('app.servicios.media_server.obtener_video')
-    def test_agregar_comentario_content_type_con_charset_devuelve_201(self, mock):
+    @mock.patch('app.servicios.auth_server.obtener_usuario')
+    def test_agregar_comentario_content_type_con_charset_devuelve_201(self, _, mock):
         self.cargar_mock_obtener_video(mock, "5edcd01cd3cf810031d865db")
         
         body = {"comentario": "test"}

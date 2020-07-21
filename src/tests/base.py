@@ -1,7 +1,8 @@
 import unittest
 from unittest.mock import MagicMock
+import mock
 
-from app import app, db, login_requerido_decorator
+from app import app, db, login_requerido_decorator, servicios
 from app.repositorios import usuario_actual_repositorio
 from config import Config
 
@@ -15,6 +16,8 @@ class BaseTestCase(unittest.TestCase):
         app.config.from_object(Config)
         db.create_all()
         db.session.commit()
+
+        self.mock_notificador = servicios.notificador = MagicMock()
 
     def auth_server_error(self, status_code=500, data=None):
         def auth_error(*_, **__):

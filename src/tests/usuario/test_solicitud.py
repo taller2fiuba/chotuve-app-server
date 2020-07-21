@@ -39,7 +39,8 @@ class SolicitudContactoTestCase(LoginMockTestCase):
     @mock.patch('app.models.solicitud_contacto.SolicitudContacto.hay_solicitud')
     @mock.patch('app.models.contacto.Contacto.es_contacto')
     @mock.patch('app.db.session')
-    def test_crear_solicitud_devuelve_201(self, db_session, es_contacto, hay_solicitud):
+    @mock.patch('app.servicios.auth_server.obtener_usuario')
+    def test_crear_solicitud_devuelve_201(self, _, db_session, es_contacto, hay_solicitud):
         es_contacto.return_value = False
         hay_solicitud.return_value = False
 
@@ -52,6 +53,21 @@ class SolicitudContactoTestCase(LoginMockTestCase):
         db_session.add.assert_called_with(SolicitudContacto(usuario_emisor=1,
                                                             usuario_receptor=2))
         db_session.commit.assert_called_once()
+
+    @mock.patch('app.models.solicitud_contacto.SolicitudContacto.hay_solicitud')
+    @mock.patch('app.models.contacto.Contacto.es_contacto')
+    @mock.patch('app.db.session')
+    @mock.patch('app.servicios.auth_server.obtener_usuario')
+    def test_crear_solicitud_envia_notificacion(self, _, __, es_contacto, hay_solicitud):
+        es_contacto.return_value = False
+        hay_solicitud.return_value = False
+
+        response = self.app.post('/usuario/solicitud-contacto', json={
+            'usuario_id': 2
+        })
+
+        self.assertEqual(201, response.status_code)
+        self.assertEqual({}, response.json)
 
     @mock.patch('app.models.solicitud_contacto.SolicitudContacto.hay_solicitud')
     @mock.patch('app.models.contacto.Contacto.es_contacto')
@@ -128,7 +144,8 @@ class SolicitudContactoTestCase(LoginMockTestCase):
 
     @mock.patch('app.models.solicitud_contacto.SolicitudContacto.obtener_por_id')
     @mock.patch('app.db.session')
-    def test_aceptar_solicitud_correcta_devuelve_200(self, db_session, obtener_sol_por_id):
+    @mock.patch('app.servicios.auth_server.obtener_usuario')
+    def test_aceptar_solicitud_correcta_devuelve_200(self, _, db_session, obtener_sol_por_id):
         solicitud = SolicitudContacto(id=1,
                                       usuario_emisor=2,
                                       usuario_receptor=1)
