@@ -95,6 +95,7 @@ class MediaServer(ClienteHttpBase):
         response = self._get("/video", params={
             'cantidad': cantidad,
             'offset': offset,
+            'usuario_id': usuario_id,
             'contactos': [usuario_id] if con_privados else [' ']
         })
 

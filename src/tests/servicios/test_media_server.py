@@ -117,6 +117,7 @@ class MediaServerTestCase(MockClienteHttpTestCase):
         self.mock_get.assert_called_with('/video', params={
             'offset': 0,
             'cantidad': 10,
+            'usuario_id': 123,
             'contactos': [123]
         })
 
@@ -125,6 +126,7 @@ class MediaServerTestCase(MockClienteHttpTestCase):
         self.mock_get.assert_called_with('/video', params={
             'offset': 0,
             'cantidad': 10,
+            'usuario_id': 123,
             'contactos': [' ']
         })
 
@@ -133,6 +135,7 @@ class MediaServerTestCase(MockClienteHttpTestCase):
         self.mock_get.assert_called_with('/video', params={
             'offset': 4,
             'cantidad': 7,
+            'usuario_id': 123,
             'contactos': [' ']
         })
 
@@ -173,6 +176,7 @@ class MediaServerTestCase(MockClienteHttpTestCase):
         self.mock_get.assert_called_with('/video', params={
             'offset': 0,
             'cantidad': 0,
+            'usuario_id': 123,
             'contactos': [' ']
         })
 
@@ -181,6 +185,7 @@ class MediaServerTestCase(MockClienteHttpTestCase):
         self.mock_get.assert_called_with('/video', params={
             'offset': 0,
             'cantidad': 0,
+            'usuario_id': 123,
             'contactos': [123]
         })
 
