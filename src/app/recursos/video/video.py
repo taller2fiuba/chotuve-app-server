@@ -1,7 +1,7 @@
 from flask import request, g, abort
 
 from app.login_requerido_decorator import login_requerido
-from app.servicios import auth_server, media_server
+from app.servicios import auth_server, media_server, priorizador
 from app.models.contacto import Contacto
 
 from .video_base import VideoBaseResource
@@ -47,5 +47,13 @@ class VideoResource(VideoBaseResource):
 
         for i, video in enumerate(videos):
             videos[i] = self.armar_video(video, autores[video['usuario_id']])
+            # Agregar cantidad de contactos para el priorizador
+            videos[i]['autor']['cantidad-contactos'] = \
+                Contacto.obtener_cantidad_contactos(video['usuario_id'])
+
+        videos = priorizador.ordenar(videos)
+        for video in videos:
+            # Sacar cantidad de contactos
+            video['autor'].pop('cantidad-contactos')
 
         return videos, 200

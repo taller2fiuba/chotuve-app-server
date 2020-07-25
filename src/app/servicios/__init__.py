@@ -14,6 +14,7 @@ auth_server = None
 chat = None
 media_server = None
 notificador = None
+priorizador = None
 
 def configurar_servicios(app, log):
     '''
@@ -23,6 +24,7 @@ def configurar_servicios(app, log):
     _configurar_media_server(app)
     _configurar_chat(app)
     _configurar_notificador(app, log)
+    _configurar_priorizador()
 
 def _configurar_auth_server(app):
     global auth_server
@@ -70,3 +72,9 @@ def _configurar_notificador(app, log):
     
     from .servicio_notificaciones.notificador_texto_plano import NotificadorTextoPlano
     notificador = NotificadorTextoPlano(backend)
+
+def _configurar_priorizador():
+    global priorizador
+
+    from .servicio_reglas.priorizador import Priorizador
+    priorizador = Priorizador()
