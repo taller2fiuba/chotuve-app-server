@@ -260,6 +260,33 @@ paths:
           description: Falta el token de autenticación o es inválido.
           schema:
             $ref: '#/definitions/ErrorNoAutorizado'
+  /usuario/clave:
+    put:
+      summary: Actualizar contraseña
+      description: Actualiza la contraseña del usuario actual.
+      parameters:
+        - in: header
+          name: Authorization
+          description: Token de autenticación de usuario
+          required: true
+          type: string
+        - in: body
+          name: clave
+          description: Nueva contraseña
+          required: true
+          schema:
+            $ref: '#/definitions/SolicitudActualizarClave'
+      responses:
+        200:
+          description: Clave actualizada
+          schema:
+            $ref: '#/definitions/Usuario'
+        400:
+          description: La nueva clave es inválida o faltan datos.
+        401:
+          description: Falta el token de autenticación o es inválido.
+          schema:
+            $ref: '#/definitions/ErrorNoAutorizado'
   /usuario/{usuario_id}:
     get:
       summary: Ver información de un usuario
@@ -776,6 +803,12 @@ definitions:
         type: string
         format: date-time
         example: 2016-08-29T09:12:33.001Z
+
+  SolicitudActualizarClave:
+    properties:
+      password:
+        type: string
+        example: s3cr3t0!
 
   SolicitudComentario:
     properties:

@@ -95,6 +95,18 @@ class AuthServer(ClienteHttpBase):
 
         return {u['id']: u for u in response.json()}
 
+    def actualizar_clave(self, usuario_id: int, nueva_clave: str):
+        '''
+        Actualiza la clave de un usuario.
+        '''
+        response = self._put(f"/usuario/{usuario_id}/clave", json={"password": nueva_clave})
+        if response.status_code == 200:
+            return True
+        if response.status_code == 400:
+            return False
+
+        raise AuthServerError(response)
+
     def actualizar_usuario(self, usuario_id: int, data: dict):
         '''
         Actualiza la información de un usuario.

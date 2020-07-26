@@ -31,6 +31,7 @@ api.add_resource(UsuarioResource, '/usuario/<int:usuario_id>', methods=["GET"], 
 api.add_resource(PerfilUsuarioResource, '/usuario/perfil')
 api.add_resource(PerfilUsuarioResource, '/usuario/<int:usuario_id>/perfil', methods=["GET"], endpoint='PerfilOtroUsuario')
 api.add_resource(Sesion, '/usuario/sesion')
+api.add_resource(UsuarioClaveResource, '/usuario/clave')
 api.add_resource(BaseDeDatosResource, '/base_de_datos')
 api.add_resource(SolicitudContactoResource, '/usuario/solicitud-contacto')
 api.add_resource(SolicitudContactoResource,
