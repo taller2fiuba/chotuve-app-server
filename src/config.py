@@ -40,5 +40,8 @@ class Config:
     FIREBASE_CHAT_DB_RAIZ = os.environ.get('FIREBASE_CHAT_DB_RAIZ') or "app-server-dev"
     FIREBASE_CHAT_DB_RECURSO_CHATS = os.environ.get('FIREBASE_CHAT_DB_RECURSO_CHATS') or "chats"
     FIREBASE_CHAT_DB_RECURSO_MENSAJES = os.environ.get('FIREBASE_CHAT_DB_RECURSO_MENSAJES') or "mensajes"
+    FIREBASE_NOTIFICADOR_DB_URL = os.environ.get('FIREBASE_NOTIFICADOR_DB_URL') or "https://chotuve-a8587.firebaseio.com/"
+    FIREBASE_NOTIFICADOR_DB_RAIZ = os.environ.get('FIREBASE_NOTIFICADOR_DB_RAIZ') or "app-server-dev"
+    FIREBASE_NOTIFICADOR_DB_RECURSO = os.environ.get('FIREBASE_NOTIFICADOR_DB_RECURSO') or 'notificaciones'
     APP_SERVER_TOKEN = os.environ.get('APP_SERVER_TOKEN')
     APP_VERSION = "0.0.1"

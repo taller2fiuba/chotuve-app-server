@@ -21,9 +21,11 @@ class ChatFirebaseTestCase(TestCase):
         )
         mock_cred.assert_called_with({"test": True})
         mock_init.assert_called_with(mock_cred({"test": True}),
-                                     {"databaseURL": "db-url"})
-        mock_db.assert_has_calls([mock.call('/raiz/chats'),
-                                  mock.call('/raiz/mensajes')])
+                                     {"databaseURL": "db-url"},
+                                     name='chotuve-chat')
+        app = mock_init.return_value
+        mock_db.assert_has_calls([mock.call('/raiz/chats', app=app),
+                                  mock.call('/raiz/mensajes', app=app)])
 
     @mock.patch('firebase_admin.credentials.Certificate')
     @mock.patch('firebase_admin.db.reference')
@@ -38,9 +40,11 @@ class ChatFirebaseTestCase(TestCase):
         )
         mock_cred.assert_called_with({"test": True})
         mock_init.assert_called_with(mock_cred({"test": True}),
-                                     {"databaseURL": "db-url"})
-        mock_db.assert_has_calls([mock.call('/chats'),
-                                  mock.call('/mensajes')])
+                                     {"databaseURL": "db-url"},
+                                     name='chotuve-chat')
+        app = mock_init.return_value
+        mock_db.assert_has_calls([mock.call('/chats', app=app),
+                                  mock.call('/mensajes', app=app)])
 
     @mock.patch('firebase_admin.credentials.Certificate')
     @mock.patch('firebase_admin.db.reference')
