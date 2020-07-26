@@ -8,3 +8,4 @@ flask-sqlalchemy==2.4.1
 flask-migrate==2.5.3
 psycopg2==2.8.5
 firebase-admin==4.3.0
+business-rules==1.0.1
