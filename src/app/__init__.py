@@ -48,6 +48,7 @@ api.add_resource(VideoUsuarioResource,
                  '/usuario/video',
                  endpoint='UsuarioVideoResource')
 api.add_resource(ChatResource, '/chat/<int:destinatario_id>')
+api.add_resource(HistoricoResource, '/stats/historico')
 
 from app.servicios.servicio_auth_server import AuthServerError
 @app.errorhandler(AuthServerError)

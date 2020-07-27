@@ -45,3 +45,10 @@ class Contacto(db.Model):
         Devuelve True si otro_usuario es contacto de usuario.
         '''
         return otro_usuario_id in Contacto.obtener_contactos(usuario_id)
+
+    @staticmethod
+    def cantidad_contactos():
+        '''
+        Devuelve la cantidad de usuarios.
+        '''
+        return Contacto.query.count()

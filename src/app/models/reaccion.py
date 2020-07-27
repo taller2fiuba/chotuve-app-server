@@ -24,3 +24,6 @@ class Reaccion(db.Model):
             return reaccion.tipo
         return None
 
+    @staticmethod
+    def cantidad_reacciones():
+        return Reaccion.query.count()
