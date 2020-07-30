@@ -687,6 +687,48 @@ paths:
             $ref: '#/definitions/ErrorNoAutorizado'
         404: 
           description: El destinatario no existe
+  /stats:
+    get:
+      summary: Devuelve la cantidad de reacciones y contactos dentro del sistema por fecha.
+      description: Devuelve la cantidad de reacciones y contactos registrados en el sistema por cada dia dentro del rango pasado por parametro.
+      produces:
+        - application/json
+      parameters:
+      - in: query
+        name: inicio
+        type: string
+        format: date
+        description: fecha inicio para tomar las estadísticas
+        required: true
+      - in: query
+        name: fin
+        type: string
+        format: date
+        description: fecha fin para tomar las estadísticas inclusive
+        required: true  
+      responses:
+        200:
+          description: Pedido exitoso
+          schema:
+            type: object
+            example: "{reacciones: {2020-10-20 : 5}, contactos: {2020-10-20 : 1}}"
+        400:
+          description: Parametros inválidos.
+          schema:
+            type: object
+            example: "{}"
+  /stats/historico:
+    get:
+      summary: Devuelve la cantidad de reacciones y contactos registrados en el sistema.
+      description: Devuelve la cantidad de reacciones y contactos en el sistema.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Pedido exitoso
+          schema:
+            type: object
+            example: "{total_reacciones : 5, total_contactos : 5}"
 
 definitions:
   Comentario:

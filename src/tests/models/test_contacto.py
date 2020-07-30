@@ -35,6 +35,10 @@ class ContactoTestCase(unittest.TestCase):
         self.assertTrue(Contacto.es_contacto(1, 2))
         self.assertTrue(Contacto.es_contacto(2, 1))
 
+    @mock.patch('app.models.contacto.Contacto.query')
+    def test_cantidad_de_contactos(self, mock_db):
+        mock_db.count.return_value = 0
+        self.assertEqual(Contacto.cantidad_contactos(), 0)
 
 if __name__ == '__main__':
     unittest.main()

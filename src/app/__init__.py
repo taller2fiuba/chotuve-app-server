@@ -3,6 +3,7 @@ from flask import Flask
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_cors import CORS
 import logging
 import traceback
 
@@ -15,6 +16,7 @@ migrate = Migrate(app, db)
 api = Api(app)
 configurar_logger()
 log = logging.getLogger(__name__)
+CORS(app)
 
 from .servicios import configurar_servicios
 configurar_servicios(app, log)
@@ -48,6 +50,8 @@ api.add_resource(VideoUsuarioResource,
                  '/usuario/video',
                  endpoint='UsuarioVideoResource')
 api.add_resource(ChatResource, '/chat/<int:destinatario_id>')
+api.add_resource(HistoricoResource, '/stats/historico')
+api.add_resource(StatsResource, '/stats')
 
 from app.servicios.servicio_auth_server import AuthServerError
 @app.errorhandler(AuthServerError)
