@@ -2,6 +2,7 @@
 import enum
 from sqlalchemy import func
 from app import db
+from datetime import timedelta, date
 
 class TipoReaccion(enum.Enum):
     NO_ME_GUSTA = 'NO_ME_GUSTA'
@@ -12,6 +13,7 @@ class Reaccion(db.Model):
     video = db.Column(db.String(32))
     usuario = db.Column(db.Integer)
     tipo = db.Column(db.Enum(TipoReaccion))
+    fecha = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
     @staticmethod
     def contar_reacciones(video, tipo):
@@ -24,3 +26,27 @@ class Reaccion(db.Model):
             return reaccion.tipo
         return None
 
+    @staticmethod
+    def cantidad_reacciones():
+        return Reaccion.query.count()
+
+    @staticmethod
+    def reacciones_por_fecha(f_inicio, f_final):
+        f_final = f_final + timedelta(seconds=59, minutes=59, hours=23)
+        #este es ya que sino la query se hara para la f_final
+        #a las 00 y no entraran las reacciones de f_final
+        query = db.session.query(db.func.date(Reaccion.fecha), db.func.count('*')).\
+                                 filter(Reaccion.fecha >= f_inicio,Reaccion.fecha <= f_final).\
+                                 group_by(db.func.date(Reaccion.fecha)).all()                  
+        reacciones = {}
+        for fecha in query:
+            reacciones[str(fecha[0])] = fecha[1]
+
+        #saco los segundos y minutos
+        fecha = date(f_inicio.year, f_inicio.month, f_inicio.day)
+        f_final = date(f_final.year, f_final.month, f_final.day)
+        while fecha <= f_final:
+            if str(fecha) not in reacciones:
+                reacciones[str(fecha)] = 0
+            fecha = fecha + timedelta(days=1)
+        return reacciones

@@ -1,10 +1,13 @@
-from sqlalchemy import or_
+from datetime import timedelta, date
+from sqlalchemy import or_, func
+
 from app import db
 
 class Contacto(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     usuario_1 = db.Column(db.Integer)
     usuario_2 = db.Column(db.Integer)
+    fecha = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
     def __repr__(self): # pragma: no cover
         return f'<Contacto id={self.id} ' + \
@@ -45,3 +48,28 @@ class Contacto(db.Model):
         Devuelve True si otro_usuario es contacto de usuario.
         '''
         return otro_usuario_id in Contacto.obtener_contactos(usuario_id)
+
+    @staticmethod
+    def cantidad_contactos():
+        '''
+        Devuelve la cantidad de usuarios.
+        '''
+        return Contacto.query.count()
+
+    @staticmethod
+    def contactos_por_fecha(f_inicio, f_final):
+        query = db.session.query(db.func.date(Contacto.fecha), db.func.count('*')).\
+                                 filter(Contacto.fecha >= f_inicio, Contacto.fecha <= f_final).\
+                                 group_by(db.func.date(Contacto.fecha)).all()
+        contactos = {}
+        for fecha in query:
+            contactos[str(fecha[0])] = fecha[1]
+
+        #saco los segundos y minutos
+        fecha = date(f_inicio.year, f_inicio.month, f_inicio.day)
+        f_final = date(f_final.year, f_final.month, f_final.day)
+        while fecha <= f_final:
+            if str(fecha) not in contactos:
+                contactos[str(fecha)] = 0
+            fecha = fecha + timedelta(days=1)
+        return contactos
