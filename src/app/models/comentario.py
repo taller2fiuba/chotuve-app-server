@@ -22,8 +22,9 @@ class Comentario(db.Model):
 
     @staticmethod
     def comentarios_por_fecha(f_inicio, f_final):
-        f_final = f_final + timedelta(days=1) #este es ya que sino la query se hara para la f_final
-                                              #a las 00 y no entraran las comentarios de f_final
+        f_final = f_final + timedelta(ḥour=23, minutes=59, seconds=59)
+        #este es ya que sino la query se hara para la f_final
+        #a las 00 y no entraran las comentarios de f_final
         query = db.session.query(db.func.date(Comentario.fecha), db.func.count('*')).\
                                  filter(Comentario.fecha >= f_inicio,Comentario.fecha <= f_final).\
                                  group_by(db.func.date(Comentario.fecha)).all()
