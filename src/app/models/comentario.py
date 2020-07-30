@@ -31,7 +31,7 @@ class Comentario(db.Model):
         comentarios = {}
         for fecha in query:
             comentarios[str(fecha[0])] = fecha[1]
-        
+
         #saco los segundos y minutos
         fecha = date(f_inicio.year, f_inicio.month, f_inicio.day)
         f_final = date(f_final.year, f_final.month, f_final.day)
