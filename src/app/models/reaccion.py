@@ -1,7 +1,7 @@
 # pylint: skip-file
 import enum
 from sqlalchemy import func
-from app import db
+from app import db, logging
 from datetime import timedelta, date
 
 class TipoReaccion(enum.Enum):
@@ -32,13 +32,15 @@ class Reaccion(db.Model):
 
     @staticmethod
     def reacciones_por_fecha(f_inicio, f_final):
+        f_final = f_final + timedelta(days=1) #este es ya que sino la query se hara para la f_final
+                                              #a las 00 y no entraran las reacciones de f_final
         query = db.session.query(db.func.date(Reaccion.fecha), db.func.count('*')).\
                                  filter(Reaccion.fecha >= f_inicio,Reaccion.fecha <= f_final).\
-                                 group_by(db.func.date(Reaccion.fecha)).all()
+                                 group_by(db.func.date(Reaccion.fecha)).all()                  
         reacciones = {}
         for fecha in query:
             reacciones[str(fecha[0])] = fecha[1]
-        
+
         #saco los segundos y minutos
         fecha = date(f_inicio.year, f_inicio.month, f_inicio.day)
         f_final = date(f_final.year, f_final.month, f_final.day)
