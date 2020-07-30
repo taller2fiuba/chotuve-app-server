@@ -58,9 +58,9 @@ class Contacto(db.Model):
 
     @staticmethod
     def contactos_por_fecha(f_inicio, f_final):
-        query = db.session.query(db.func.date(Contacto.fecha),
-                                db.func.count('*')).filter(Contacto.fecha >= f_inicio,
-                                                           Contacto.fecha <= f_final).group_by(db.func.date(Contacto.fecha)).all()
+        query = db.session.query(db.func.date(Contacto.fecha), db.func.count('*')).\
+                                 filter(Contacto.fecha >= f_inicio, Contacto.fecha <= f_final).\
+                                 group_by(db.func.date(Contacto.fecha)).all()
         contactos = {}
         for fecha in query:
             contactos[str(fecha[0])] = fecha[1]
