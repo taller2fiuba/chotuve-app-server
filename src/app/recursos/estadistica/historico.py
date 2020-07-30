@@ -1,10 +1,10 @@
 from flask_restful import Resource
 from app.models.reaccion import Reaccion
-from app.models.contacto import Contacto
+from app.models.comentario import Comentario
 
 class HistoricoResource(Resource):
     def get(self):
         reacciones = Reaccion.cantidad_reacciones()
-        contactos = Contacto.cantidad_contactos()
+        comentarios = Comentario.cantidad_comentarios()
         return  {"total_reacciones": reacciones,
-                 "total_contactos": contactos}, 200
+                 "total_comentarios": comentarios}, 200

@@ -3,7 +3,7 @@ from flask import request, abort
 
 from flask_restful import Resource
 from app.models.reaccion import Reaccion
-from app.models.contacto import Contacto
+from app.models.comentario import Comentario
 
 class StatsResource(Resource):
     def get(self):
@@ -20,6 +20,6 @@ class StatsResource(Resource):
             return {}, 400
 
         reacciones = Reaccion.reacciones_por_fecha(f_inicio, f_final)
-        contactos = Contacto.contactos_por_fecha(f_inicio, f_final)
+        comentarios = Comentario.comentarios_por_fecha(f_inicio, f_final)
 
-        return  {"reacciones":reacciones, "contactos": contactos}, 200
+        return  {"reacciones":reacciones, "comentarios": comentarios}, 200
