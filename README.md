@@ -223,7 +223,7 @@ En el caso en que haya conflictos de migraciones lo que termina sucediendo es qu
 ```
 
 En el caso en que se genere un conflicto de este estilo, la forma de proceder es la siguiente:
-- Desactualizar la base de datos hasta una versión que sea común entre los dos branches. En el caso de la figura sería desactualizar a la revisión `v2`.
+- Desactualizar la base de datos hasta una versión que sea común entre los dos branches. En el caso de la figura sería desactualizar a la revisión `v2` (`flask db downgrade`).
 - Borrar las migraciones posteriores a la revisión `v2` de la carpeta `src/migrations/versions`.
 - Con la base en esa revisión, realizar el *merge* de los archivos `.py` de los modelos (y del resto del código si fuera necesario).
 - Generar las nuevas migraciones (`flask db migrate`).
