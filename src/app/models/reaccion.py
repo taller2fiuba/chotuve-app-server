@@ -32,7 +32,7 @@ class Reaccion(db.Model):
 
     @staticmethod
     def reacciones_por_fecha(f_inicio, f_final):
-        f_final = f_final + timedelta(ḥour=23, minutes=59, seconds=59)
+        f_final = f_final + timedelta(seconds=59, minutes=59, hours=23)
         #este es ya que sino la query se hara para la f_final
         #a las 00 y no entraran las reacciones de f_final
         query = db.session.query(db.func.date(Reaccion.fecha), db.func.count('*')).\
