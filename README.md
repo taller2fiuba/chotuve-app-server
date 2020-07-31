@@ -90,7 +90,7 @@ b51f513fc78cc222b32226d617b689a3960e4eb5b8f6d021dd6714163c14fb8b
 
 > **IMPORTANTE**: No olvidar configurar la variable de ambiente `FLASK_ENV` en `production` para hacer el despliegue productivo.
 
-Ahora el servidor de aplicación estará corriendo.
+Ahora el servidor de aplicación estará corriendo y aceptando conexiones en `http://localhost:5000`.
 
 > El servidor de aplicación no funcionará si no puede acceder a los servidores de medios y de autenticación en las URLs indicadas.
 
@@ -109,6 +109,8 @@ El servidor de desarrollo tendrá acceso al código fuente del proyecto mediante
 ```bash
 ~/chotuve-app-server$ bin/dev-compose up
 ```
+
+El servidor de desarrollo aceptará conexiones en `http://localhost:28080`.
 
 Para iniciar el servidor en segundo plano o pasarle opciones extras a `docker-compose`, se pueden agregar al final de la línea de comandos, por ejemplo:
 
@@ -229,6 +231,10 @@ En el caso en que se genere un conflicto de este estilo, la forma de proceder es
 - Generar las nuevas migraciones (`flask db migrate`).
 - Actualizar la base a la última versión (`flask db upgrade`).
 - Versionar los cambios en migraciones.
+
+> Otra opción es eliminar la base de datos y volver a crearla. En ese caso debe primero hay que 
+borrar las migraciones divergentes, luego borrar la base, volver a crearla y luego generar las 
+nuevas migraciones.
 
 ## Pruebas de aceptación
 
